@@ -188,9 +188,9 @@
     </PublishFile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Win10MqttLibrary\Win2Mqtt.Library.csproj">
+    <ProjectReference Include="..\Win10MqttLibrary\Win2Mqtt.Common.csproj">
       <Project>{c7a61f18-4bc9-4f0d-91a0-6cd63bc5c64e}</Project>
-      <Name>Win2Mqtt.Library</Name>
+      <Name>Win2Mqtt.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Win10SensorLibrary\Win2Mqtt.Sensors.csproj">
       <Project>{34747F0B-64C0-445C-866D-4E378FBFE510}</Project>
