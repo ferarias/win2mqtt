@@ -1,4 +1,4 @@
-﻿namespace mqttclient.Mqtt
+﻿namespace Win2Mqtt.Client.Mqtt
 {
     public interface IMqttPublish
     {

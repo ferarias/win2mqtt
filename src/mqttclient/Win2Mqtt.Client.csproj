@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{61184F33-8C53-4A4F-83FB-3EAD95088218}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>mqttclient</RootNamespace>
-    <AssemblyName>mqttclient</AssemblyName>
+    <RootNamespace>Win2Mqtt.Client</RootNamespace>
+    <AssemblyName>Win2Mqtt.Client</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -79,7 +79,7 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>mqttclient.Program</StartupObject>
+    <StartupObject>Win2Mqtt.Client.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -188,13 +188,13 @@
     </PublishFile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Win10MqttLibrary\Win10MqttLibrary.csproj">
+    <ProjectReference Include="..\Win10MqttLibrary\Win2Mqtt.Library.csproj">
       <Project>{c7a61f18-4bc9-4f0d-91a0-6cd63bc5c64e}</Project>
-      <Name>Win10MqttLibrary</Name>
+      <Name>Win2Mqtt.Library</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Win10SensorLibrary\Win10SensorLibrary.csproj">
+    <ProjectReference Include="..\Win10SensorLibrary\Win2Mqtt.Sensors.csproj">
       <Project>{34747F0B-64C0-445C-866D-4E378FBFE510}</Project>
-      <Name>Win10SensorLibrary</Name>
+      <Name>Win2Mqtt.Sensors</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

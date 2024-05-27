@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Windows.Data.Xml.Dom;
 using Windows.UI.Notifications;
 
-namespace mqttclient
+namespace Win2Mqtt.Client
 {
     public class ToastMessage : IToastMessage
     {
@@ -33,7 +33,7 @@ namespace mqttclient
                 stringElements[i].AppendChild(toastXml.CreateTextNode(lines[i]));
             }
 
-            String imagePath = "file:///" + imageUrl;
+            string imagePath = "file:///" + imageUrl;
 
             XmlNodeList toastImageAttributes = toastXml.GetElementsByTagName("image");
             ((XmlElement)toastImageAttributes[0]).SetAttribute("src", imagePath);

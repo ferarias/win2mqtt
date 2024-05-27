@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace mqttclient.Mqtt
+﻿namespace Win2Mqtt.Client.Mqtt
 {
     public interface IMqtt
     {

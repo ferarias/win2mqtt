@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{34747F0B-64C0-445C-866D-4E378FBFE510}</ProjectGuid>
+    <ProjectGuid>{C7A61F18-4BC9-4F0D-91A0-6CD63BC5C64E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Win10SensorLibrary</RootNamespace>
-    <AssemblyName>Win10SensorLibrary</AssemblyName>
+    <RootNamespace>Win2Mqtt</RootNamespace>
+    <AssemblyName>Win2Mqtt.Common</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -36,9 +36,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Speech" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,36 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HardwareSensors\Audio.cs" />
-    <Compile Include="HardwareSensors\Camera.cs" />
-    <Compile Include="HardwareSensors\IAudio.cs" />
-    <Compile Include="HardwareSensors\IdleTimeFinder.cs" />
-    <Compile Include="HardwareSensors\Memory.cs" />
-    <Compile Include="HardwareSensors\Monitor.cs" />
-    <Compile Include="HardwareSensors\Power.cs" />
-    <Compile Include="HardwareSensors\Process.cs" />
-    <Compile Include="HardwareSensors\Processor.cs" />
-    <Compile Include="HardwareSensors\Speaker.cs" />
-    <Compile Include="HardwareSensors\SystemShutdown.cs" />
-    <Compile Include="HardwareSensors\UsingComputer.cs" />
+    <Compile Include="Helpers.cs" />
+    <Compile Include="Models\CommandParameters.cs" />
+    <Compile Include="Models\IsRunning.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AForge.Controls">
-      <Version>2.2.5</Version>
-    </PackageReference>
-    <PackageReference Include="AForge.Video.DirectShow">
-      <Version>2.2.5</Version>
-    </PackageReference>
-    <PackageReference Include="AudioSwitcher.AudioApi.CoreAudio">
-      <Version>3.0.3</Version>
-    </PackageReference>
-    <PackageReference Include="EMGU.CV">
-      <Version>4.9.0.5494</Version>
-    </PackageReference>
-    <PackageReference Include="Emgu.CV.Bitmap">
-      <Version>4.9.0.5494</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
       <Version>8.0.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

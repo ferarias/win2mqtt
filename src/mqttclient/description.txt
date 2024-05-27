@@ -1,18 +1,11 @@
-﻿Winiot
-
-Kort forklart en mqtt klient for Windows. 
-Jeg startet med å lage et lite program for å kunne styrer volumet på arbeidsstasjonen fra alexa men ble fort litt større.
-
-Pr. nå er det følgende funsjonalitet.
-
-MQTT
+﻿MQTT
 - Suspend/shutdown/hibernate/reboot PC
-- Volum kontrol mute/unmute sette lyd nivå i %
-- Egendefinert program/script/batch filer med parameter.
-- Publisering av ledig minne/cpu belastning.
-- Varsling 
-	- Toast melding(Action Center, mqtt format Melding1,Melding2,Melding3,FIleURI)
-		- F.eks "Home Assistant,Detection-> Cat Found,,c:\temp\cat.jpg" fil sti til bildet lokalt.
+- Volume control mute/unmute set sound level in %
+- Custom program/script/batch files with parameters.
+- Publication of free memory/cpu load.
+- Notification 
+	- Toast message (Action Center, mqtt format Message1, Message2, Message3, FIleURI)
+		- Eg "Home Assistant,Detection-> Cat Found,,c:\temp\cat.jpg" file path to the image locally.
 	- TTS
-
-Har også laget en mulighet for å ta skjermdump av valgt skjerm, som jeg bruker Home assistant til å lage en stream av.(En veldig fleksible og enkel måte og sjekke status på f.eks nedlastninger og kompilering)
+- Take a screenshot of the selected screen, which I use Home assistant to create a stream of. 
+(A very flexible and easy way to check the status of e.g. downloads and compilation)

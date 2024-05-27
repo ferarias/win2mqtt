@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Speech.Synthesis;
 using System.Text;
 using System.Windows.Forms;
-using mqttclient.HardwareSensors;
+using Win2Mqtt.Sensors.HardwareSensors;
 using Newtonsoft.Json;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
-using Win10MqttLibrary;
 
 
-namespace mqttclient.Mqtt
+namespace Win2Mqtt.Client.Mqtt
 {
     public class Mqtt : IMqtt
     {
@@ -80,14 +78,14 @@ namespace mqttclient.Mqtt
         {
             try
             {
-                if (!Helpers.IsEmptyOrWhitespaced(hostname))
+                if (!hostname.IsEmptyOrWhitespaced())
                 {
                     try
                     {
 
                         _client = new MqttClient(hostname, portNumber, false, null, null, MqttSslProtocols.None, null);
 
-                        if (Helpers.IsEmptyOrWhitespaced(username))
+                        if (username.IsEmptyOrWhitespaced())
                         {
                             byte code = _client.Connect(Guid.NewGuid().ToString());
                         }
@@ -118,7 +116,7 @@ namespace mqttclient.Mqtt
                             GMqtttopic = Properties.Settings.Default["mqtttopic"].ToString();
 
                             var r = new List<string>();
-                            var qosLevelse = new List<Byte[]>();
+                            var qosLevelse = new List<byte[]>();
 
                             //r.Add(GMqtttopic + "/#");
 
@@ -166,7 +164,7 @@ namespace mqttclient.Mqtt
 
             catch (Exception ex)
             {
-                throw new Exception($"not connected,check settings. Error: {ex.InnerException.ToString()}");
+                throw new Exception($"not connected,check settings. Error: {ex.InnerException}");
             }
             return false;
         }
@@ -196,6 +194,7 @@ namespace mqttclient.Mqtt
             }
             catch
             {
+                //TODO
                 throw;
             }
 
@@ -251,28 +250,28 @@ namespace mqttclient.Mqtt
                 {
                     case "app/running":
 
-                        var isRunning = JsonConvert.DeserializeObject<Win10MqttLibrary.Models.IsRunning>(message);
+                        var isRunning = JsonConvert.DeserializeObject<Models.IsRunning>(message);
 
                         switch (isRunning.Action)
                         {
 
                             case "1":
-                                Publish($"app/running/{isRunning.ApplicationName}", Process.IsRunning(message, ""));
+                                Publish($"app/running/{isRunning.ApplicationName}", Sensors.HardwareSensors.Process.IsRunning(message, ""));
                                 break;
                             case "0":
                                 //close the app
-                                Process.Close(isRunning.ApplicationName);
+                                Sensors.HardwareSensors.Process.Close(isRunning.ApplicationName);
                                 Publish($"app/running/{isRunning.ApplicationName}", "0");
                                 break;
                             default:
-                                Publish($"app/running/{isRunning.ApplicationName}", Process.IsRunning(message, ""));
+                                Publish($"app/running/{isRunning.ApplicationName}", Sensors.HardwareSensors.Process.IsRunning(message, ""));
                                 break;
 
                         }
                         break;
 
                     case "app/close":
-                        Publish($"app/running/{message}", Process.Close(message));
+                        Publish($"app/running/{message}", Sensors.HardwareSensors.Process.Close(message));
                         break;
 
                     case "monitor/set":
@@ -345,7 +344,7 @@ namespace mqttclient.Mqtt
 
                         ProcessWindowStyle processWindowStyle = new ProcessWindowStyle();
 
-                        var commandParameters = JsonConvert.DeserializeObject<Win10MqttLibrary.Models.CommandParameters>(message);
+                        var commandParameters = JsonConvert.DeserializeObject<Models.CommandParameters>(message);
 
                         switch (Convert.ToInt16(commandParameters.WindowStyle))
                         {
@@ -386,7 +385,7 @@ namespace mqttclient.Mqtt
         }
         private static int GetDelay(string message)
         {
-            var result = Int32.TryParse(message, out var delay);
+            var result = int.TryParse(message, out var delay);
             if (result)
             {
                 return delay;

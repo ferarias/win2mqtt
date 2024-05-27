@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 
-namespace mqttclient.HardwareSensors
+namespace Win2Mqtt.Sensors.HardwareSensors
 {
     public static class Processor
     {

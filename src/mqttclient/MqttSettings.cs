@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace mqttclient
+namespace Win2Mqtt.Client
 {
     public static class MqttSettings
     {
@@ -86,7 +82,7 @@ namespace mqttclient
         public static bool IsComputerUsed
         {
             get => (bool)Properties.Settings.Default[nameof(IsComputerUsed)];
-            set => Properties.Settings.Default[nameof(IsComputerUsed)] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture),CultureInfo.CurrentCulture);
+            set => Properties.Settings.Default[nameof(IsComputerUsed)] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
         }
         public static bool BatterySensor
         {
@@ -114,54 +110,54 @@ namespace mqttclient
             set => Properties.Settings.Default[nameof(EnableTTS)] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
         }
         public static string TTSSpeaker { get; internal set; }
-        public static Boolean Monitor
+        public static bool Monitor
         {
-            get => (Boolean)Properties.Settings.Default["CmdMonitor"];
+            get => (bool)Properties.Settings.Default["CmdMonitor"];
             set => Properties.Settings.Default["CmdMonitor"] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
         }
-        public static Boolean Toast
+        public static bool Toast
         {
-            get => (Boolean)Properties.Settings.Default["CmdToast"];
+            get => (bool)Properties.Settings.Default["CmdToast"];
             set => Properties.Settings.Default["CmdToast"] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
         }
-        public static Boolean App
+        public static bool App
         {
-            get => (Boolean)Properties.Settings.Default["CmdApp"];
+            get => (bool)Properties.Settings.Default["CmdApp"];
             set => Properties.Settings.Default["CmdApp"] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
         }
-        public static Boolean Tts
+        public static bool Tts
         {
-            get => (Boolean)Properties.Settings.Default["CmdTts"];
+            get => (bool)Properties.Settings.Default["CmdTts"];
             set => Properties.Settings.Default["CmdTts"] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
         }
-        public static Boolean Hibernate
+        public static bool Hibernate
         {
-            get => (Boolean)Properties.Settings.Default["CmdHibernate"];
+            get => (bool)Properties.Settings.Default["CmdHibernate"];
             set => Properties.Settings.Default["CmdHibernate"] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
         }
-        public static Boolean Shutdown
+        public static bool Shutdown
         {
-            get => (Boolean)Properties.Settings.Default["CmdShutdown"];
+            get => (bool)Properties.Settings.Default["CmdShutdown"];
             set => Properties.Settings.Default["CmdShutdown"] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
         }
-        public static Boolean Reboot
+        public static bool Reboot
         {
-            get => (Boolean)Properties.Settings.Default["CmdReboot"];
+            get => (bool)Properties.Settings.Default["CmdReboot"];
             set => Properties.Settings.Default["CmdReboot"] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
         }
-        public static Boolean Suspend
+        public static bool Suspend
         {
-            get => (Boolean)Properties.Settings.Default["CmdSuspend"];
+            get => (bool)Properties.Settings.Default["CmdSuspend"];
             set => Properties.Settings.Default["CmdSuspend"] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
         }
-        public static Boolean Mute
+        public static bool Mute
         {
-            get => (Boolean)Properties.Settings.Default["CmdMute"];
+            get => (bool)Properties.Settings.Default["CmdMute"];
             set => Properties.Settings.Default["CmdMute"] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
         }
-        public static Boolean Volume
+        public static bool Volume
         {
-            get => (Boolean)Properties.Settings.Default["CmdVolume"];
+            get => (bool)Properties.Settings.Default["CmdVolume"];
             set => Properties.Settings.Default["CmdVolume"] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
         }
         internal static void Save()
@@ -173,7 +169,7 @@ namespace mqttclient
         {
             get => "Win Mqtt Client";
         }
-        
+
 
 
     }

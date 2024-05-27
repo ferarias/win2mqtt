@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace mqttclient
+namespace Win2Mqtt.Client
 {
     public class Logger : ILogger
     {
@@ -20,7 +20,7 @@ namespace mqttclient
                 mainForm.Invoke((MethodInvoker)(() => mainForm.txtLoger.Text = message + "\n " + mainForm.txtLoger.Text));
 
 
-                
+
                 //mainForm.te
 
                 //if (mainForm.listBox1.Items.Count > 20)

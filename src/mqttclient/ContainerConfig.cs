@@ -1,9 +1,8 @@
-﻿using System.Reflection;
-using Autofac;
-using mqttclient.HardwareSensors;
-using mqttclient.Mqtt;
+﻿using Autofac;
+using Win2Mqtt.Client.Mqtt;
+using Win2Mqtt.Sensors.HardwareSensors;
 
-namespace mqttclient
+namespace Win2Mqtt.Client
 {
     public static class ContainerConfig
     {
@@ -16,7 +15,7 @@ namespace mqttclient
             builder.RegisterType<Logger>().As<ILogger>();
             builder.RegisterType<Mqtt.Mqtt>().As<IMqtt>().SingleInstance();
             builder.RegisterType<MqttPublish>().As<IMqttPublish>();
-           builder.RegisterType<Audio>().As<IAudio>().SingleInstance();
+            builder.RegisterType<Audio>().As<IAudio>().SingleInstance();
             builder.RegisterType<ToastMessage>().As<IToastMessage>();
 
             builder.RegisterType<FrmOptions>().AsSelf();

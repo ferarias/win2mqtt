@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace mqttclient.HardwareSensors
+namespace Win2Mqtt.Sensors.HardwareSensors
 {
     public static class Memory
     {

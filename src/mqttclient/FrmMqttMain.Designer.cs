@@ -1,4 +1,4 @@
-﻿namespace mqttclient
+﻿namespace Win2Mqtt.Client
 {
     partial class FrmMqttMain
     {

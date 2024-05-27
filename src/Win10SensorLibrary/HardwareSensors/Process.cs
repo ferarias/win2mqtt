@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 
-namespace mqttclient
+namespace Win2Mqtt.Sensors.HardwareSensors
 {
     public static class Process
     {

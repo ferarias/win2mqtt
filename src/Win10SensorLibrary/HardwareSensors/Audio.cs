@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Globalization;
 using AudioSwitcher.AudioApi.CoreAudio;
 
-namespace mqttclient.HardwareSensors
+namespace Win2Mqtt.Sensors.HardwareSensors
 {
     public class Audio : IAudio
     {
-        
 
-        public void Mute(Boolean Enable)
+
+        public void Mute(bool Enable)
         {
             try
             {
                 CoreAudioDevice defaultPlaybackDevice = new CoreAudioController().DefaultPlaybackDevice;
                 defaultPlaybackDevice.Mute(Enable);
-                
+
             }
             catch (Exception)
             {
@@ -24,7 +24,7 @@ namespace mqttclient.HardwareSensors
             }
 
         }
-        public Boolean IsMuted()
+        public bool IsMuted()
         {
             try
             {
@@ -84,7 +84,7 @@ namespace mqttclient.HardwareSensors
             CoreAudioController cac = new CoreAudioController();
             foreach (CoreAudioDevice de in cac.GetPlaybackDevices())
             {
-                if (de.FullName.ToLower(CultureInfo.CurrentCulture) == DeviceFullname.ToLower(CultureInfo.CurrentCulture))
+                if (de.FullName.Equals(DeviceFullname, StringComparison.CurrentCultureIgnoreCase))
                 {
                     defaultPlaybackDevice = de;
                 }

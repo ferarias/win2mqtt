@@ -4,7 +4,7 @@ using System.Threading;
 using System.Windows.Forms;
 
 
-namespace mqttclient
+namespace Win2Mqtt.Client
 {
     static class Program
     {
@@ -18,9 +18,9 @@ namespace mqttclient
 
             using (var scope = container.BeginLifetimeScope())
             {
-                FrmMqttMain form1 = scope.Resolve<FrmMqttMain>();
-                Application.ThreadException += new ThreadExceptionEventHandler(form1.UnhandledThreadExceptionHandler);
-                Application.Run(form1);
+                FrmMqttMain mainForm = scope.Resolve<FrmMqttMain>();
+                Application.ThreadException += new ThreadExceptionEventHandler(mainForm.UnhandledThreadExceptionHandler);
+                Application.Run(mainForm);
             }
 
 

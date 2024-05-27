@@ -6,9 +6,9 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using mqttclient.HardwareSensors;
+using Win2Mqtt.Sensors.HardwareSensors;
 
-namespace mqttclient.Mqtt
+namespace Win2Mqtt.Client.Mqtt
 {
     public class MqttPublish : IMqttPublish
     {
@@ -24,8 +24,8 @@ namespace mqttclient.Mqtt
         public async void PublishSystemData()
         {
 
-            List<System.Threading.Tasks.Task> task = new List<System.Threading.Tasks.Task>();
-            
+            List<Task> task = new List<Task>();
+
             if (_mqtt.IsConnected == false)
             {
 
@@ -44,7 +44,7 @@ namespace mqttclient.Mqtt
                 }
                 if (MqttSettings.FreeMemorySensor)
                 {
-                    task.Add(Task.Run(() =>  _mqtt.Publish("freememory", Memory.GetFreeMemory())));
+                    task.Add(Task.Run(() => _mqtt.Publish("freememory", Memory.GetFreeMemory())));
                 }
                 if (MqttSettings.VolumeSensor)
                 {
@@ -55,7 +55,7 @@ namespace mqttclient.Mqtt
                     if (Properties.Settings.Default["MqttSlideshowFolder"].ToString().Length > 5)
                     {
                         string folder = @Properties.Settings.Default["MqttSlideshowFolder"].ToString();
-                        task.Add(Task.Run(() =>  MqttCameraSlide(folder)));
+                        task.Add(Task.Run(() => MqttCameraSlide(folder)));
                     }
                 }
                 if (MqttSettings.BatterySensor)
@@ -110,6 +110,7 @@ namespace mqttclient.Mqtt
         }
         private void PublishBattery()
         {
+            //TODO
             //_mqtt.Publish("Power/BatteryChargeStatus", Power.BatteryChargeStatus());
             //_mqtt.Publish("Power/BatteryFullLifetime", Power.BatteryFullLifetime());
             //_mqtt.Publish("Power/BatteryLifePercent", Power.BatteryLifePercent());
@@ -124,7 +125,7 @@ namespace mqttclient.Mqtt
                 {
                     double freeSpace = drive.TotalFreeSpace;
                     double totalSpace = drive.TotalSize;
-                    double percentFree = (freeSpace / totalSpace) * 100;
+                    double percentFree = freeSpace / totalSpace * 100;
                     float num = (float)percentFree;
 
                     string rawdrivename = drive.Name.Replace(":\\", "");
@@ -182,7 +183,7 @@ namespace mqttclient.Mqtt
         {
             try
             {
-                if (HardwareSensors.Camera.Save(GLocalWebcamFile))
+                if (Camera.Save(GLocalWebcamFile))
                 {
                     _mqtt.PublishImage("webcamera", GLocalWebcamFile);
 

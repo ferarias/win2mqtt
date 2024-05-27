@@ -5,7 +5,7 @@ using System.Drawing;
 using AForge.Video.DirectShow;
 using Emgu.CV;
 
-namespace mqttclient.HardwareSensors
+namespace Win2Mqtt.Sensors.HardwareSensors
 {
     public static class Camera
     {
@@ -20,7 +20,7 @@ namespace mqttclient.HardwareSensors
 
             return Result;
         }
-        public static Boolean Save(string FileName)
+        public static bool Save(string FileName)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace mqttclient.HardwareSensors
 
                 throw;
             }
-            
+
         }
     }
 }

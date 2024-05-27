@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace mqttclient.HardwareSensors
+﻿namespace Win2Mqtt.Sensors.HardwareSensors
 {
     public interface IAudio
     {

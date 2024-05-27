@@ -2,10 +2,10 @@
 using System.Windows.Forms;
 using System.Threading;
 using System.Reflection;
-using mqttclient.Mqtt;
 using System.Globalization;
+using Win2Mqtt.Client.Mqtt;
 
-namespace mqttclient
+namespace Win2Mqtt.Client
 {
     public partial class FrmMqttMain : Form
     {

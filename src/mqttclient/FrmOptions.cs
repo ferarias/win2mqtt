@@ -1,27 +1,23 @@
-﻿
-using Newtonsoft.Json;
-using System;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿using System;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using uPLibrary.Networking.M2Mqtt;
+using Win2Mqtt.Sensors.HardwareSensors;
 
-namespace mqttclient
+namespace Win2Mqtt.Client
 {
     public partial class FrmOptions : Form
     {
 
         
         public string TriggerFile { get; set; }
-        public FrmMqttMain ParentForm { get; set; }
+        public FrmMqttMain ParentFrm { get; set; }
         public FrmOptions(FrmMqttMain Mainform)
         {
 
             InitializeComponent();
-            ParentForm = Mainform;
+            ParentFrm = Mainform;
             TriggerFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "triggers.json");
             LoadSettings();
             if (txtmqtttopic.TextLength == 0)
@@ -74,7 +70,7 @@ namespace mqttclient
 
             if (chkTtsEnabled.Checked == true)
             {
-                cmbSpeaker.DataSource = HardwareSensors.Speaker.GetSpeakers();
+                cmbSpeaker.DataSource = Speaker.GetSpeakers();
                 cmbSpeaker.SelectedItem = Properties.Settings.Default["TTSSpeaker"];
             }
 
@@ -169,7 +165,7 @@ namespace mqttclient
 
                 try
                 {
-                    ParentForm.ReloadApp();
+                    ParentFrm.ReloadApp();
                 }
                 catch (Exception ex)
                 {
@@ -198,7 +194,7 @@ namespace mqttclient
         {
             if (cmbSpeaker.SelectedItem.ToString().Length > 0)
             {
-                HardwareSensors.Speaker.Speak("testing", cmbSpeaker.SelectedItem.ToString());
+                Speaker.Speak("testing", cmbSpeaker.SelectedItem.ToString());
             }
         }
         private void ChkStartUp_CheckedChanged(object sender, EventArgs e)
@@ -219,11 +215,11 @@ namespace mqttclient
         }
         private void LoadAudioDevices()
         {
-            cmbAudioOutput.DataSource = HardwareSensors.Audio.GetAudioDevices();
+            cmbAudioOutput.DataSource = Audio.GetAudioDevices();
         }
         private void LoadCameraDevices()
         {
-            cmbWebcam.DataSource = HardwareSensors.Camera.GetDevices();
+            cmbWebcam.DataSource = Camera.GetDevices();
         }
         private void Button2_Click(object sender, EventArgs e)
         {
@@ -233,7 +229,7 @@ namespace mqttclient
                 {
                     string Filename = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) +  @"\cameratest.jpeg";
 
-                    if (HardwareSensors.Camera.Save(Filename))
+                    if (Camera.Save(Filename))
                     {
                         MessageBox.Show($"camera image saved to {Filename}");
                     }
@@ -270,7 +266,7 @@ namespace mqttclient
         {
             if (chkTtsEnabled.Checked == true)
             {
-                cmbSpeaker.DataSource = HardwareSensors.Speaker.GetSpeakers();
+                cmbSpeaker.DataSource = Speaker.GetSpeakers();
                 cmbSpeaker.SelectedItem = Properties.Settings.Default["TTSSpeaker"];
             }
         }
