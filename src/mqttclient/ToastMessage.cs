@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Windows.Data.Xml.Dom;
-using Windows.UI.Notifications;
+﻿using CommunityToolkit.WinUI.Notifications;
 
 namespace Win2Mqtt.Client
 {
@@ -9,53 +6,25 @@ namespace Win2Mqtt.Client
     {
         public void ShowText(IList<string> lines)
         {
-            XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText04);
-
-            XmlNodeList stringElements = toastXml.GetElementsByTagName("text");
-            for (int i = 0; i < stringElements.Length; i++)
+            var t = new ToastContentBuilder();
+            t.AddArgument("conversationId", MqttSettings.AppId);
+            foreach (var item in lines)
             {
-                stringElements[i].AppendChild(toastXml.CreateTextNode(lines[i]));
-            }
-
-            ToastNotification toast = new ToastNotification(toastXml);
-            toast.Activated += ToastActivated;
-            toast.Dismissed += ToastDismissed;
-            toast.Failed += ToastFailed;
-            ToastNotificationManager.CreateToastNotifier(MqttSettings.AppId).Show(toast);
+                t.AddText(item);
+            };
+            t.Show();
         }
         public void ShowImage(IList<string> lines, string imageUrl)
         {
-            XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText04);
-
-            XmlNodeList stringElements = toastXml.GetElementsByTagName("text");
-            for (int i = 0; i < stringElements.Length; i++)
+            var t = new ToastContentBuilder();
+            t.AddArgument("conversationId", MqttSettings.AppId);
+            t.AddInlineImage(new Uri("file:///" + imageUrl));
+            foreach (var item in lines)
             {
-                stringElements[i].AppendChild(toastXml.CreateTextNode(lines[i]));
-            }
+                t.AddText(item);
+            };
+            t.Show();
 
-            string imagePath = "file:///" + imageUrl;
-
-            XmlNodeList toastImageAttributes = toastXml.GetElementsByTagName("image");
-            ((XmlElement)toastImageAttributes[0]).SetAttribute("src", imagePath);
-            ((XmlElement)toastImageAttributes[0]).SetAttribute("alt", "alt text");
-
-            ToastNotification toast = new ToastNotification(toastXml);
-            toast.Activated += ToastActivated;
-            toast.Dismissed += ToastDismissed;
-            toast.Failed += ToastFailed;
-            ToastNotificationManager.CreateToastNotifier(MqttSettings.AppId).Show(toast);
-        }
-        private void ToastFailed(ToastNotification sender, ToastFailedEventArgs args)
-        {
-            throw new NotImplementedException();
-        }
-        private void ToastDismissed(ToastNotification sender, ToastDismissedEventArgs args)
-        {
-            throw new NotImplementedException();
-        }
-        private void ToastActivated(ToastNotification sender, object args)
-        {
-            throw new NotImplementedException();
         }
     }
 }

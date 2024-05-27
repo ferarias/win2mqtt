@@ -28,830 +28,562 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.CmdSave = new System.Windows.Forms.Button();
-            this.CmdClose = new System.Windows.Forms.Button();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label10 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.txtMqttTimerInterval = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.txtmqtttopic = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtmqttpassword = new System.Windows.Forms.TextBox();
-            this.txtmqttusername = new System.Windows.Forms.TextBox();
-            this.txtmqttserver = new System.Windows.Forms.TextBox();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.ChkComputerUsed = new System.Windows.Forms.CheckBox();
-            this.chkVolumeSensor = new System.Windows.Forms.CheckBox();
-            this.chkCpuSensor = new System.Windows.Forms.CheckBox();
-            this.chkMemorySensor = new System.Windows.Forms.CheckBox();
-            this.ChkDiskSensor = new System.Windows.Forms.CheckBox();
-            this.ChkBatterySensor = new System.Windows.Forms.CheckBox();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.ChkProcesses = new System.Windows.Forms.CheckBox();
-            this.ChkMonitor = new System.Windows.Forms.CheckBox();
-            this.chktoast = new System.Windows.Forms.CheckBox();
-            this.chkTTS = new System.Windows.Forms.CheckBox();
-            this.chkReboot = new System.Windows.Forms.CheckBox();
-            this.ChkVolume = new System.Windows.Forms.CheckBox();
-            this.chkHibernate = new System.Windows.Forms.CheckBox();
-            this.chkmute = new System.Windows.Forms.CheckBox();
-            this.chkShutdown = new System.Windows.Forms.CheckBox();
-            this.chkSuspend = new System.Windows.Forms.CheckBox();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.groupBox10 = new System.Windows.Forms.GroupBox();
-            this.ChkEnableWebCamPublish = new System.Windows.Forms.CheckBox();
-            this.CmdWebCamTest = new System.Windows.Forms.Button();
-            this.cmbWebcam = new System.Windows.Forms.ComboBox();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.chkScreenshot = new System.Windows.Forms.CheckBox();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.ChkSlideshow = new System.Windows.Forms.CheckBox();
-            this.txtSlideshowFolder = new System.Windows.Forms.TextBox();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.chkTtsEnabled = new System.Windows.Forms.CheckBox();
-            this.CmdTestSpeaker = new System.Windows.Forms.Button();
-            this.label11 = new System.Windows.Forms.Label();
-            this.cmbSpeaker = new System.Windows.Forms.ComboBox();
-            this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.cmbAudioOutput = new System.Windows.Forms.ComboBox();
-            this.tabPage7 = new System.Windows.Forms.TabPage();
-            this.chkMinimizeToTray = new System.Windows.Forms.CheckBox();
-            this.chkStartUp = new System.Windows.Forms.CheckBox();
-            this.tabPage8 = new System.Windows.Forms.TabPage();
-            this.CmdDiscovery = new System.Windows.Forms.Button();
-            this.CmdSelectSlideShowPath = new System.Windows.Forms.Button();
-            this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.groupBox6.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.tabPage4.SuspendLayout();
-            this.groupBox10.SuspendLayout();
-            this.groupBox5.SuspendLayout();
-            this.groupBox7.SuspendLayout();
-            this.tabPage6.SuspendLayout();
-            this.groupBox9.SuspendLayout();
-            this.groupBox8.SuspendLayout();
-            this.tabPage7.SuspendLayout();
-            this.tabPage8.SuspendLayout();
-            this.SuspendLayout();
+            CmdSave = new Button();
+            CmdClose = new Button();
+            tabControl1 = new TabControl();
+            tabPage1 = new TabPage();
+            groupBox2 = new GroupBox();
+            button1 = new Button();
+            label10 = new Label();
+            textBox1 = new TextBox();
+            label7 = new Label();
+            txtMqttTimerInterval = new TextBox();
+            label4 = new Label();
+            txtmqtttopic = new TextBox();
+            label3 = new Label();
+            label2 = new Label();
+            label1 = new Label();
+            txtmqttpassword = new TextBox();
+            txtmqttusername = new TextBox();
+            txtmqttserver = new TextBox();
+            tabPage2 = new TabPage();
+            textBox4 = new TextBox();
+            groupBox6 = new GroupBox();
+            ChkComputerUsed = new CheckBox();
+            chkVolumeSensor = new CheckBox();
+            chkCpuSensor = new CheckBox();
+            chkMemorySensor = new CheckBox();
+            ChkDiskSensor = new CheckBox();
+            ChkBatterySensor = new CheckBox();
+            tabPage3 = new TabPage();
+            groupBox3 = new GroupBox();
+            ChkProcesses = new CheckBox();
+            ChkMonitor = new CheckBox();
+            chktoast = new CheckBox();
+            chkReboot = new CheckBox();
+            chkHibernate = new CheckBox();
+            chkShutdown = new CheckBox();
+            chkSuspend = new CheckBox();
+            tabPage5 = new TabPage();
+            tabPage7 = new TabPage();
+            chkMinimizeToTray = new CheckBox();
+            chkStartUp = new CheckBox();
+            tabPage8 = new TabPage();
+            CmdDiscovery = new Button();
+            tabControl1.SuspendLayout();
+            tabPage1.SuspendLayout();
+            groupBox2.SuspendLayout();
+            tabPage2.SuspendLayout();
+            groupBox6.SuspendLayout();
+            tabPage3.SuspendLayout();
+            groupBox3.SuspendLayout();
+            tabPage7.SuspendLayout();
+            tabPage8.SuspendLayout();
+            SuspendLayout();
             // 
             // CmdSave
             // 
-            this.CmdSave.Location = new System.Drawing.Point(619, 651);
-            this.CmdSave.Name = "CmdSave";
-            this.CmdSave.Size = new System.Drawing.Size(95, 23);
-            this.CmdSave.TabIndex = 42;
-            this.CmdSave.Text = "Save and close";
-            this.CmdSave.UseVisualStyleBackColor = true;
-            this.CmdSave.Click += new System.EventHandler(this.CmdSave_Click);
+            CmdSave.Location = new Point(722, 751);
+            CmdSave.Margin = new Padding(4, 3, 4, 3);
+            CmdSave.Name = "CmdSave";
+            CmdSave.Size = new Size(111, 27);
+            CmdSave.TabIndex = 42;
+            CmdSave.Text = "Save and close";
+            CmdSave.UseVisualStyleBackColor = true;
+            CmdSave.Click += CmdSave_Click;
             // 
             // CmdClose
             // 
-            this.CmdClose.Location = new System.Drawing.Point(518, 651);
-            this.CmdClose.Name = "CmdClose";
-            this.CmdClose.Size = new System.Drawing.Size(95, 23);
-            this.CmdClose.TabIndex = 43;
-            this.CmdClose.Text = "Close";
-            this.CmdClose.UseVisualStyleBackColor = true;
-            this.CmdClose.Click += new System.EventHandler(this.CmdClose_Click);
+            CmdClose.Location = new Point(604, 751);
+            CmdClose.Margin = new Padding(4, 3, 4, 3);
+            CmdClose.Name = "CmdClose";
+            CmdClose.Size = new Size(111, 27);
+            CmdClose.TabIndex = 43;
+            CmdClose.Text = "Close";
+            CmdClose.UseVisualStyleBackColor = true;
+            CmdClose.Click += CmdClose_Click;
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Controls.Add(this.tabPage6);
-            this.tabControl1.Controls.Add(this.tabPage7);
-            this.tabControl1.Controls.Add(this.tabPage8);
-            this.tabControl1.Location = new System.Drawing.Point(1, 12);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(702, 613);
-            this.tabControl1.TabIndex = 53;
+            tabControl1.Controls.Add(tabPage1);
+            tabControl1.Controls.Add(tabPage2);
+            tabControl1.Controls.Add(tabPage3);
+            tabControl1.Controls.Add(tabPage5);
+            tabControl1.Controls.Add(tabPage7);
+            tabControl1.Controls.Add(tabPage8);
+            tabControl1.Location = new Point(1, 14);
+            tabControl1.Margin = new Padding(4, 3, 4, 3);
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new Size(819, 707);
+            tabControl1.TabIndex = 53;
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.groupBox2);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(694, 587);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Connection";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            tabPage1.Controls.Add(groupBox2);
+            tabPage1.Location = new Point(4, 24);
+            tabPage1.Margin = new Padding(4, 3, 4, 3);
+            tabPage1.Name = "tabPage1";
+            tabPage1.Padding = new Padding(4, 3, 4, 3);
+            tabPage1.Size = new Size(811, 679);
+            tabPage1.TabIndex = 0;
+            tabPage1.Text = "Connection";
+            tabPage1.UseVisualStyleBackColor = true;
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.button1);
-            this.groupBox2.Controls.Add(this.label10);
-            this.groupBox2.Controls.Add(this.textBox1);
-            this.groupBox2.Controls.Add(this.label7);
-            this.groupBox2.Controls.Add(this.txtMqttTimerInterval);
-            this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.txtmqtttopic);
-            this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.txtmqttpassword);
-            this.groupBox2.Controls.Add(this.txtmqttusername);
-            this.groupBox2.Controls.Add(this.txtmqttserver);
-            this.groupBox2.Location = new System.Drawing.Point(6, 6);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(285, 212);
-            this.groupBox2.TabIndex = 35;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "MQTT client options";
+            groupBox2.Controls.Add(button1);
+            groupBox2.Controls.Add(label10);
+            groupBox2.Controls.Add(textBox1);
+            groupBox2.Controls.Add(label7);
+            groupBox2.Controls.Add(txtMqttTimerInterval);
+            groupBox2.Controls.Add(label4);
+            groupBox2.Controls.Add(txtmqtttopic);
+            groupBox2.Controls.Add(label3);
+            groupBox2.Controls.Add(label2);
+            groupBox2.Controls.Add(label1);
+            groupBox2.Controls.Add(txtmqttpassword);
+            groupBox2.Controls.Add(txtmqttusername);
+            groupBox2.Controls.Add(txtmqttserver);
+            groupBox2.Location = new Point(7, 7);
+            groupBox2.Margin = new Padding(4, 3, 4, 3);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Padding = new Padding(4, 3, 4, 3);
+            groupBox2.Size = new Size(332, 245);
+            groupBox2.TabIndex = 35;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "MQTT client options";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(97, 183);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(111, 23);
-            this.button1.TabIndex = 29;
-            this.button1.Text = "test connection";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1_Click_1);
+            button1.Location = new Point(113, 211);
+            button1.Margin = new Padding(4, 3, 4, 3);
+            button1.Name = "button1";
+            button1.Size = new Size(130, 27);
+            button1.TabIndex = 29;
+            button1.Text = "test connection";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += Button1_Click_1;
             // 
             // label10
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 105);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(26, 13);
-            this.label10.TabIndex = 28;
-            this.label10.Text = "Port";
-            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            label10.AutoSize = true;
+            label10.Location = new Point(7, 121);
+            label10.Margin = new Padding(4, 0, 4, 0);
+            label10.Name = "label10";
+            label10.Size = new Size(29, 15);
+            label10.TabIndex = 28;
+            label10.Text = "Port";
+            label10.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(97, 102);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(164, 20);
-            this.textBox1.TabIndex = 4;
-            this.textBox1.Text = "1883";
+            textBox1.Location = new Point(113, 118);
+            textBox1.Margin = new Padding(4, 3, 4, 3);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(191, 23);
+            textBox1.TabIndex = 4;
+            textBox1.Text = "1883";
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 136);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(73, 13);
-            this.label7.TabIndex = 26;
-            this.label7.Text = "Timer inverval";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            label7.AutoSize = true;
+            label7.Location = new Point(7, 157);
+            label7.Margin = new Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(81, 15);
+            label7.TabIndex = 26;
+            label7.Text = "Timer inverval";
+            label7.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // txtMqttTimerInterval
             // 
-            this.txtMqttTimerInterval.Location = new System.Drawing.Point(97, 133);
-            this.txtMqttTimerInterval.Name = "txtMqttTimerInterval";
-            this.txtMqttTimerInterval.Size = new System.Drawing.Size(164, 20);
-            this.txtMqttTimerInterval.TabIndex = 5;
+            txtMqttTimerInterval.Location = new Point(113, 153);
+            txtMqttTimerInterval.Margin = new Padding(4, 3, 4, 3);
+            txtMqttTimerInterval.Name = "txtMqttTimerInterval";
+            txtMqttTimerInterval.Size = new Size(191, 23);
+            txtMqttTimerInterval.TabIndex = 5;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 162);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(34, 13);
-            this.label4.TabIndex = 24;
-            this.label4.Text = "Topic";
+            label4.AutoSize = true;
+            label4.Location = new Point(7, 187);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(35, 15);
+            label4.TabIndex = 24;
+            label4.Text = "Topic";
             // 
             // txtmqtttopic
             // 
-            this.txtmqtttopic.Location = new System.Drawing.Point(97, 159);
-            this.txtmqtttopic.Name = "txtmqtttopic";
-            this.txtmqtttopic.Size = new System.Drawing.Size(164, 20);
-            this.txtmqtttopic.TabIndex = 6;
+            txtmqtttopic.Location = new Point(113, 183);
+            txtmqtttopic.Margin = new Padding(4, 3, 4, 3);
+            txtmqtttopic.Name = "txtmqtttopic";
+            txtmqtttopic.Size = new Size(191, 23);
+            txtmqtttopic.TabIndex = 6;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 79);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(53, 13);
-            this.label3.TabIndex = 21;
-            this.label3.Text = "Password";
+            label3.AutoSize = true;
+            label3.Location = new Point(7, 91);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(57, 15);
+            label3.TabIndex = 21;
+            label3.Text = "Password";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 53);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(55, 13);
-            this.label2.TabIndex = 20;
-            this.label2.Text = "Username";
+            label2.AutoSize = true;
+            label2.Location = new Point(7, 61);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(60, 15);
+            label2.TabIndex = 20;
+            label2.Text = "Username";
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 22);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(38, 13);
-            this.label1.TabIndex = 19;
-            this.label1.Text = "Server";
+            label1.AutoSize = true;
+            label1.Location = new Point(8, 25);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(39, 15);
+            label1.TabIndex = 19;
+            label1.Text = "Server";
             // 
             // txtmqttpassword
             // 
-            this.txtmqttpassword.Location = new System.Drawing.Point(97, 76);
-            this.txtmqttpassword.Name = "txtmqttpassword";
-            this.txtmqttpassword.PasswordChar = '*';
-            this.txtmqttpassword.Size = new System.Drawing.Size(164, 20);
-            this.txtmqttpassword.TabIndex = 3;
+            txtmqttpassword.Location = new Point(113, 88);
+            txtmqttpassword.Margin = new Padding(4, 3, 4, 3);
+            txtmqttpassword.Name = "txtmqttpassword";
+            txtmqttpassword.PasswordChar = '*';
+            txtmqttpassword.Size = new Size(191, 23);
+            txtmqttpassword.TabIndex = 3;
             // 
             // txtmqttusername
             // 
-            this.txtmqttusername.Location = new System.Drawing.Point(97, 46);
-            this.txtmqttusername.Name = "txtmqttusername";
-            this.txtmqttusername.Size = new System.Drawing.Size(165, 20);
-            this.txtmqttusername.TabIndex = 2;
+            txtmqttusername.Location = new Point(113, 53);
+            txtmqttusername.Margin = new Padding(4, 3, 4, 3);
+            txtmqttusername.Name = "txtmqttusername";
+            txtmqttusername.Size = new Size(192, 23);
+            txtmqttusername.TabIndex = 2;
             // 
             // txtmqttserver
             // 
-            this.txtmqttserver.Location = new System.Drawing.Point(97, 19);
-            this.txtmqttserver.Name = "txtmqttserver";
-            this.txtmqttserver.Size = new System.Drawing.Size(165, 20);
-            this.txtmqttserver.TabIndex = 1;
+            txtmqttserver.Location = new Point(113, 22);
+            txtmqttserver.Margin = new Padding(4, 3, 4, 3);
+            txtmqttserver.Name = "txtmqttserver";
+            txtmqttserver.Size = new Size(192, 23);
+            txtmqttserver.TabIndex = 1;
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.textBox4);
-            this.tabPage2.Controls.Add(this.groupBox6);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(694, 587);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Sensors";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            tabPage2.Controls.Add(textBox4);
+            tabPage2.Controls.Add(groupBox6);
+            tabPage2.Location = new Point(4, 24);
+            tabPage2.Margin = new Padding(4, 3, 4, 3);
+            tabPage2.Name = "tabPage2";
+            tabPage2.Padding = new Padding(4, 3, 4, 3);
+            tabPage2.Size = new Size(811, 679);
+            tabPage2.TabIndex = 1;
+            tabPage2.Text = "Sensors";
+            tabPage2.UseVisualStyleBackColor = true;
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(27, 303);
-            this.textBox4.Multiline = true;
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(381, 154);
-            this.textBox4.TabIndex = 42;
+            textBox4.Location = new Point(31, 350);
+            textBox4.Margin = new Padding(4, 3, 4, 3);
+            textBox4.Multiline = true;
+            textBox4.Name = "textBox4";
+            textBox4.Size = new Size(444, 177);
+            textBox4.TabIndex = 42;
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.ChkComputerUsed);
-            this.groupBox6.Controls.Add(this.chkVolumeSensor);
-            this.groupBox6.Controls.Add(this.chkCpuSensor);
-            this.groupBox6.Controls.Add(this.chkMemorySensor);
-            this.groupBox6.Controls.Add(this.ChkDiskSensor);
-            this.groupBox6.Controls.Add(this.ChkBatterySensor);
-            this.groupBox6.Location = new System.Drawing.Point(6, 6);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(611, 282);
-            this.groupBox6.TabIndex = 41;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Sensors";
+            groupBox6.Controls.Add(ChkComputerUsed);
+            groupBox6.Controls.Add(chkVolumeSensor);
+            groupBox6.Controls.Add(chkCpuSensor);
+            groupBox6.Controls.Add(chkMemorySensor);
+            groupBox6.Controls.Add(ChkDiskSensor);
+            groupBox6.Controls.Add(ChkBatterySensor);
+            groupBox6.Location = new Point(7, 7);
+            groupBox6.Margin = new Padding(4, 3, 4, 3);
+            groupBox6.Name = "groupBox6";
+            groupBox6.Padding = new Padding(4, 3, 4, 3);
+            groupBox6.Size = new Size(713, 325);
+            groupBox6.TabIndex = 41;
+            groupBox6.TabStop = false;
+            groupBox6.Text = "Sensors";
             // 
             // ChkComputerUsed
             // 
-            this.ChkComputerUsed.AutoSize = true;
-            this.ChkComputerUsed.Location = new System.Drawing.Point(95, 70);
-            this.ChkComputerUsed.Name = "ChkComputerUsed";
-            this.ChkComputerUsed.Size = new System.Drawing.Size(107, 17);
-            this.ChkComputerUsed.TabIndex = 5;
-            this.ChkComputerUsed.Text = "Is computer used";
-            this.ChkComputerUsed.UseVisualStyleBackColor = true;
+            ChkComputerUsed.AutoSize = true;
+            ChkComputerUsed.Location = new Point(111, 81);
+            ChkComputerUsed.Margin = new Padding(4, 3, 4, 3);
+            ChkComputerUsed.Name = "ChkComputerUsed";
+            ChkComputerUsed.Size = new Size(117, 19);
+            ChkComputerUsed.TabIndex = 5;
+            ChkComputerUsed.Text = "Is computer used";
+            ChkComputerUsed.UseVisualStyleBackColor = true;
             // 
             // chkVolumeSensor
             // 
-            this.chkVolumeSensor.AutoSize = true;
-            this.chkVolumeSensor.Location = new System.Drawing.Point(10, 46);
-            this.chkVolumeSensor.Name = "chkVolumeSensor";
-            this.chkVolumeSensor.Size = new System.Drawing.Size(61, 17);
-            this.chkVolumeSensor.TabIndex = 4;
-            this.chkVolumeSensor.Text = "Volume";
-            this.chkVolumeSensor.UseVisualStyleBackColor = true;
+            chkVolumeSensor.AutoSize = true;
+            chkVolumeSensor.Location = new Point(12, 53);
+            chkVolumeSensor.Margin = new Padding(4, 3, 4, 3);
+            chkVolumeSensor.Name = "chkVolumeSensor";
+            chkVolumeSensor.Size = new Size(66, 19);
+            chkVolumeSensor.TabIndex = 4;
+            chkVolumeSensor.Text = "Volume";
+            chkVolumeSensor.UseVisualStyleBackColor = true;
             // 
             // chkCpuSensor
             // 
-            this.chkCpuSensor.AutoSize = true;
-            this.chkCpuSensor.Location = new System.Drawing.Point(95, 46);
-            this.chkCpuSensor.Name = "chkCpuSensor";
-            this.chkCpuSensor.Size = new System.Drawing.Size(45, 17);
-            this.chkCpuSensor.TabIndex = 3;
-            this.chkCpuSensor.Text = "Cpu";
-            this.chkCpuSensor.UseVisualStyleBackColor = true;
+            chkCpuSensor.AutoSize = true;
+            chkCpuSensor.Location = new Point(111, 53);
+            chkCpuSensor.Margin = new Padding(4, 3, 4, 3);
+            chkCpuSensor.Name = "chkCpuSensor";
+            chkCpuSensor.Size = new Size(48, 19);
+            chkCpuSensor.TabIndex = 3;
+            chkCpuSensor.Text = "Cpu";
+            chkCpuSensor.UseVisualStyleBackColor = true;
             // 
             // chkMemorySensor
             // 
-            this.chkMemorySensor.AutoSize = true;
-            this.chkMemorySensor.Location = new System.Drawing.Point(10, 69);
-            this.chkMemorySensor.Name = "chkMemorySensor";
-            this.chkMemorySensor.Size = new System.Drawing.Size(63, 17);
-            this.chkMemorySensor.TabIndex = 2;
-            this.chkMemorySensor.Text = "Memory";
-            this.chkMemorySensor.UseVisualStyleBackColor = true;
+            chkMemorySensor.AutoSize = true;
+            chkMemorySensor.Location = new Point(12, 80);
+            chkMemorySensor.Margin = new Padding(4, 3, 4, 3);
+            chkMemorySensor.Name = "chkMemorySensor";
+            chkMemorySensor.Size = new Size(71, 19);
+            chkMemorySensor.TabIndex = 2;
+            chkMemorySensor.Text = "Memory";
+            chkMemorySensor.UseVisualStyleBackColor = true;
             // 
             // ChkDiskSensor
             // 
-            this.ChkDiskSensor.AutoSize = true;
-            this.ChkDiskSensor.Location = new System.Drawing.Point(95, 23);
-            this.ChkDiskSensor.Name = "ChkDiskSensor";
-            this.ChkDiskSensor.Size = new System.Drawing.Size(52, 17);
-            this.ChkDiskSensor.TabIndex = 1;
-            this.ChkDiskSensor.Text = "Disks";
-            this.ChkDiskSensor.UseVisualStyleBackColor = true;
+            ChkDiskSensor.AutoSize = true;
+            ChkDiskSensor.Location = new Point(111, 27);
+            ChkDiskSensor.Margin = new Padding(4, 3, 4, 3);
+            ChkDiskSensor.Name = "ChkDiskSensor";
+            ChkDiskSensor.Size = new Size(53, 19);
+            ChkDiskSensor.TabIndex = 1;
+            ChkDiskSensor.Text = "Disks";
+            ChkDiskSensor.UseVisualStyleBackColor = true;
             // 
             // ChkBatterySensor
             // 
-            this.ChkBatterySensor.AutoSize = true;
-            this.ChkBatterySensor.Location = new System.Drawing.Point(10, 23);
-            this.ChkBatterySensor.Name = "ChkBatterySensor";
-            this.ChkBatterySensor.Size = new System.Drawing.Size(56, 17);
-            this.ChkBatterySensor.TabIndex = 0;
-            this.ChkBatterySensor.Text = "Power";
-            this.ChkBatterySensor.UseVisualStyleBackColor = true;
+            ChkBatterySensor.AutoSize = true;
+            ChkBatterySensor.Location = new Point(12, 27);
+            ChkBatterySensor.Margin = new Padding(4, 3, 4, 3);
+            ChkBatterySensor.Name = "ChkBatterySensor";
+            ChkBatterySensor.Size = new Size(59, 19);
+            ChkBatterySensor.TabIndex = 0;
+            ChkBatterySensor.Text = "Power";
+            ChkBatterySensor.UseVisualStyleBackColor = true;
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.groupBox3);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(694, 587);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Presets";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            tabPage3.Controls.Add(groupBox3);
+            tabPage3.Location = new Point(4, 24);
+            tabPage3.Margin = new Padding(4, 3, 4, 3);
+            tabPage3.Name = "tabPage3";
+            tabPage3.Padding = new Padding(4, 3, 4, 3);
+            tabPage3.Size = new Size(811, 679);
+            tabPage3.TabIndex = 2;
+            tabPage3.Text = "Presets";
+            tabPage3.UseVisualStyleBackColor = true;
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.ChkProcesses);
-            this.groupBox3.Controls.Add(this.ChkMonitor);
-            this.groupBox3.Controls.Add(this.chktoast);
-            this.groupBox3.Controls.Add(this.chkTTS);
-            this.groupBox3.Controls.Add(this.chkReboot);
-            this.groupBox3.Controls.Add(this.ChkVolume);
-            this.groupBox3.Controls.Add(this.chkHibernate);
-            this.groupBox3.Controls.Add(this.chkmute);
-            this.groupBox3.Controls.Add(this.chkShutdown);
-            this.groupBox3.Controls.Add(this.chkSuspend);
-            this.groupBox3.Location = new System.Drawing.Point(3, 6);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(620, 529);
-            this.groupBox3.TabIndex = 36;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Enable Presets";
+            groupBox3.Controls.Add(ChkProcesses);
+            groupBox3.Controls.Add(ChkMonitor);
+            groupBox3.Controls.Add(chktoast);
+            groupBox3.Controls.Add(chkReboot);
+            groupBox3.Controls.Add(chkHibernate);
+            groupBox3.Controls.Add(chkShutdown);
+            groupBox3.Controls.Add(chkSuspend);
+            groupBox3.Location = new Point(4, 7);
+            groupBox3.Margin = new Padding(4, 3, 4, 3);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Padding = new Padding(4, 3, 4, 3);
+            groupBox3.Size = new Size(723, 610);
+            groupBox3.TabIndex = 36;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Enable Presets";
             // 
             // ChkProcesses
             // 
-            this.ChkProcesses.AutoSize = true;
-            this.ChkProcesses.Location = new System.Drawing.Point(201, 43);
-            this.ChkProcesses.Name = "ChkProcesses";
-            this.ChkProcesses.Size = new System.Drawing.Size(75, 17);
-            this.ChkProcesses.TabIndex = 33;
-            this.ChkProcesses.Text = "Processes";
-            this.ChkProcesses.UseVisualStyleBackColor = true;
-            this.ChkProcesses.CheckStateChanged += new System.EventHandler(this.ChkTtsEnabled_CheckedChanged);
+            ChkProcesses.AutoSize = true;
+            ChkProcesses.Location = new Point(156, 102);
+            ChkProcesses.Margin = new Padding(4, 3, 4, 3);
+            ChkProcesses.Name = "ChkProcesses";
+            ChkProcesses.Size = new Size(77, 19);
+            ChkProcesses.TabIndex = 33;
+            ChkProcesses.Text = "Processes";
+            ChkProcesses.UseVisualStyleBackColor = true;
             // 
             // ChkMonitor
             // 
-            this.ChkMonitor.AutoSize = true;
-            this.ChkMonitor.Location = new System.Drawing.Point(201, 20);
-            this.ChkMonitor.Name = "ChkMonitor";
-            this.ChkMonitor.Size = new System.Drawing.Size(61, 17);
-            this.ChkMonitor.TabIndex = 32;
-            this.ChkMonitor.Text = "Monitor";
-            this.ChkMonitor.UseVisualStyleBackColor = true;
-            this.ChkMonitor.CheckStateChanged += new System.EventHandler(this.ChkTtsEnabled_CheckedChanged);
+            ChkMonitor.AutoSize = true;
+            ChkMonitor.Location = new Point(234, 23);
+            ChkMonitor.Margin = new Padding(4, 3, 4, 3);
+            ChkMonitor.Name = "ChkMonitor";
+            ChkMonitor.Size = new Size(69, 19);
+            ChkMonitor.TabIndex = 32;
+            ChkMonitor.Text = "Monitor";
+            ChkMonitor.UseVisualStyleBackColor = true;
             // 
             // chktoast
             // 
-            this.chktoast.AutoSize = true;
-            this.chktoast.Location = new System.Drawing.Point(134, 20);
-            this.chktoast.Name = "chktoast";
-            this.chktoast.Size = new System.Drawing.Size(53, 17);
-            this.chktoast.TabIndex = 31;
-            this.chktoast.Text = "Toast";
-            this.chktoast.UseVisualStyleBackColor = true;
-            this.chktoast.CheckStateChanged += new System.EventHandler(this.ChkTtsEnabled_CheckedChanged);
-            // 
-            // chkTTS
-            // 
-            this.chkTTS.AutoSize = true;
-            this.chkTTS.Location = new System.Drawing.Point(134, 43);
-            this.chkTTS.Name = "chkTTS";
-            this.chkTTS.Size = new System.Drawing.Size(47, 17);
-            this.chkTTS.TabIndex = 30;
-            this.chkTTS.Text = "TTS";
-            this.chkTTS.UseVisualStyleBackColor = true;
-            this.chkTTS.CheckStateChanged += new System.EventHandler(this.ChkTtsEnabled_CheckedChanged);
+            chktoast.AutoSize = true;
+            chktoast.Location = new Point(156, 23);
+            chktoast.Margin = new Padding(4, 3, 4, 3);
+            chktoast.Name = "chktoast";
+            chktoast.Size = new Size(53, 19);
+            chktoast.TabIndex = 31;
+            chktoast.Text = "Toast";
+            chktoast.UseVisualStyleBackColor = true;
             // 
             // chkReboot
             // 
-            this.chkReboot.AutoSize = true;
-            this.chkReboot.Location = new System.Drawing.Point(134, 66);
-            this.chkReboot.Name = "chkReboot";
-            this.chkReboot.Size = new System.Drawing.Size(61, 17);
-            this.chkReboot.TabIndex = 18;
-            this.chkReboot.Text = "Reboot";
-            this.chkReboot.UseVisualStyleBackColor = true;
-            this.chkReboot.CheckStateChanged += new System.EventHandler(this.ChkTtsEnabled_CheckedChanged);
-            // 
-            // ChkVolume
-            // 
-            this.ChkVolume.AutoSize = true;
-            this.ChkVolume.Location = new System.Drawing.Point(24, 43);
-            this.ChkVolume.Name = "ChkVolume";
-            this.ChkVolume.Size = new System.Drawing.Size(61, 17);
-            this.ChkVolume.TabIndex = 16;
-            this.ChkVolume.Text = "Volume";
-            this.ChkVolume.UseVisualStyleBackColor = true;
-            this.ChkVolume.CheckStateChanged += new System.EventHandler(this.ChkTtsEnabled_CheckedChanged);
+            chkReboot.AutoSize = true;
+            chkReboot.Location = new Point(156, 50);
+            chkReboot.Margin = new Padding(4, 3, 4, 3);
+            chkReboot.Name = "chkReboot";
+            chkReboot.Size = new Size(64, 19);
+            chkReboot.TabIndex = 18;
+            chkReboot.Text = "Reboot";
+            chkReboot.UseVisualStyleBackColor = true;
             // 
             // chkHibernate
             // 
-            this.chkHibernate.AutoSize = true;
-            this.chkHibernate.Location = new System.Drawing.Point(134, 89);
-            this.chkHibernate.Name = "chkHibernate";
-            this.chkHibernate.Size = new System.Drawing.Size(72, 17);
-            this.chkHibernate.TabIndex = 16;
-            this.chkHibernate.Text = "Hibernate";
-            this.chkHibernate.UseVisualStyleBackColor = true;
-            this.chkHibernate.CheckStateChanged += new System.EventHandler(this.ChkTtsEnabled_CheckedChanged);
-            // 
-            // chkmute
-            // 
-            this.chkmute.AutoSize = true;
-            this.chkmute.Location = new System.Drawing.Point(24, 20);
-            this.chkmute.Name = "chkmute";
-            this.chkmute.Size = new System.Drawing.Size(92, 17);
-            this.chkmute.TabIndex = 15;
-            this.chkmute.Text = "Mute/Unmute";
-            this.chkmute.UseVisualStyleBackColor = true;
-            this.chkmute.CheckStateChanged += new System.EventHandler(this.ChkTtsEnabled_CheckedChanged);
+            chkHibernate.AutoSize = true;
+            chkHibernate.Location = new Point(156, 77);
+            chkHibernate.Margin = new Padding(4, 3, 4, 3);
+            chkHibernate.Name = "chkHibernate";
+            chkHibernate.Size = new Size(78, 19);
+            chkHibernate.TabIndex = 16;
+            chkHibernate.Text = "Hibernate";
+            chkHibernate.UseVisualStyleBackColor = true;
             // 
             // chkShutdown
             // 
-            this.chkShutdown.AutoSize = true;
-            this.chkShutdown.Location = new System.Drawing.Point(24, 88);
-            this.chkShutdown.Name = "chkShutdown";
-            this.chkShutdown.Size = new System.Drawing.Size(74, 17);
-            this.chkShutdown.TabIndex = 15;
-            this.chkShutdown.Text = "Shutdown";
-            this.chkShutdown.UseVisualStyleBackColor = true;
-            this.chkShutdown.CheckStateChanged += new System.EventHandler(this.ChkTtsEnabled_CheckedChanged);
+            chkShutdown.AutoSize = true;
+            chkShutdown.Location = new Point(28, 102);
+            chkShutdown.Margin = new Padding(4, 3, 4, 3);
+            chkShutdown.Name = "chkShutdown";
+            chkShutdown.Size = new Size(80, 19);
+            chkShutdown.TabIndex = 15;
+            chkShutdown.Text = "Shutdown";
+            chkShutdown.UseVisualStyleBackColor = true;
             // 
             // chkSuspend
             // 
-            this.chkSuspend.AutoSize = true;
-            this.chkSuspend.Location = new System.Drawing.Point(24, 66);
-            this.chkSuspend.Name = "chkSuspend";
-            this.chkSuspend.Size = new System.Drawing.Size(68, 17);
-            this.chkSuspend.TabIndex = 14;
-            this.chkSuspend.Text = "Suspend";
-            this.chkSuspend.UseVisualStyleBackColor = true;
-            this.chkSuspend.CheckStateChanged += new System.EventHandler(this.ChkTtsEnabled_CheckedChanged);
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.Controls.Add(this.groupBox10);
-            this.tabPage4.Controls.Add(this.groupBox5);
-            this.tabPage4.Controls.Add(this.groupBox7);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(694, 587);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Camera";
-            this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // groupBox10
-            // 
-            this.groupBox10.Controls.Add(this.ChkEnableWebCamPublish);
-            this.groupBox10.Controls.Add(this.CmdWebCamTest);
-            this.groupBox10.Controls.Add(this.cmbWebcam);
-            this.groupBox10.Location = new System.Drawing.Point(7, 152);
-            this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(352, 151);
-            this.groupBox10.TabIndex = 56;
-            this.groupBox10.TabStop = false;
-            this.groupBox10.Text = "Webcam";
-            // 
-            // ChkEnableWebCamPublish
-            // 
-            this.ChkEnableWebCamPublish.AutoSize = true;
-            this.ChkEnableWebCamPublish.Location = new System.Drawing.Point(15, 29);
-            this.ChkEnableWebCamPublish.Name = "ChkEnableWebCamPublish";
-            this.ChkEnableWebCamPublish.Size = new System.Drawing.Size(59, 17);
-            this.ChkEnableWebCamPublish.TabIndex = 56;
-            this.ChkEnableWebCamPublish.Text = "Enable";
-            this.ChkEnableWebCamPublish.UseVisualStyleBackColor = true;
-            this.ChkEnableWebCamPublish.CheckedChanged += new System.EventHandler(this.ChkEnableWebCamPublish_CheckedChanged);
-            // 
-            // CmdWebCamTest
-            // 
-            this.CmdWebCamTest.Location = new System.Drawing.Point(226, 78);
-            this.CmdWebCamTest.Name = "CmdWebCamTest";
-            this.CmdWebCamTest.Size = new System.Drawing.Size(80, 24);
-            this.CmdWebCamTest.TabIndex = 55;
-            this.CmdWebCamTest.Text = "Test";
-            this.CmdWebCamTest.UseVisualStyleBackColor = true;
-            this.CmdWebCamTest.Click += new System.EventHandler(this.Button2_Click);
-            // 
-            // cmbWebcam
-            // 
-            this.cmbWebcam.FormattingEnabled = true;
-            this.cmbWebcam.Location = new System.Drawing.Point(88, 29);
-            this.cmbWebcam.Name = "cmbWebcam";
-            this.cmbWebcam.Size = new System.Drawing.Size(219, 21);
-            this.cmbWebcam.TabIndex = 54;
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.chkScreenshot);
-            this.groupBox5.Location = new System.Drawing.Point(7, 3);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(352, 62);
-            this.groupBox5.TabIndex = 55;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Screenshot";
-            // 
-            // chkScreenshot
-            // 
-            this.chkScreenshot.AutoSize = true;
-            this.chkScreenshot.Location = new System.Drawing.Point(18, 19);
-            this.chkScreenshot.Name = "chkScreenshot";
-            this.chkScreenshot.Size = new System.Drawing.Size(59, 17);
-            this.chkScreenshot.TabIndex = 0;
-            this.chkScreenshot.Text = "Enable";
-            this.chkScreenshot.UseVisualStyleBackColor = true;
-            // 
-            // groupBox7
-            // 
-            this.groupBox7.Controls.Add(this.CmdSelectSlideShowPath);
-            this.groupBox7.Controls.Add(this.label12);
-            this.groupBox7.Controls.Add(this.ChkSlideshow);
-            this.groupBox7.Controls.Add(this.txtSlideshowFolder);
-            this.groupBox7.Location = new System.Drawing.Point(7, 70);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(352, 74);
-            this.groupBox7.TabIndex = 54;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Slideshow";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(12, 51);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(44, 13);
-            this.label12.TabIndex = 51;
-            this.label12.Text = "Filepath";
-            // 
-            // ChkSlideshow
-            // 
-            this.ChkSlideshow.AutoSize = true;
-            this.ChkSlideshow.Location = new System.Drawing.Point(15, 19);
-            this.ChkSlideshow.Name = "ChkSlideshow";
-            this.ChkSlideshow.Size = new System.Drawing.Size(74, 17);
-            this.ChkSlideshow.TabIndex = 50;
-            this.ChkSlideshow.Text = "Slideshow";
-            this.ChkSlideshow.UseVisualStyleBackColor = true;
-            // 
-            // txtSlideshowFolder
-            // 
-            this.txtSlideshowFolder.Location = new System.Drawing.Point(88, 48);
-            this.txtSlideshowFolder.Name = "txtSlideshowFolder";
-            this.txtSlideshowFolder.Size = new System.Drawing.Size(189, 20);
-            this.txtSlideshowFolder.TabIndex = 49;
+            chkSuspend.AutoSize = true;
+            chkSuspend.Location = new Point(28, 76);
+            chkSuspend.Margin = new Padding(4, 3, 4, 3);
+            chkSuspend.Name = "chkSuspend";
+            chkSuspend.Size = new Size(71, 19);
+            chkSuspend.TabIndex = 14;
+            chkSuspend.Text = "Suspend";
+            chkSuspend.UseVisualStyleBackColor = true;
             // 
             // tabPage5
             // 
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(694, 587);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Commands";
-            this.tabPage5.UseVisualStyleBackColor = true;
-            // 
-            // tabPage6
-            // 
-            this.tabPage6.Controls.Add(this.groupBox9);
-            this.tabPage6.Controls.Add(this.groupBox8);
-            this.tabPage6.Location = new System.Drawing.Point(4, 22);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(694, 587);
-            this.tabPage6.TabIndex = 5;
-            this.tabPage6.Text = "Sound";
-            this.tabPage6.UseVisualStyleBackColor = true;
-            // 
-            // groupBox9
-            // 
-            this.groupBox9.Controls.Add(this.chkTtsEnabled);
-            this.groupBox9.Controls.Add(this.CmdTestSpeaker);
-            this.groupBox9.Controls.Add(this.label11);
-            this.groupBox9.Controls.Add(this.cmbSpeaker);
-            this.groupBox9.Location = new System.Drawing.Point(7, 106);
-            this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(352, 108);
-            this.groupBox9.TabIndex = 56;
-            this.groupBox9.TabStop = false;
-            this.groupBox9.Text = "Text to speach";
-            // 
-            // chkTtsEnabled
-            // 
-            this.chkTtsEnabled.AutoSize = true;
-            this.chkTtsEnabled.Location = new System.Drawing.Point(24, 20);
-            this.chkTtsEnabled.Name = "chkTtsEnabled";
-            this.chkTtsEnabled.Size = new System.Drawing.Size(83, 17);
-            this.chkTtsEnabled.TabIndex = 59;
-            this.chkTtsEnabled.Text = "Enable TTS";
-            this.chkTtsEnabled.UseVisualStyleBackColor = true;
-            this.chkTtsEnabled.CheckedChanged += new System.EventHandler(this.ChkTtsEnabled_CheckedChanged);
-            // 
-            // CmdTestSpeaker
-            // 
-            this.CmdTestSpeaker.Location = new System.Drawing.Point(286, 43);
-            this.CmdTestSpeaker.Name = "CmdTestSpeaker";
-            this.CmdTestSpeaker.Size = new System.Drawing.Size(42, 23);
-            this.CmdTestSpeaker.TabIndex = 58;
-            this.CmdTestSpeaker.Text = "test";
-            this.CmdTestSpeaker.UseVisualStyleBackColor = true;
-            this.CmdTestSpeaker.Click += new System.EventHandler(this.CmdTestSpeaker_Click);
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(36, 46);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(69, 13);
-            this.label11.TabIndex = 57;
-            this.label11.Text = "TTS speaker";
-            // 
-            // cmbSpeaker
-            // 
-            this.cmbSpeaker.FormattingEnabled = true;
-            this.cmbSpeaker.Location = new System.Drawing.Point(111, 43);
-            this.cmbSpeaker.Name = "cmbSpeaker";
-            this.cmbSpeaker.Size = new System.Drawing.Size(166, 21);
-            this.cmbSpeaker.TabIndex = 56;
-            // 
-            // groupBox8
-            // 
-            this.groupBox8.Controls.Add(this.checkBox2);
-            this.groupBox8.Controls.Add(this.label13);
-            this.groupBox8.Controls.Add(this.cmbAudioOutput);
-            this.groupBox8.Location = new System.Drawing.Point(7, 3);
-            this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(352, 97);
-            this.groupBox8.TabIndex = 52;
-            this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Audio device";
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Enabled = false;
-            this.checkBox2.Location = new System.Drawing.Point(24, 19);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(136, 17);
-            this.checkBox2.TabIndex = 61;
-            this.checkBox2.Text = "Use non-default device";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(27, 45);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(69, 13);
-            this.label13.TabIndex = 52;
-            this.label13.Text = "Audio device";
-            // 
-            // cmbAudioOutput
-            // 
-            this.cmbAudioOutput.FormattingEnabled = true;
-            this.cmbAudioOutput.Location = new System.Drawing.Point(111, 42);
-            this.cmbAudioOutput.Name = "cmbAudioOutput";
-            this.cmbAudioOutput.Size = new System.Drawing.Size(213, 21);
-            this.cmbAudioOutput.TabIndex = 51;
+            tabPage5.Location = new Point(4, 24);
+            tabPage5.Margin = new Padding(4, 3, 4, 3);
+            tabPage5.Name = "tabPage5";
+            tabPage5.Padding = new Padding(4, 3, 4, 3);
+            tabPage5.Size = new Size(811, 679);
+            tabPage5.TabIndex = 4;
+            tabPage5.Text = "Commands";
+            tabPage5.UseVisualStyleBackColor = true;
             // 
             // tabPage7
             // 
-            this.tabPage7.Controls.Add(this.chkMinimizeToTray);
-            this.tabPage7.Controls.Add(this.chkStartUp);
-            this.tabPage7.Location = new System.Drawing.Point(4, 22);
-            this.tabPage7.Name = "tabPage7";
-            this.tabPage7.Size = new System.Drawing.Size(694, 587);
-            this.tabPage7.TabIndex = 6;
-            this.tabPage7.Text = "Application";
-            this.tabPage7.UseVisualStyleBackColor = true;
+            tabPage7.Controls.Add(chkMinimizeToTray);
+            tabPage7.Controls.Add(chkStartUp);
+            tabPage7.Location = new Point(4, 24);
+            tabPage7.Margin = new Padding(4, 3, 4, 3);
+            tabPage7.Name = "tabPage7";
+            tabPage7.Size = new Size(811, 679);
+            tabPage7.TabIndex = 6;
+            tabPage7.Text = "Application";
+            tabPage7.UseVisualStyleBackColor = true;
             // 
             // chkMinimizeToTray
             // 
-            this.chkMinimizeToTray.AutoSize = true;
-            this.chkMinimizeToTray.Location = new System.Drawing.Point(7, 35);
-            this.chkMinimizeToTray.Name = "chkMinimizeToTray";
-            this.chkMinimizeToTray.Size = new System.Drawing.Size(98, 17);
-            this.chkMinimizeToTray.TabIndex = 43;
-            this.chkMinimizeToTray.Text = "Minimize to tray";
-            this.chkMinimizeToTray.UseVisualStyleBackColor = true;
+            chkMinimizeToTray.AutoSize = true;
+            chkMinimizeToTray.Location = new Point(8, 40);
+            chkMinimizeToTray.Margin = new Padding(4, 3, 4, 3);
+            chkMinimizeToTray.Name = "chkMinimizeToTray";
+            chkMinimizeToTray.Size = new Size(112, 19);
+            chkMinimizeToTray.TabIndex = 43;
+            chkMinimizeToTray.Text = "Minimize to tray";
+            chkMinimizeToTray.UseVisualStyleBackColor = true;
             // 
             // chkStartUp
             // 
-            this.chkStartUp.AutoSize = true;
-            this.chkStartUp.Location = new System.Drawing.Point(7, 3);
-            this.chkStartUp.Name = "chkStartUp";
-            this.chkStartUp.Size = new System.Drawing.Size(81, 17);
-            this.chkStartUp.TabIndex = 42;
-            this.chkStartUp.Text = "Run at start";
-            this.chkStartUp.UseVisualStyleBackColor = true;
-            this.chkStartUp.CheckedChanged += new System.EventHandler(this.ChkStartUp_CheckedChanged);
+            chkStartUp.AutoSize = true;
+            chkStartUp.Location = new Point(8, 3);
+            chkStartUp.Margin = new Padding(4, 3, 4, 3);
+            chkStartUp.Name = "chkStartUp";
+            chkStartUp.Size = new Size(86, 19);
+            chkStartUp.TabIndex = 42;
+            chkStartUp.Text = "Run at start";
+            chkStartUp.UseVisualStyleBackColor = true;
+            chkStartUp.CheckedChanged += ChkStartUp_CheckedChanged;
             // 
             // tabPage8
             // 
-            this.tabPage8.Controls.Add(this.CmdDiscovery);
-            this.tabPage8.Location = new System.Drawing.Point(4, 22);
-            this.tabPage8.Name = "tabPage8";
-            this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage8.Size = new System.Drawing.Size(694, 587);
-            this.tabPage8.TabIndex = 7;
-            this.tabPage8.Text = "Discovery";
-            this.tabPage8.UseVisualStyleBackColor = true;
+            tabPage8.Controls.Add(CmdDiscovery);
+            tabPage8.Location = new Point(4, 24);
+            tabPage8.Margin = new Padding(4, 3, 4, 3);
+            tabPage8.Name = "tabPage8";
+            tabPage8.Padding = new Padding(4, 3, 4, 3);
+            tabPage8.Size = new Size(811, 679);
+            tabPage8.TabIndex = 7;
+            tabPage8.Text = "Discovery";
+            tabPage8.UseVisualStyleBackColor = true;
             // 
             // CmdDiscovery
             // 
-            this.CmdDiscovery.Enabled = false;
-            this.CmdDiscovery.Location = new System.Drawing.Point(40, 24);
-            this.CmdDiscovery.Name = "CmdDiscovery";
-            this.CmdDiscovery.Size = new System.Drawing.Size(155, 23);
-            this.CmdDiscovery.TabIndex = 0;
-            this.CmdDiscovery.Text = "Send discovery";
-            this.CmdDiscovery.UseVisualStyleBackColor = true;
-            // 
-            // CmdSelectSlideShowPath
-            // 
-            this.CmdSelectSlideShowPath.Location = new System.Drawing.Point(288, 47);
-            this.CmdSelectSlideShowPath.Name = "CmdSelectSlideShowPath";
-            this.CmdSelectSlideShowPath.Size = new System.Drawing.Size(58, 20);
-            this.CmdSelectSlideShowPath.TabIndex = 52;
-            this.CmdSelectSlideShowPath.Text = "Browse";
-            this.CmdSelectSlideShowPath.UseVisualStyleBackColor = true;
-            this.CmdSelectSlideShowPath.Click += new System.EventHandler(this.CmdSelectSlideShowPath_Click);
+            CmdDiscovery.Enabled = false;
+            CmdDiscovery.Location = new Point(47, 28);
+            CmdDiscovery.Margin = new Padding(4, 3, 4, 3);
+            CmdDiscovery.Name = "CmdDiscovery";
+            CmdDiscovery.Size = new Size(181, 27);
+            CmdDiscovery.TabIndex = 0;
+            CmdDiscovery.Text = "Send discovery";
+            CmdDiscovery.UseVisualStyleBackColor = true;
             // 
             // FrmOptions
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(724, 691);
-            this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.CmdClose);
-            this.Controls.Add(this.CmdSave);
-            this.Name = "FrmOptions";
-            this.Text = "Options";
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            this.groupBox6.ResumeLayout(false);
-            this.groupBox6.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
-            this.groupBox10.ResumeLayout(false);
-            this.groupBox10.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
-            this.groupBox7.ResumeLayout(false);
-            this.groupBox7.PerformLayout();
-            this.tabPage6.ResumeLayout(false);
-            this.groupBox9.ResumeLayout(false);
-            this.groupBox9.PerformLayout();
-            this.groupBox8.ResumeLayout(false);
-            this.groupBox8.PerformLayout();
-            this.tabPage7.ResumeLayout(false);
-            this.tabPage7.PerformLayout();
-            this.tabPage8.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(845, 797);
+            Controls.Add(tabControl1);
+            Controls.Add(CmdClose);
+            Controls.Add(CmdSave);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "FrmOptions";
+            Text = "Options";
+            tabControl1.ResumeLayout(false);
+            tabPage1.ResumeLayout(false);
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
+            tabPage2.ResumeLayout(false);
+            tabPage2.PerformLayout();
+            groupBox6.ResumeLayout(false);
+            groupBox6.PerformLayout();
+            tabPage3.ResumeLayout(false);
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
+            tabPage7.ResumeLayout(false);
+            tabPage7.PerformLayout();
+            tabPage8.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
@@ -886,41 +618,16 @@
         private System.Windows.Forms.CheckBox ChkProcesses;
         private System.Windows.Forms.CheckBox ChkMonitor;
         private System.Windows.Forms.CheckBox chktoast;
-        private System.Windows.Forms.CheckBox chkTTS;
         private System.Windows.Forms.CheckBox chkReboot;
-        private System.Windows.Forms.CheckBox ChkVolume;
         private System.Windows.Forms.CheckBox chkHibernate;
-        private System.Windows.Forms.CheckBox chkmute;
         private System.Windows.Forms.CheckBox chkShutdown;
         private System.Windows.Forms.CheckBox chkSuspend;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.CheckBox chkScreenshot;
-        private System.Windows.Forms.GroupBox groupBox7;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.CheckBox ChkSlideshow;
-        private System.Windows.Forms.TextBox txtSlideshowFolder;
         private System.Windows.Forms.TabPage tabPage5;
-        private System.Windows.Forms.TabPage tabPage6;
-        private System.Windows.Forms.GroupBox groupBox9;
-        private System.Windows.Forms.Button CmdTestSpeaker;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.ComboBox cmbSpeaker;
-        private System.Windows.Forms.GroupBox groupBox8;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.ComboBox cmbAudioOutput;
         private System.Windows.Forms.TabPage tabPage7;
         private System.Windows.Forms.CheckBox chkMinimizeToTray;
         private System.Windows.Forms.CheckBox chkStartUp;
-        private System.Windows.Forms.GroupBox groupBox10;
-        private System.Windows.Forms.ComboBox cmbWebcam;
-        private System.Windows.Forms.Button CmdWebCamTest;
-        private System.Windows.Forms.CheckBox ChkEnableWebCamPublish;
-        private System.Windows.Forms.CheckBox chkTtsEnabled;
-        private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.TabPage tabPage8;
         private System.Windows.Forms.Button CmdDiscovery;
         private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.Button CmdSelectSlideShowPath;
     }
 }

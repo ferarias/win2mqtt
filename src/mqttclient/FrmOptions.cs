@@ -1,9 +1,5 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
-using System.Windows.Forms;
+﻿using System.Globalization;
 using uPLibrary.Networking.M2Mqtt;
-using Win2Mqtt.Sensors.HardwareSensors;
 
 namespace Win2Mqtt.Client
 {
@@ -30,13 +26,12 @@ namespace Win2Mqtt.Client
                 txtMqttTimerInterval.Text = "60000";
             }
 
-            if (txtmqtttopic.Text.Contains("#") == true)
+            if (txtmqtttopic.Text.Contains('#') == true)
             {
                 txtmqtttopic.Text = txtmqtttopic.Text.Replace("/#", "");
                 Properties.Settings.Default["mqtttopic"] = txtmqtttopic.Text;
                 Properties.Settings.Default.Save();
             }
-            LoadAudioDevices();
 
         }
         private void LoadSettings()
@@ -53,47 +48,15 @@ namespace Win2Mqtt.Client
             chkVolumeSensor.Checked = MqttSettings.VolumeSensor;
             ChkComputerUsed.Checked = MqttSettings.IsComputerUsed;
             chkMinimizeToTray.Checked = MqttSettings.MinimizeToTray;
-            chkScreenshot.Checked = MqttSettings.ScreenshotEnable;
-            chkTtsEnabled.Checked = MqttSettings.EnableTTS;
             ChkMonitor.Checked = MqttSettings.Monitor;
             chktoast.Checked = MqttSettings.Toast;
             ChkProcesses.Checked = MqttSettings.App;
-            chkTTS.Checked = MqttSettings.Tts;
             chkHibernate.Checked = MqttSettings.Hibernate;
             chkShutdown.Checked = MqttSettings.Shutdown;
             chkReboot.Checked = MqttSettings.Reboot;
             chkSuspend.Checked = MqttSettings.Suspend;
-            chkmute.Checked = MqttSettings.Mute;
-            ChkVolume.Checked = MqttSettings.Volume;
 
-           
-
-            if (chkTtsEnabled.Checked == true)
-            {
-                cmbSpeaker.DataSource = Speaker.GetSpeakers();
-                cmbSpeaker.SelectedItem = Properties.Settings.Default["TTSSpeaker"];
-            }
-
-
-            ChkSlideshow.Checked = Convert.ToBoolean(Properties.Settings.Default["MqttSlideshow"].ToString(), CultureInfo.CurrentCulture);
-            txtSlideshowFolder.Text = Properties.Settings.Default["MqttSlideshowFolder"].ToString();
             chkStartUp.Checked = Convert.ToBoolean(Properties.Settings.Default["RunAtStart"], CultureInfo.CurrentCulture);
-            ChkEnableWebCamPublish.Checked = Convert.ToBoolean(Properties.Settings.Default["EnableWebCamPublish"], CultureInfo.CurrentCulture);
-            if (ChkEnableWebCamPublish.Checked == true)
-            {
-                LoadCameraDevices();
-                if (Convert.ToString(Properties.Settings.Default["WebCamToPublish"], CultureInfo.CurrentCulture).Length > 0)
-                {
-                    cmbWebcam.SelectedText = Convert.ToString(Properties.Settings.Default["WebCamToPublish"], CultureInfo.CurrentCulture);
-                }
-            }
-            else
-            {
-                cmbWebcam.Visible = false;
-                CmdWebCamTest.Visible = false;
-            }
-
-
 
         }
         private void SaveSettings()
@@ -103,46 +66,20 @@ namespace Win2Mqtt.Client
             MqttSettings.MqttPassword = txtmqttpassword.Text;
             MqttSettings.MqttTopic = txtmqtttopic.Text;
             MqttSettings.MqttTimerInterval = txtMqttTimerInterval.Text;
-            MqttSettings.ScreenshotEnable = Convert.ToBoolean(chkScreenshot.Checked);
             MqttSettings.MinimizeToTray = chkMinimizeToTray.Checked;
-            MqttSettings.MqttSlideshow = ChkSlideshow.Checked;
-            MqttSettings.MqttSlideshowFolder = txtSlideshowFolder.Text;
             MqttSettings.CpuSensor = chkCpuSensor.Checked;
             MqttSettings.FreeMemorySensor = chkMemorySensor.Checked;
             MqttSettings.VolumeSensor = chkVolumeSensor.Checked;
-            MqttSettings.EnableWebCamPublish = ChkEnableWebCamPublish.Checked;
             MqttSettings.DiskSensor = (bool)ChkDiskSensor.Checked;
             MqttSettings.IsComputerUsed = ChkComputerUsed.Checked;
             MqttSettings.BatterySensor = ChkBatterySensor.Checked;
             MqttSettings.Monitor = ChkMonitor.Checked;
             MqttSettings.Toast = chktoast.Checked;
             MqttSettings.App = ChkProcesses.Checked;
-            MqttSettings.Tts = chkTTS.Checked;
             MqttSettings.Hibernate = chkHibernate.Checked;
             MqttSettings.Shutdown = chkShutdown.Checked;
             MqttSettings.Reboot = chkReboot.Checked;
             MqttSettings.Suspend = chkSuspend.Checked;
-            MqttSettings.Mute = chkmute.Checked;
-            MqttSettings.Volume = ChkVolume.Checked;
-
-            if (ChkEnableWebCamPublish.Checked == true)
-            {
-                CmdWebCamTest.Visible = true;
-            }
-            else
-            {
-                CmdWebCamTest.Visible = false;
-            }
-
-            MqttSettings.EnableTTS = chkTtsEnabled.Checked;
-            if (cmbSpeaker.SelectedItem != null)
-            {
-                MqttSettings.TTSSpeaker = cmbSpeaker.SelectedItem.ToString();
-            }
-            if (cmbWebcam.SelectedItem != null)
-            {
-                MqttSettings.WebCamToPublish = cmbWebcam.SelectedItem.ToString();
-            }
             MqttSettings.Save();
         }
         private void CmdClose_Click(object sender, EventArgs e)
@@ -190,84 +127,22 @@ namespace Win2Mqtt.Client
             }
 
         }
-        private void CmdTestSpeaker_Click(object sender, EventArgs e)
-        {
-            if (cmbSpeaker.SelectedItem.ToString().Length > 0)
-            {
-                Speaker.Speak("testing", cmbSpeaker.SelectedItem.ToString());
-            }
-        }
         private void ChkStartUp_CheckedChanged(object sender, EventArgs e)
         {
             {
-                Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-
-                if (chkStartUp.Checked)
+                var rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                if (rk != null)
                 {
-                    rk.SetValue(MqttSettings.AppId, Application.ExecutablePath.ToString(CultureInfo.CurrentCulture));
-                }
-                else
-                {
-                    rk.DeleteValue(MqttSettings.AppId, false);
-                }
-                Properties.Settings.Default["RunAtStart"] = chkStartUp.Checked;
-            }
-        }
-        private void LoadAudioDevices()
-        {
-            cmbAudioOutput.DataSource = Audio.GetAudioDevices();
-        }
-        private void LoadCameraDevices()
-        {
-            cmbWebcam.DataSource = Camera.GetDevices();
-        }
-        private void Button2_Click(object sender, EventArgs e)
-        {
-            if (cmbWebcam.SelectedValue.ToString().Length > 0)
-            {
-                try
-                {
-                    string Filename = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures) +  @"\cameratest.jpeg";
-
-                    if (Camera.Save(Filename))
+                    if (chkStartUp.Checked)
                     {
-                        MessageBox.Show($"camera image saved to {Filename}");
+                        rk.SetValue(MqttSettings.AppId, Application.ExecutablePath.ToString(CultureInfo.CurrentCulture));
                     }
                     else
                     {
-                        MessageBox.Show($"Failed to save image");
+                        rk.DeleteValue(MqttSettings.AppId, false);
                     }
-
                 }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-
-            }
-        }
-        private void ChkEnableWebCamPublish_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ChkEnableWebCamPublish.Checked)
-            {
-                cmbWebcam.Visible = true;
-                LoadCameraDevices();
-                CmdWebCamTest.Visible = true;
-            }
-            else
-            {
-                cmbWebcam.DataSource = null;
-                cmbWebcam.Visible = false;
-                CmdWebCamTest.Visible = false;
-            }
-        }
-        private void ChkTtsEnabled_CheckedChanged(object sender, EventArgs e)
-        {
-            if (chkTtsEnabled.Checked == true)
-            {
-                cmbSpeaker.DataSource = Speaker.GetSpeakers();
-                cmbSpeaker.SelectedItem = Properties.Settings.Default["TTSSpeaker"];
+                Properties.Settings.Default["RunAtStart"] = chkStartUp.Checked;
             }
         }
         private void Button1_Click_1(object sender, EventArgs e)
@@ -290,14 +165,6 @@ namespace Win2Mqtt.Client
             {
                 MessageBox.Show("Connection failed");
                 //throw;
-            }
-        }
-        private void CmdSelectSlideShowPath_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog folderBrowserDialog1 = new FolderBrowserDialog();
-            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
-            {
-                txtSlideshowFolder.Text = folderBrowserDialog1.SelectedPath;
             }
         }
     }

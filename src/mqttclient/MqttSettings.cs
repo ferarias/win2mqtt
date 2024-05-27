@@ -39,30 +39,10 @@ namespace Win2Mqtt.Client
             get => (string)Properties.Settings.Default["mqtttimerinterval"];
             set => Properties.Settings.Default["mqtttimerinterval"] = value.ToString(CultureInfo.CurrentCulture);
         }
-        public static bool ScreenshotEnable
-        {
-            get => (bool)Properties.Settings.Default["screenshotenable"];
-            set => Properties.Settings.Default["screenshotenable"] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
-        }
-        public static string ScreenShotPath
-        {
-            get => (string)Properties.Settings.Default["ScreenShotpath"];
-            set => Properties.Settings.Default["ScreenShotpath"] = value;
-        }
         public static bool MinimizeToTray
         {
             get => (bool)Properties.Settings.Default[nameof(MinimizeToTray)];
             set => Properties.Settings.Default[nameof(MinimizeToTray)] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
-        }
-        public static bool MqttSlideshow
-        {
-            get => (bool)Properties.Settings.Default[nameof(MqttSlideshow)];
-            set => Properties.Settings.Default[nameof(MqttSlideshow)] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
-        }
-        public static string MqttSlideshowFolder
-        {
-            get => (string)Properties.Settings.Default[nameof(MqttSlideshowFolder)];
-            set => Properties.Settings.Default[nameof(MqttSlideshowFolder)] = value;
         }
         public static bool CpuSensor
         {
@@ -93,16 +73,6 @@ namespace Win2Mqtt.Client
         {
             get => (bool)Properties.Settings.Default[nameof(DiskSensor)];
             set => Properties.Settings.Default[nameof(DiskSensor)] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
-        }
-        public static bool EnableWebCamPublish
-        {
-            get => (bool)Properties.Settings.Default[nameof(EnableWebCamPublish)];
-            set => Properties.Settings.Default[nameof(EnableWebCamPublish)] = Convert.ToBoolean(value.ToString(CultureInfo.CurrentCulture), CultureInfo.CurrentCulture);
-        }
-        public static string WebCamToPublish
-        {
-            get => (string)Properties.Settings.Default[nameof(WebCamToPublish)];
-            set => Properties.Settings.Default[nameof(WebCamToPublish)] = value.ToString(CultureInfo.CurrentCulture);
         }
         public static bool EnableTTS
         {

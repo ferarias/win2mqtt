@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Speech.Synthesis;
 using System.Text;
-using System.Windows.Forms;
-using Win2Mqtt.Sensors.HardwareSensors;
-using Newtonsoft.Json;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
@@ -16,40 +9,21 @@ namespace Win2Mqtt.Client.Mqtt
 {
     public class Mqtt : IMqtt
     {
-        private readonly IToastMessage _toastMessage;
-        private readonly IAudio _audio;
-        private readonly ILogger _logger;
         private MqttClient _client;
-        public enum SensorType { BinarySensor, Switch, Light, Sensor };
+
+        private readonly IToastMessage _toastMessage;
+        private readonly ILogger _logger;
+
         public string GMqtttopic { get; set; }
-        public bool IsConnected
+
+        public bool IsConnected => _client != null && _client.IsConnected;
+
+        public Mqtt(IToastMessage toastMessage, ILogger logger)
         {
-            get
-            {
-                if (_client == null)
-                    return false;
-                return _client.IsConnected;
-            }
-        }
-        public Mqtt(IAudio audio, IToastMessage toastMessage, ILogger logger)
-        {
-            _audio = audio;
             _toastMessage = toastMessage;
             _logger = logger;
         }
-        public void PublishImage(string topic, string file)
-        {
-            if (File.Exists(file))
-            {
-                if (_client.IsConnected)
-                {
-                    var fullTopic = FullTopic(topic);
-                    _client.Publish(fullTopic, File.ReadAllBytes(file));
-                    _logger.Log("image published:" + fullTopic);
-                }
-            }
-        }
-        public void PublishByte(string topic, byte[] bytes)
+        public void PublishBytes(string topic, byte[] bytes)
         {
             if (_client.IsConnected)
             {
@@ -135,17 +109,17 @@ namespace Win2Mqtt.Client.Mqtt
                             //r.Add(GMqtttopic + "/toast");
                             //r.Add(GMqtttopic + "/cmd");
 
-                            _client.Subscribe(new string[] { GMqtttopic + "/monitor/set" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
-                            _client.Subscribe(new string[] { GMqtttopic + "/mute/set" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
-                            _client.Subscribe(new string[] { GMqtttopic + "/volume/set" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
-                            _client.Subscribe(new string[] { GMqtttopic + "/hibernate" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
-                            _client.Subscribe(new string[] { GMqtttopic + "/suspend" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
-                            _client.Subscribe(new string[] { GMqtttopic + "/reboot" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
-                            _client.Subscribe(new string[] { GMqtttopic + "/reboot" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
-                            _client.Subscribe(new string[] { GMqtttopic + "/shutdown" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
-                            _client.Subscribe(new string[] { GMqtttopic + "/tts" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
-                            _client.Subscribe(new string[] { GMqtttopic + "/toast" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
-                            _client.Subscribe(new string[] { GMqtttopic + "/cmd" }, new byte[] { MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE });
+                            _client.Subscribe([GMqtttopic + "/monitor/set"], [MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE]);
+                            _client.Subscribe([GMqtttopic + "/mute/set"], [MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE]);
+                            _client.Subscribe([GMqtttopic + "/volume/set"], [MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE]);
+                            _client.Subscribe([GMqtttopic + "/hibernate"], [MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE]);
+                            _client.Subscribe([GMqtttopic + "/suspend"], [MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE]);
+                            _client.Subscribe([GMqtttopic + "/reboot"], [MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE]);
+                            _client.Subscribe([GMqtttopic + "/reboot"], [MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE]);
+                            _client.Subscribe([GMqtttopic + "/shutdown"], [MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE]);
+                            _client.Subscribe([GMqtttopic + "/tts"], [MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE]);
+                            _client.Subscribe([GMqtttopic + "/toast"], [MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE]);
+                            _client.Subscribe([GMqtttopic + "/cmd"], [MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE]);
 
                             return true;
                         }
@@ -168,10 +142,12 @@ namespace Win2Mqtt.Client.Mqtt
             }
             return false;
         }
+
         public string FullTopic(string topic)
         {
             return GMqtttopic.Replace("#", topic);
         }
+
         public void Disconnect()
         {
             if (_client != null)
@@ -182,6 +158,7 @@ namespace Win2Mqtt.Client.Mqtt
                 }
             }
         }
+
         private void ClientMqttMsgPublished(object sender, MqttMsgPublishedEventArgs e)
         {
             try
@@ -252,7 +229,7 @@ namespace Win2Mqtt.Client.Mqtt
 
                         var isRunning = JsonConvert.DeserializeObject<Models.IsRunning>(message);
 
-                        switch (isRunning.Action)
+                        switch (isRunning?.Action)
                         {
 
                             case "1":
@@ -277,30 +254,20 @@ namespace Win2Mqtt.Client.Mqtt
                     case "monitor/set":
                         if (message == "1" || message == "on")
                         {
-                            Monitor.TurnOn();
+                            Sensors.HardwareSensors.Monitor.TurnOn();
                             Publish("monitor", "1");
                         }
                         else if (message == "0" || message == "off")
                         {
-                            Monitor.TurnOff();
+                            Sensors.HardwareSensors.Monitor.TurnOff();
                             Publish("monitor", "0");
                         }
                         break;
 
                     case "mute/set":
-                        if (message == "1" || message == "on")
-                        {
-                            _audio.Mute(true);
-                        }
-                        else if (message == "0" || message == "off")
-                        {
-                            _audio.Mute(false);
-                        }
-                        Publish("mute", message);
                         break;
 
                     case "volume/set":
-                        _audio.Volume(Convert.ToInt32(message, CultureInfo.CurrentCulture));
                         break;
 
                     case "hibernate":
@@ -320,11 +287,12 @@ namespace Win2Mqtt.Client.Mqtt
                         break;
 
                     case "tts":
-                        SpeechSynthesizer synthesizer = new SpeechSynthesizer
-                        {
-                            Volume = 100
-                        };
-                        synthesizer.SpeakAsync(message);
+                        //TODO
+                        //SpeechSynthesizer synthesizer = new SpeechSynthesizer
+                        //{
+                        //    Volume = 100
+                        //};
+                        //synthesizer.SpeakAsync(message);
                         break;
 
                     case "toast":
@@ -395,7 +363,7 @@ namespace Win2Mqtt.Client.Mqtt
                 return 10;
             }
         }
-        public void PublishDiscovery(string topic, Mqtt.SensorType sensorType)
+        public void PublishDiscovery(string topic, SensorType sensorType)
         {
             switch (sensorType)
             {

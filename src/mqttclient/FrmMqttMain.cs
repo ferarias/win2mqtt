@@ -1,8 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-using System.Threading;
-using System.Reflection;
-using System.Globalization;
+﻿using System.Globalization;
 using Win2Mqtt.Client.Mqtt;
 
 namespace Win2Mqtt.Client
@@ -20,7 +16,6 @@ namespace Win2Mqtt.Client
             try
             {
                 InitializeComponent();
-                Version version = Assembly.GetExecutingAssembly().GetName().Version;
                 toolStripStatusLabel2.Text = "";
                 MqttSettings.Init();
                 SetupNotify();
