@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Win2Mqtt.Client
+﻿namespace Win2Mqtt.Client
 {
     public interface IToastMessage
     {

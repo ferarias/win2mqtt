@@ -135,11 +135,11 @@ namespace Win2Mqtt.Client
                 {
                     if (chkStartUp.Checked)
                     {
-                        rk.SetValue(MqttSettings.AppId, Application.ExecutablePath.ToString(CultureInfo.CurrentCulture));
+                        rk.SetValue(Constants.AppId, Application.ExecutablePath.ToString(CultureInfo.CurrentCulture));
                     }
                     else
                     {
-                        rk.DeleteValue(MqttSettings.AppId, false);
+                        rk.DeleteValue(Constants.AppId, false);
                     }
                 }
                 Properties.Settings.Default["RunAtStart"] = chkStartUp.Checked;

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Serilog;
 using System.Diagnostics;
 using System.Text;
 using uPLibrary.Networking.M2Mqtt;
@@ -29,7 +30,7 @@ namespace Win2Mqtt.Client.Mqtt
             {
                 var fullTopic = FullTopic(topic);
                 _client.Publish(fullTopic, bytes);
-                _logger.Log("bytes published:" + fullTopic);
+                _logger.Information("Bytes published: {topic}", fullTopic);
             }
         }
         public void Publish(string topic, string message, bool retain = false)
@@ -45,7 +46,7 @@ namespace Win2Mqtt.Client.Mqtt
                 {
                     _client.Publish(fullTopic, Encoding.UTF8.GetBytes(message));
                 }
-                _logger.Log("message published:" + fullTopic + " value " + message);
+                _logger.Information("message published: {fullTopic} value {message}", fullTopic, message);
             }
         }
         public bool Connect(string hostname, int portNumber, string username, string password)
@@ -84,7 +85,7 @@ namespace Win2Mqtt.Client.Mqtt
                             _client.MqttMsgPublished += ClientMqttMsgPublished;
                             _client.ConnectionClosed += ClientMqttConnectionClosed;
 
-                            _logger.Log("connected");
+                            _logger.Information("connected");
 
 
                             GMqtttopic = Properties.Settings.Default["mqtttopic"].ToString();
@@ -163,16 +164,11 @@ namespace Win2Mqtt.Client.Mqtt
         {
             try
             {
-                _logger.Log("MessageId = " + e.MessageId + " Published = " + e.IsPublished);
+                _logger.Information("MessageId = {messageId}; Published = {published}", e.MessageId, e.IsPublished);
             }
             catch (Exception ex)
             {
-                _logger.Log("error: " + ex.Message);
-            }
-            catch
-            {
-                //TODO
-                throw;
+                _logger.Error(ex, "Exception publishing");
             }
 
         }
@@ -180,11 +176,11 @@ namespace Win2Mqtt.Client.Mqtt
         {
             try
             {
-                _logger.Log("Mqtt Connection closed");
+                _logger.Information("Mqtt Connection closed");
             }
             catch (Exception ex)
             {
-                _logger.Log("error: " + ex.Message);
+                _logger.Error(ex, "Exception closing connection");
             }
 
         }
@@ -192,11 +188,11 @@ namespace Win2Mqtt.Client.Mqtt
         {
             try
             {
-                _logger.Log($"Subscribed for id = {e.MessageId}");
+                _logger.Information("Subscribed for id = {messageId}", e.MessageId);
             }
             catch (Exception ex)
             {
-                _logger.Log($"error: {ex.Message}");
+                _logger.Error(ex, "Exception subscribing");
             }
 
         }
@@ -205,7 +201,7 @@ namespace Win2Mqtt.Client.Mqtt
             try
             {
                 string message = Encoding.UTF8.GetString(e.Message);
-                _logger.Log("Message recived " + e.Topic + " value " + message);
+                _logger.Information("Message received in {topic}: `{message}`", e.Topic, message);
 
                 string TopLevel = GMqtttopic.Replace("/#", "");
                 string subtopic = e.Topic.Replace(TopLevel + "/", "");
@@ -215,7 +211,7 @@ namespace Win2Mqtt.Client.Mqtt
             }
             catch (Exception ex)
             {
-                _logger.Log("error: " + ex.Message);
+                _logger.Error(ex, "Exception receiving");
             }
 
         }
@@ -345,10 +341,9 @@ namespace Win2Mqtt.Client.Mqtt
                         break;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                _logger.Error(ex, "Exception on processing message received");
             }
         }
         private static int GetDelay(string message)

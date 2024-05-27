@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using AutofacSerilogIntegration;
 using Win2Mqtt.Client.Mqtt;
 
 namespace Win2Mqtt.Client
@@ -9,9 +10,8 @@ namespace Win2Mqtt.Client
         {
             var builder = new ContainerBuilder();
 
-            builder.RegisterType<MainFormContainer>().AsSelf().SingleInstance();
+            builder.RegisterLogger();
             builder.RegisterType<FrmMqttMain>().AsSelf().SingleInstance();
-            builder.RegisterType<Logger>().As<ILogger>();
             builder.RegisterType<Mqtt.Mqtt>().As<IMqtt>().SingleInstance();
             builder.RegisterType<MqttPublish>().As<IMqttPublish>();
             builder.RegisterType<ToastMessage>().As<IToastMessage>();

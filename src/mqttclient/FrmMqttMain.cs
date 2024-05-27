@@ -7,11 +7,11 @@ namespace Win2Mqtt.Client
     {
         private readonly IMqttPublish _mqttPublish;
         private readonly IMqtt _mqtt;
-        public FrmMqttMain(IMqtt mqtt, IMqttPublish mqttPublish, MainFormContainer mainFormContainer)
+
+        public FrmMqttMain(IMqtt mqtt, IMqttPublish mqttPublish)
         {
             _mqtt = mqtt;
             _mqttPublish = mqttPublish;
-            mainFormContainer.MainForm = this;
 
             try
             {
@@ -60,19 +60,8 @@ namespace Win2Mqtt.Client
         {
             _mqttPublish.PublishSystemData();
         }
-        public static void HandleUnhandledException(Exception e)
-        {
-            if (MessageBox.Show("An unexpected error has occurred. details:" + e.Message + "innerException:" + e.InnerException + "Continue?",
-                "MqttClient" + e.Message + " inner:" + e.InnerException, MessageBoxButtons.YesNo, MessageBoxIcon.Stop,
-                MessageBoxDefaultButton.Button2) == DialogResult.No)
-            {
-                Application.Exit();
-            }
-        }
-        public void UnhandledThreadExceptionHandler(object sender, ThreadExceptionEventArgs e)
-        {
-            HandleUnhandledException(e.Exception);
-        }
+        
+        
         //private void ListBox1_KeyUp(object sender, KeyEventArgs e)
         //{
         //    if (sender != listBox1) return;
