@@ -25,7 +25,7 @@ namespace mqttclient.HardwareSensors
             try
             {
                 VideoCapture capture = new VideoCapture(0);
-                Bitmap image = capture.QueryFrame().Bitmap;
+                Bitmap image = capture.QueryFrame().ToBitmap();
                 image.Save(FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
 
                 capture.Dispose();
