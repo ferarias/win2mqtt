@@ -1,7 +1,9 @@
-﻿namespace Win2Mqtt.Client.Mqtt
+﻿using System.Threading.Tasks;
+
+namespace Win2Mqtt.Client.Mqtt
 {
     public interface ISensorDataPublisher
     {
-        void PublishSystemData();
+        Task PublishSystemDataAsync();
     }
 }

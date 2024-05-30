@@ -9,6 +9,7 @@ namespace Win2Mqtt.Options
         public string MqttTopic { get; set; } = "win2mqtt";
         public int TimerInterval { get; set; } = 5;
         public bool EnableNotifications { get; set; }
+        [Required]
         public SensorsOptions Sensors { get; set; }
     }
     public class MqttBrokerOptions
@@ -24,7 +25,6 @@ namespace Win2Mqtt.Options
     {
         public bool CpuSensor { get; set; }
         public bool FreeMemorySensor { get; set; }
-        public bool VolumeSensor { get; set; }
         public bool IsComputerUsed { get; set; }
         public bool BatterySensor { get; set; }
         public bool DiskSensor { get; set; }

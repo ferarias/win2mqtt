@@ -31,14 +31,17 @@ namespace Win2Mqtt.Client.Mqtt
             {
                 var mqttFactory = new MqttFactory();
                 _client = mqttFactory.CreateMqttClient();
-                var mqttOptions = new MqttClientOptionsBuilder()
+                var mqttOptionsBuilder = new MqttClientOptionsBuilder()
                     .WithTcpServer(_options.Broker.Server, _options.Broker.Port) // MQTT broker address and port
-                    .WithCredentials(_options.Broker.Username, _options.Broker.Password) // Set username and password
                     .WithClientId(Guid.NewGuid().ToString())
-                    .WithCleanSession()
-                .Build();
+                    .WithCleanSession();
+                if(!string.IsNullOrWhiteSpace(_options.Broker.Username) || !string.IsNullOrWhiteSpace(_options.Broker.Password))
+                {
+                    mqttOptionsBuilder.WithCredentials(_options.Broker.Username, _options.Broker.Password); // Set username and password
 
-                var response = await _client.ConnectAsync(mqttOptions, CancellationToken.None);
+                }
+
+                var response = await _client.ConnectAsync(mqttOptionsBuilder.Build(), CancellationToken.None);
 
                 _logger.LogInformation("The MQTT client is connected.");
             }
@@ -89,7 +92,15 @@ namespace Win2Mqtt.Client.Mqtt
         {
             if (_client?.IsConnected == true)
             {
-                await _client.DisconnectAsync(new MqttClientDisconnectOptionsBuilder().WithReason(MqttClientDisconnectOptionsReason.NormalDisconnection).Build());
+                var unsubscribeOptions = new MqttClientUnsubscribeOptionsBuilder()
+                    .WithTopicFilter(_mqttTopic)
+                    .Build();
+                await _client.UnsubscribeAsync(unsubscribeOptions);
+
+                var disconnectOptions = new MqttClientDisconnectOptionsBuilder()
+                    .WithReason(MqttClientDisconnectOptionsReason.NormalDisconnection)
+                    .Build();
+                await _client.DisconnectAsync(disconnectOptions);
             }
 
         }

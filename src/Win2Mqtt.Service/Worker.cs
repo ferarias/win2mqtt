@@ -10,14 +10,23 @@ namespace Win2Mqtt.Service
         private readonly Win2MqttOptions _options = options.Value;
         private readonly ILogger<Worker> _logger = logger;
 
+        private readonly static SemaphoreSlim _semaphore = new(1,1);
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+
+            _logger.LogInformation("Worker started");
+
             while (!stoppingToken.IsCancellationRequested)
             {
-                _publisher.PublishSystemData();
-                if (_logger.IsEnabled(LogLevel.Information))
+                await _semaphore.WaitAsync(stoppingToken);
+                try
                 {
-                    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                    await _publisher.PublishSystemDataAsync();
+                }
+                finally
+                {
+                    _semaphore.Release();
                 }
                 await Task.Delay(_options.TimerInterval, stoppingToken);
             }
