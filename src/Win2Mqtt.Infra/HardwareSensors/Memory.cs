@@ -1,22 +1,13 @@
 using System.Diagnostics;
 
-namespace Win2Mqtt.Sensors.HardwareSensors
+namespace Win2Mqtt.Infra.HardwareSensors
 {
     public static class Memory
     {
-        public static string GetFreeMemory()
+        public static float GetFreeMemory()
         {
-            try
-            {
-                var ramCounter = new PerformanceCounter("Memory", "Available MBytes");
-                return ramCounter.NextValue() + "MB";
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-
+            var ramCounter = new PerformanceCounter("Memory", "Available MBytes");
+            return ramCounter.NextValue();
         }
     }
 }

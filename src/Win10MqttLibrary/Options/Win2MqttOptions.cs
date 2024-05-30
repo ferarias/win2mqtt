@@ -6,7 +6,9 @@ namespace Win2Mqtt.Options
     {
         [Required]
         public MqttBrokerOptions Broker { get; set; }
-        public string MqttTopic { get; set; } = "win2mqtt";
+        [Required()]
+        [RegularExpression(@"win2mqtt/[^/\\#]+$")]
+        public string MqttTopic { get; set; } = "win2mqtt/localhost";
         public int TimerInterval { get; set; } = 5;
         public bool EnableNotifications { get; set; }
         [Required]
@@ -21,12 +23,20 @@ namespace Win2Mqtt.Options
         public string Password { get; set; }
     }
 
+    public class OperationsOptions
+    {
+        public OperationOptions Monitor { get; set; }
+    }
+
+    public class OperationOptions
+    {
+    }
+
     public class SensorsOptions
     {
         public bool CpuSensor { get; set; }
         public bool FreeMemorySensor { get; set; }
         public bool IsComputerUsed { get; set; }
-        public bool BatterySensor { get; set; }
         public bool DiskSensor { get; set; }
         public bool NetworkSensor { get; set; }
 

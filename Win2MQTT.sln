@@ -4,9 +4,17 @@ VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Win2Mqtt.Common", "src\Win10MqttLibrary\Win2Mqtt.Common.csproj", "{C7A61F18-4BC9-4F0D-91A0-6CD63BC5C64E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win2Mqtt.Service", "src\Win2Mqtt.Service\Win2Mqtt.Service.csproj", "{6986A9A0-EA1B-4610-BC5D-981EF2C7489B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Win2Mqtt.Service", "src\Win2Mqtt.Service\Win2Mqtt.Service.csproj", "{6986A9A0-EA1B-4610-BC5D-981EF2C7489B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win2Mqtt.Infra", "src\Win2Mqtt.Infra\Win2Mqtt.Infra.csproj", "{3BAF2E9A-9646-4E5D-8828-6CA227255D41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Win2Mqtt.Infra", "src\Win2Mqtt.Infra\Win2Mqtt.Infra.csproj", "{3BAF2E9A-9646-4E5D-8828-6CA227255D41}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F3FF03FD-AD2C-4CD4-B6BD-D51C67EDA6A6}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		hass-sample.yaml = hass-sample.yaml
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

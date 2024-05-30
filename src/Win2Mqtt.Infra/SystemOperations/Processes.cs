@@ -1,22 +1,21 @@
 ﻿using System.Diagnostics;
 
-namespace Win2Mqtt.Sensors.HardwareSensors
+namespace Win2Mqtt.Infra.SystemOperations
 {
     public static class Processes
     {
-        public static string IsRunning(string exename)
+        public static bool IsRunning(string exename)
         {
             try
             {
-                return Process.GetProcessesByName(exename).Length != 0 == true ? "1" : "0";
+                return Process.GetProcessesByName(exename)?.Length != 0 == true;
             }
             catch (Exception)
             {
-                return "0";
+                return false;
             }
         }
-
-        public static string Close(string exename)
+        public static bool Close(string exename)
         {
             try
             {
@@ -24,11 +23,11 @@ namespace Win2Mqtt.Sensors.HardwareSensors
                 {
                     proc.Kill();
                 }
-                return "1";
+                return true;
             }
             catch
             {
-                return "0";
+                return false;
             }
         }
     }

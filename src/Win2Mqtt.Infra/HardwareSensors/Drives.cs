@@ -7,6 +7,7 @@
         public double AvailableFreeSpace { get; set; }
         public double PercentFree { get; set; }
     }
+
     public static class Drives
     {
         public static IEnumerable<DriveStatus> GetDriveStatus()

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Win2Mqtt.Infra.HardwareSensors
+namespace Win2Mqtt.Infra.SystemOperations
 {
     public static partial class PowerManagement
     {

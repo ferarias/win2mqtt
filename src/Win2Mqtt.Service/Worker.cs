@@ -4,31 +4,42 @@ using Win2Mqtt.Options;
 
 namespace Win2Mqtt.Service
 {
-    public class Worker(ISensorDataPublisher sensorDataPublisher, IOptions<Win2MqttOptions> options, ILogger<Worker> logger) : BackgroundService
+    public class Worker(
+        ISensorDataCollector collector,
+        IMqttConnector connector,
+        IOptions<Win2MqttOptions> options,
+        ILogger<Worker> logger) : BackgroundService
     {
-        private readonly ISensorDataPublisher _publisher = sensorDataPublisher;
+        private readonly ISensorDataCollector _collector = collector;
+        private readonly IMqttConnector _connector = connector;
         private readonly Win2MqttOptions _options = options.Value;
         private readonly ILogger<Worker> _logger = logger;
 
-        private readonly static SemaphoreSlim _semaphore = new(1,1);
+        private readonly static SemaphoreSlim _semaphore = new(1, 1);
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-
             _logger.LogInformation("Worker started");
 
-            while (!stoppingToken.IsCancellationRequested)
+            if (await _connector.ConnectAsync() && await _connector.SubscribeAsync())
             {
-                await _semaphore.WaitAsync(stoppingToken);
-                try
+                while (!stoppingToken.IsCancellationRequested)
                 {
-                    await _publisher.PublishSystemDataAsync();
+                    await _semaphore.WaitAsync(stoppingToken);
+                    try
+                    {
+                        var sensorsData = await _collector.CollectSystemDataAsync();
+                        foreach (var sensorData in sensorsData)
+                        {
+                            await _connector.PublishMessageAsync(sensorData.Key, sensorData.Value);
+                        }
+                    }
+                    finally
+                    {
+                        _semaphore.Release();
+                    }
+                    await Task.Delay(TimeSpan.FromSeconds(_options.TimerInterval), stoppingToken);
                 }
-                finally
-                {
-                    _semaphore.Release();
-                }
-                await Task.Delay(_options.TimerInterval, stoppingToken);
             }
         }
     }

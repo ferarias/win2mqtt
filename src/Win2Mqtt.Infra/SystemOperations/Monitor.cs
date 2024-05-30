@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Win2Mqtt.Sensors.HardwareSensors
+namespace Win2Mqtt.Infra.SystemOperations
 {
 
     public static partial class Monitor
@@ -13,6 +13,16 @@ namespace Win2Mqtt.Sensors.HardwareSensors
         private const int ScMonitorpower = 0xF170;
         private const int MonitorTurnOn = -1;
         private const int MonitorShutoff = 2;
+
+        public static void Set(bool value) 
+        { 
+            if (value)
+            {
+                TurnOn();
+            }
+            else 
+                TurnOff(); 
+        }
 
         public static void TurnOn()
         {

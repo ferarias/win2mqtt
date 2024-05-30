@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Win2Mqtt.Infra.HardwareSensors
+namespace Win2Mqtt.Infra.SystemOperations
 {
     public class CommandParameters
     {
@@ -29,7 +29,7 @@ namespace Win2Mqtt.Infra.HardwareSensors
 
             };
 
-            System.Diagnostics.Process.Start(startInfo);
+            Process.Start(startInfo);
         }
     }
 }
