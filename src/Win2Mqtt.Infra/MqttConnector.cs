@@ -32,7 +32,7 @@ namespace Win2Mqtt.Client.Mqtt
                 var mqttFactory = new MqttFactory();
                 _client = mqttFactory.CreateMqttClient();
                 var mqttOptionsBuilder = new MqttClientOptionsBuilder()
-                    .WithTcpServer(_options.Broker.Server, _options.Broker.Port) // MQTT broker address and port
+                    .WithTcpServer(_options.Broker.Server, _options.Broker.Port)
                     .WithClientId(Guid.NewGuid().ToString())
                     .WithCleanSession();
                 if(!string.IsNullOrWhiteSpace(_options.Broker.Username) || !string.IsNullOrWhiteSpace(_options.Broker.Password))
