@@ -23,9 +23,10 @@ namespace Win2Mqtt.Client.Mqtt
             {
                 foreach (var drive in Drives.GetDriveStatus())
                 {
-                    data.Add("drive/" + drive.DriveName + "/totalsize", drive.TotalSize.ToString(CultureInfo.CurrentCulture));
-                    data.Add("drive/" + drive.DriveName + "/availablefreespace", drive.AvailableFreeSpace.ToString(CultureInfo.CurrentCulture));
-                    data.Add("drive/" + drive.DriveName + "/percentfree", drive.PercentFree.ToString(CultureInfo.CurrentCulture));
+                    var topic = "drive/" + drive.DriveName;
+                    data.Add($"{topic}/totalsize", drive.TotalSize.ToString(CultureInfo.CurrentCulture));
+                    data.Add($"{topic}/availablefreespace", drive.AvailableFreeSpace.ToString(CultureInfo.CurrentCulture));
+                    data.Add($"{topic}/percentfree", drive.PercentFree.ToString(CultureInfo.CurrentCulture));
                 }
             }
             if (_options.Sensors.FreeMemorySensor)
