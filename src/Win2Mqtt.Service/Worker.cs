@@ -33,6 +33,7 @@ namespace Win2Mqtt.Service
                         {
                             await _connector.PublishMessageAsync(sensorData.Key, sensorData.Value);
                         }
+                        _logger.LogDebug("{sensorCount} sensors published", sensorsData.Count);
                     }
                     finally
                     {

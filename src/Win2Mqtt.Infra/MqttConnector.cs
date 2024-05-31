@@ -26,6 +26,7 @@ namespace Win2Mqtt.Client.Mqtt
 
         public async Task<bool> ConnectAsync()
         {
+            _logger.LogInformation("Connecting to MQTT broker.");
             try
             {
                 var mqttFactory = new MqttFactory();
@@ -54,6 +55,7 @@ namespace Win2Mqtt.Client.Mqtt
         }
         public async Task<bool> SubscribeAsync()
         {
+            _logger.LogInformation("Subscribing to topics.");
             try
             {
                 if (_client?.IsConnected == true)
@@ -69,6 +71,7 @@ namespace Win2Mqtt.Client.Mqtt
                     await _client.SubscribeAsync(options.Value.MqttTopic + "/process/running", MqttQualityOfServiceLevel.ExactlyOnce);
                     await _client.SubscribeAsync(options.Value.MqttTopic + "/exec", MqttQualityOfServiceLevel.ExactlyOnce);
 
+                    _logger.LogInformation("Subscribed to MQTT topics.");
                     return true;
                 }
             }
@@ -87,39 +90,41 @@ namespace Win2Mqtt.Client.Mqtt
                     .WithTopicFilter(_mqttBaseTopic)
                     .Build();
                 await _client.UnsubscribeAsync(unsubscribeOptions);
+                _logger.LogInformation("Unsubscribed from MQTT topics.");
 
                 var disconnectOptions = new MqttClientDisconnectOptionsBuilder()
                     .WithReason(MqttClientDisconnectOptionsReason.NormalDisconnection)
                     .Build();
                 await _client.DisconnectAsync(disconnectOptions);
-            }
-
-        }
-
-        public async Task PublishRawAsync(string topic, byte[] bytes)
-        {
-            if (_client?.IsConnected == true)
-            {
-                var fullTopic = GetFullTopic(topic);
-                await _client.PublishBinaryAsync(fullTopic, bytes);
-                _logger.LogInformation("Bytes published: {topic}", fullTopic);
+                _logger.LogInformation("The MQTT client is disconnected.");
             }
         }
 
-        public async Task PublishMessageAsync(string topic, string message, bool retain = false)
+        public async Task PublishRawAsync(string subtopic, byte[] bytes)
         {
             if (_client?.IsConnected == true)
             {
-                var fullTopic = GetFullTopic(topic);
+                var topic = GetFullTopic(subtopic);
+
+                await _client.PublishBinaryAsync(topic, bytes);
+                _logger.LogDebug("Bytes published: {subtopic}", topic);
+            }
+        }
+
+        public async Task PublishMessageAsync(string subtopic, string message, bool retain = false)
+        {
+            if (_client?.IsConnected == true)
+            {
+                var topic = GetFullTopic(subtopic);
                 var mqttMessage = new MqttApplicationMessageBuilder()
-                    .WithTopic(fullTopic)
+                    .WithTopic(topic)
                     .WithPayload(Encoding.UTF8.GetBytes(message))
                     .WithRetainFlag(retain)
                     .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
                     .Build();
 
                 await _client.PublishAsync(mqttMessage);
-                _logger.LogInformation("message published: {fullTopic} value {message}", fullTopic, message);
+                _logger.LogDebug("Message published: {topic} value {message}", topic, message);
             }
         }
 
@@ -128,7 +133,7 @@ namespace Win2Mqtt.Client.Mqtt
             try
             {
                 string message = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
-                _logger.LogInformation("Message received in {topic}: `{message}`", e.ApplicationMessage.Topic, message);
+                _logger.LogInformation("Message received in {subtopic}: `{message}`", e.ApplicationMessage.Topic, message);
 
                 string topLevel = _mqttBaseTopic.Replace("/#", "");
                 string subtopic = e.ApplicationMessage.Topic.Replace(topLevel + "/", "");
@@ -213,11 +218,7 @@ namespace Win2Mqtt.Client.Mqtt
 
         protected virtual async ValueTask DisposeAsyncCore()
         {
-            if (_client != null && _client.IsConnected)
-            {
-                await _client.DisconnectAsync();
-                _logger.LogInformation("Disconnected from broker");
-            }
+            await DisconnectAsync();
         }
 
 
