@@ -19,10 +19,10 @@ namespace Win2Mqtt.Client.Mqtt
     {
         private readonly Win2MqttOptions _options = options.Value;
         private readonly ILogger _logger = logger;
-        private readonly string _mqttBaseTopic = $"{options.Value.MqttTopic}/#";
+        private readonly string _mqttBaseTopic = $"win2mqtt/{options.Value.MqttTopic}/";
         private IMqttClient? _client;
 
-        private string GetFullTopic(string topic) => _mqttBaseTopic.Replace("#", topic);
+        private string GetFullTopic(string topic) => $"{_mqttBaseTopic}{topic}";
 
         public async Task<bool> ConnectAsync()
         {
@@ -60,18 +60,18 @@ namespace Win2Mqtt.Client.Mqtt
             {
                 if (_client?.IsConnected == true)
                 {
-                    _client.ApplicationMessageReceivedAsync += ProcessApplicationMessageReceivedAsync;
+                    _client.ApplicationMessageReceivedAsync += BrokerOnMessageReceivedAsync;
 
-                    await _client.SubscribeAsync(options.Value.MqttTopic + "/monitor/set", MqttQualityOfServiceLevel.ExactlyOnce);
-                    await _client.SubscribeAsync(options.Value.MqttTopic + "/reboot", MqttQualityOfServiceLevel.ExactlyOnce);
-                    await _client.SubscribeAsync(options.Value.MqttTopic + "/shutdown", MqttQualityOfServiceLevel.ExactlyOnce);
-                    await _client.SubscribeAsync(options.Value.MqttTopic + "/hibernate", MqttQualityOfServiceLevel.ExactlyOnce);
-                    await _client.SubscribeAsync(options.Value.MqttTopic + "/suspend", MqttQualityOfServiceLevel.ExactlyOnce);
-                    await _client.SubscribeAsync(options.Value.MqttTopic + "/sendmessage", MqttQualityOfServiceLevel.ExactlyOnce);
-                    await _client.SubscribeAsync(options.Value.MqttTopic + "/process/running", MqttQualityOfServiceLevel.ExactlyOnce);
-                    await _client.SubscribeAsync(options.Value.MqttTopic + "/exec", MqttQualityOfServiceLevel.ExactlyOnce);
+                    foreach (var listener in _options.Listeners)
+                    {
+                        if(listener.Value.Enabled)
+                        {
+                            string topic = GetFullTopic(listener.Value.Topic);
+                            await _client.SubscribeAsync(topic, MqttQualityOfServiceLevel.ExactlyOnce);
+                            _logger.LogInformation("Subscribed to MQTT subtopic `{subtopic}`.", topic);
+                        }
+                    }
 
-                    _logger.LogInformation("Subscribed to MQTT topics.");
                     return true;
                 }
             }
@@ -87,7 +87,7 @@ namespace Win2Mqtt.Client.Mqtt
             if (_client?.IsConnected == true)
             {
                 var unsubscribeOptions = new MqttClientUnsubscribeOptionsBuilder()
-                    .WithTopicFilter(_mqttBaseTopic)
+                    .WithTopicFilter($"{_mqttBaseTopic}#")
                     .Build();
                 await _client.UnsubscribeAsync(unsubscribeOptions);
                 _logger.LogInformation("Unsubscribed from MQTT topics.");
@@ -124,21 +124,19 @@ namespace Win2Mqtt.Client.Mqtt
                     .Build();
 
                 await _client.PublishAsync(mqttMessage);
-                _logger.LogDebug("Message published: {topic} value {message}", topic, message);
+                _logger.LogDebug("Message published: {subtopic} value {message}", topic, message);
             }
         }
 
-        private async Task ProcessApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs e)
+        private async Task BrokerOnMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs e)
         {
+            _logger.LogInformation("New message received in `{topic}`.", e.ApplicationMessage.Topic);
             try
             {
-                string message = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
-                _logger.LogInformation("Message received in {subtopic}: `{message}`", e.ApplicationMessage.Topic, message);
+                var operation = e.ApplicationMessage.Topic.Replace(_mqttBaseTopic, "");
+                var message = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
 
-                string topLevel = _mqttBaseTopic.Replace("/#", "");
-                string subtopic = e.ApplicationMessage.Topic.Replace(topLevel + "/", "");
-
-                await MessageReceivedAsync(subtopic, message);
+                await ProcessMessageAsync(operation, message);
 
             }
             catch (Exception ex)
@@ -147,29 +145,32 @@ namespace Win2Mqtt.Client.Mqtt
             }
 
         }
-        private async Task MessageReceivedAsync(string subtopic, string message)
+        private async Task ProcessMessageAsync(string subtopic, string message)
         {
             try
             {
-                switch (subtopic)
+                // Find in options the Listener that corresponds to this topic
+                var (listenerKey, lv) = _options.Listeners.First(l => l.Value.Topic.Equals(subtopic));
+
+                switch (listenerKey)
                 {
-                    case "hibernate":
+                    case "Hibernate":
                         PowerManagement.HibernateSystem();
                         break;
 
-                    case "suspend":
+                    case "Suspend":
                         PowerManagement.SuspendSystem();
                         break;
 
-                    case "reboot":
+                    case "Reboot":
                         PowerManagement.Reboot(message.AsInt(10));
                         break;
 
-                    case "shutdown":
+                    case "Shutdown":
                         PowerManagement.Shutdown(message.AsInt(10));
                         break;
 
-                    case "monitor/set":
+                    case "Monitor":
                         var setMonitorToOn = message.FromMqttAnyBoolean();
                         if (setMonitorToOn.HasValue)
                         {
@@ -178,7 +179,7 @@ namespace Win2Mqtt.Client.Mqtt
                         }
                         break;
 
-                    case "sendmessage":
+                    case "SendMessage":
                         var notifierParameters = JsonConvert.DeserializeObject<NotifierParameters>(message);
                         if (notifierParameters != null)
                         {
@@ -186,15 +187,15 @@ namespace Win2Mqtt.Client.Mqtt
                         }
                         break;
 
-                    case "process/running":
+                    case "ProcessRunning":
                         await PublishMessageAsync($"process/running/{message}", Processes.IsRunning(message).ToMqttBoolean());
                         break;
 
-                    case "process/close":
+                    case "ProcessClose":
                         await PublishMessageAsync($"process/running/{message}", Processes.Close(message).ToMqttBoolean());
                         break;
 
-                    case "exec":
+                    case "Exec":
                         var execParameters = JsonConvert.DeserializeObject<CommandParameters>(message);
                         if (execParameters != null)
                         {

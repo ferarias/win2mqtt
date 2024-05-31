@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Win2Mqtt.Options
 {
@@ -7,12 +8,14 @@ namespace Win2Mqtt.Options
         [Required]
         public MqttBrokerOptions Broker { get; set; }
         [Required()]
-        [RegularExpression(@"win2mqtt/[^/\\#]+$")]
-        public string MqttTopic { get; set; } = "win2mqtt/localhost";
+        [RegularExpression(@"[^/\\#]+$")]
+        public string MqttTopic { get; set; } = "localhost";
         public int TimerInterval { get; set; } = 5;
         public bool EnableNotifications { get; set; }
         [Required]
         public SensorsOptions Sensors { get; set; }
+        [Required]
+        public Dictionary<string, ListenerOptions> Listeners { get; set; }
     }
     public class MqttBrokerOptions
     {
@@ -21,15 +24,6 @@ namespace Win2Mqtt.Options
         public int Port { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-    }
-
-    public class OperationsOptions
-    {
-        public OperationOptions Monitor { get; set; }
-    }
-
-    public class OperationOptions
-    {
     }
 
     public class SensorsOptions
@@ -49,4 +43,9 @@ namespace Win2Mqtt.Options
         public bool App { get; set; }
     }
 
+    public class ListenerOptions
+    {
+        public string Topic { get; set; }
+        public bool Enabled { get; set; }
+    }
 }
