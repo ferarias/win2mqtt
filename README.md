@@ -2,6 +2,8 @@
 
 A Windows service that exposes system sensors to MQTT so that they can be consumed from IOT applications such as Home Assistant
 
+[Roadmap](./Roadmap.md)
+
 ## Sensors
 
 All sensors start with the prefix `win2mqtt/{hostname}`
