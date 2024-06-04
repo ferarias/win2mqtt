@@ -1,5 +1,7 @@
 ## Features
 
+Lock computer
+Get/Set volume
 
 ## Sensors (taken from System Bridge)
 

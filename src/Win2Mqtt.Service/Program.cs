@@ -10,7 +10,11 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     var builder = Host.CreateApplicationBuilder(args);
-    builder.Services.AddHostedService<Worker>();
+    builder.Services.AddWindowsService(options =>
+    {
+        options.ServiceName = "Win2MQTT Service";
+    });
+
     builder.Services.AddSingleton<IMqttConnector, MqttConnector>();
     builder.Services.AddTransient<ISensorDataCollector, SensorDataCollector>();
     builder.Services.AddSerilog();
@@ -19,6 +23,7 @@ try
         .BindConfiguration("Win2Mqtt")
         .ValidateDataAnnotations(); ;
 
+    builder.Services.AddHostedService<WindowsBackgroundService>();
     var host = builder.Build();
     host.Run();
 }
