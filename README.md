@@ -2,6 +2,29 @@
 
 A Windows service that exposes system sensors to MQTT so that they can be consumed from IOT applications such as Home Assistant
 
+## Install
+
+Install as a **Windows Service**
+
+First, build a a self-coontaining exe:
+
+```powershell
+dotnet publish .\src\Win2Mqtt.Service\ --configuration Release --runtime win-x64 --self-contained  --output c:\Win2MQTT
+```
+
+Then create the service:
+
+```powershell
+sc.exe create "Win2MQTT Service" binpath= "c:\Win2MQTT\Win2Mqtt.Service.exe"
+```
+
+Then start the service
+```powershell
+sc.exe start "Win2MQTT Service"
+```
+
+More information in [this article](https://learn.microsoft.com/en-us/dotnet/core/extensions/windows-service)
+
 [Roadmap](./Roadmap.md)
 
 ## Sensors

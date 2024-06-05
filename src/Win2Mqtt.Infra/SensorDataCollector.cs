@@ -35,7 +35,7 @@ namespace Win2Mqtt.Client.Mqtt
             }
             if (_options.Sensors.CpuSensor)
             {
-                data.Add("cpuprocessortime", Processor.GetCpuProcessorTime().ToString(CultureInfo.CurrentCulture));
+                data.Add("cpuprocessortime", Processor.GetProcessorTime().ToString(CultureInfo.CurrentCulture));
             }
             if (_options.Sensors.IsComputerUsed)
             { 
