@@ -1,80 +1,203 @@
-# Win 10 Assistant
-## Make your windows 10 computer IOT friendly with MQTT
+# Windows to MQTT
 
-### Publish mqtt senors
+A Windows service that exposes system sensors to MQTT so that they can be consumed from IOT applications such as Home Assistant
 
-#### Cpu prosessor load /cpuprosessortime
-[maintopic]/cpuprosessortime 
-returns string 0-100%
-#### Free memory in MB /freememory
-[maintopic]/freememory 
-returns string of memory in MB
-#### Volume muted
-[maintopic]/mute 
-1=muted 0=not muted
-#### Master volume in % volume
-[maintopic]/volume 
-returns string of current volume setting 0-100
-#### Camera Screnshot of primary monitor
-if enabled it publishes to specified folder as jpg file or published the [maintopic]/mqttcamera topic
-#### Battery sensors
-if enabled published to [maintopic]/Power with subtopics
-- BatteryChargeStatus
-- BatteryFullLifetime
-- BatteryLifePercent
-- BatteryLifeRemaining
-- PowerLineStatus
+## Install
+
+Install as a **Windows Service**
+
+First, build a a self-coontaining exe:
+
+```powershell
+dotnet publish .\src\Win2Mqtt.Service\ --configuration Release --runtime win-x64 --self-contained  --output c:\Win2MQTT
+```
+
+Then create the service:
+
+```powershell
+sc.exe create "Win2MQTT Service" binpath= "c:\Win2MQTT\Win2Mqtt.Service.exe"
+```
+
+Then start the service
+```powershell
+sc.exe start "Win2MQTT Service"
+```
+
+More information in [this article](https://learn.microsoft.com/en-us/dotnet/core/extensions/windows-service)
+
+[Roadmap](./Roadmap.md)
+
+## Sensors
+
+All sensors start with the prefix `win2mqtt/{hostname}`
+
+### Disk drives sensors
+
+Status of each mounted drive in the system
+
+`win2mqtt/{hostname}/drive`
+
+A subtopic with each drive letter, each having the following subtopics:
+
+- `sizetotal`
+- `sizefree`
+- `percentfree`
+
+Example : `win2mqtt/lechuck/drive/c/sizetotal` → `13455527`
+
+### Memory sensors
+
+Returns available memory in Megabytes
+
+`win2mqtt/{hostname}/freememory `
+
+Example : `win2mqtt/lechuck/freememory` → `234`
+
+### Network sensors
+
+Get network status: `1` if available, else `0`
+
+`win2mqtt/{hostname}/binary_sensor/network_available`
+
+Example : `win2mqtt/lechuck/binary_sensor/network_available` → `1`
+
 #### In use
-[maintopic]/binary_sensor/inUse
-Message "on" if the API GetLastInputInfo is less then 30 seconds else "off"
 
-#### Disk sensors
-[maintopic]/drive
-Subtopic with each drive letter with the following subtopics
-- totalsize
-- percentFree
-- availablefreespace
+`win2mqtt/{hostname}/binary_sensor/inuse`: `on` if the system has had some input for the last 30 seconds, else `off`
 
-Exsample : kjetilsv/drive/c/totalsize
+Example : `win2mqtt/lechuck/binary_sensor/inuse` → `on`
 
-### MQTT listeners 
+### Cpu sensors
+
+`win2mqtt/{hostname}/cpuprocessortime` (returns string 0-100%)
+
+Example : `win2mqtt/lechuck/cpuprocessortime` →  `50`
+
+## MQTT listeners
+
 The predefined is optional due safety resons
-#### Mute/Unmute
-[maintopic]/mute/set 1=muted 0=not muted
-published to [maintopic]/mute after setting
-#### Volume
-[maintopic]/volume/set volume 0-100
-published to [maintopic]/volume after setting
-#### Monitor
-[maintopic]/monitor/set 0-1
-published to [maintopic]/monitor after setting
-#### Suspend PC
-[maintopic]/suspend 
-#### Shutdown
-[maintopic]/shutdown
-#### Reboot
-[maintopic]/reboot
-#### Hibrernate
-[maintopic]/hibrernate
-#### Toast message
-[maintopic]/toast
-Displays a message on the windows computer.
-Message exsample "Home Assistant,kom ned!,Kjetil,c:\temp\iselin.jpg".
-The the image must be visable from the windows computer.
-#### TTS
-[maintopic]/tts
-Mqtt message is sendt to the synthesizer.
-Currently the volume is set to 100%
-#### app/running sensor
-[maintopic]/app/running/ message:[appname] and published back to [maintopic]/app/running/[appname] with 0= not running/not found in process 1= found
-Tested with common applications like spotify/firefox/skype.
-Exsample: 
-mosquitto_pub -t kjetilsv/app/running -m Spotify
-if spotify is running kjetilsv/app/running/Spotify return message = 1 
-#### CMD
-{"CommandString": "Chrome","WindowStyle": "1","ExecParameters": "http://vg.no","MonitorId": "1"}
-#### Custom commands
-[maintopic]/[customcommandname]
-Message is currently not used, will be impemented in later versions.
-One example of a custom command is lockcomputer. 
-Thanks to @FatBasta it's no added in the hass-example file.
+
+### Monitor
+
+Topic: `win2mqtt/{hostname}/monitor/set`
+Value: `0` or `1`
+
+Response:
+Published to `win2mqtt/{hostname}/monitor` after setting
+
+### Power state operations
+
+Tries to put system into different power states
+
+**Hibernate**
+Tries to put system into a hibernation power mode
+
+Topic: `win2mqtt/{hostname}/hibernate`
+
+**Suspend**
+Tries to put system into a suspended power mode
+
+Topic: `win2mqtt/{hostname}/suspend `
+
+**Shutdown**
+Shutdown immediately the computer
+
+Topic: `win2mqtt/{hostname}/shutdown`
+
+**Reboot**
+Reboot immediatly the computer
+
+Topic: `win2mqtt/{hostname}/reboot`
+
+### Send Message
+
+Shows a popup notification message on the Windows computer.
+
+Topic: `win2mqtt/{hostname}/sendmessage`
+Value: the following JSON payload is expected:
+
+```json
+{ 
+	"Lines": [],
+	"Image": "{image}"
+}
+```
+`Lines` is a list of text lines, such as `["Hello", "This is a message"]`
+`Image` is an optional path to an image file (must exist)
+
+Examples: 
+
+Topic: `win2mqtt/{hostname}/sendmessage`
+Value:
+```json
+{ 
+	"Lines": ["Hello from Home Assistant!"],
+	"Image": "{image}"
+}
+```
+
+If you want to add an image to the message, make sure the image file exists in the Windows filesystem.
+
+Topic: `win2mqtt/{hostname}/sendmessage`
+Value:
+```json
+{ 
+	"Lines": ["Home Assistant", "Text 1", "Text 2"],
+	"Image": "C:\\Windows\\System32\\ComputerToastIcon.contrast-white.png"
+}
+```
+
+### Running processes
+
+Topic: `win2mqtt/{hostname}/process/running`
+Message: `{appname}`
+
+`appname` is the name of the exe to check
+
+Return
+
+Topic: `win2mqtt/{hostname}/process/running/{appname}`
+Value:
+* 0 = Not running
+* 1 = Found running
+
+Example:
+
+Topic: `win2mqtt/{hostname}/process/running`
+Message:
+```
+pdf24.exe
+```
+
+Returns:
+Topic: `win2mqtt/{hostname}/process/running/pdf24.exe`
+Message:
+```
+1
+```
+
+### Execute
+
+Executes the provided command in the system
+
+Topic: `win2mqtt/{hostname}/exec`
+
+Value: the following payload is expected:
+
+```json
+{ 
+	"CommandString": "{command}",
+	"WindowStyle": "{style}",
+	"ExecParameters": "{commandParams}",
+	"MonitorId": ""
+}
+```
+* `command` is the command name; eg `"dotnet"`
+* `style` can be any one of:
+
+  * 0 = Normal
+  * 1 = Hidden
+  * 2 = Minimized
+  * 3 = Maximized
+
+* `commandParams` is the parameters for the command; eg `"build c:/dev/src/myproject"`

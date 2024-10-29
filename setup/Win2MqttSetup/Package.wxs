@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Define the variables in "$(var.*) expressions" -->
+<?define Name = "Win2MQTT Service" ?>
+<?define Manufacturer = "AriasMarques" ?>
+<?define Version = "1.0.0.0" ?>
+<?define UpgradeCode = "9ED3FF33-8718-444E-B44B-69A2344B7E98" ?>
+
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+	<Package Name="$(Name)"
+             Manufacturer="$(Manufacturer)"
+             Version="$(Version)"
+             UpgradeCode="$(var.UpgradeCode)"
+             Compressed="true">
+
+		<!-- Allow upgrades and prevent downgrades -->
+		<MajorUpgrade DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit." />
+
+		<!-- The files inside this DirectoryRef are linked to
+             the Win2Mqtt.Service directory via INSTALLFOLDER -->
+		<DirectoryRef Id="INSTALLFOLDER">
+
+			<Component Id='SettingsComponent' Guid='{2D00166E-AAAA-4F24-B94F-3D5E9ED21D66}'>
+				<File Id="appsettings.json" Name="appsettings.json" Source="appsettings.json"/>
+			</Component>
+			
+			<!-- Create a single component which is the Win2Mqtt.Service.exe file -->
+			<Component Id="ServiceExecutable" Bitness="always64">
+
+				<!-- Copies the Win2Mqtt.Service.exe file using the
+                     project reference preprocessor variables -->
+				<File Id="Win2Mqtt.Service.exe"
+                      Source="$(var.Win2Mqtt.Service.TargetDir)publish\Win2Mqtt.Service.exe"
+                      KeyPath="true" />
+				<!-- Remove all files from the INSTALLFOLDER on uninstall -->
+				<RemoveFile Id="ALLFILES" Name="*.*" On="both" />
+
+				<!-- Tell WiX to install the Service -->
+				<ServiceInstall Id="ServiceInstaller"
+                                Type="ownProcess"
+                                Name="Win2Mqtt.Service"
+                                DisplayName="$(Name)"
+                                Description="A service to connect Windows with an MQTT broker."
+                                Start="auto"
+                                ErrorControl="normal"
+								Account="LocalSystem" 
+								Arguments="/ARGUMENTS LIST" 
+								Vital="yes" 
+								Interactive="no"/>
+
+				<!-- Tell WiX to start the Service -->
+				<ServiceControl Id="StartService"
+                                Start="install"
+                                Stop="both"
+                                Remove="uninstall"
+                                Name="Win2Mqtt.Service"
+                                Wait="true" />
+			</Component>
+		</DirectoryRef>
+
+		<!-- Tell WiX to install the files -->
+		<Feature Id="Service" Title="Win2Mqtt.Service Setup" Level="1">
+			<ComponentRef Id="SettingsComponent" />
+			<ComponentRef Id="ServiceExecutable" />
+		</Feature>
+
+	</Package>
+</Wix>
