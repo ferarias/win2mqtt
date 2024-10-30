@@ -1,16 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
-namespace Win2Mqtt.Client.Mqtt
+namespace Win2Mqtt
 {
     public interface IMqttConnector
     {
         Task<bool> ConnectAsync();
-        Task<bool> SubscribeAsync();
 
-        Task DisconnectAsync();
+        Task<bool> SubscribeAsync(Func<string, string, Task> processMessageAsync);
 
         Task PublishMessageAsync(string topic, string message, bool retain = false);
 
         Task PublishRawAsync(string topic, byte[] bytes);
+
+        Task DisconnectAsync();
     }
 }

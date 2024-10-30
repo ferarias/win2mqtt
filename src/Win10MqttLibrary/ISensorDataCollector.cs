@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Win2Mqtt.Client.Mqtt
+namespace Win2Mqtt
 {
     public interface ISensorDataCollector
     {

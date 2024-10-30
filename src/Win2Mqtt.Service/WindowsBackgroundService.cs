@@ -1,17 +1,24 @@
 using Microsoft.Extensions.Options;
-using Win2Mqtt.Client.Mqtt;
 using Win2Mqtt.Options;
 
 namespace Win2Mqtt.Service
 {
-    public class WindowsBackgroundService(
-        ISensorDataCollector collector,
+    public partial class WindowsBackgroundService(
         IMqttConnector connector,
+        ISensorDataCollector collector,
+        IIncomingMessagesProcessor messagesProcessor,
         IOptions<Win2MqttOptions> options,
         ILogger<WindowsBackgroundService> logger) : BackgroundService
     {
-        private readonly ISensorDataCollector _collector = collector;
+        // MQTT connector
         private readonly IMqttConnector _connector = connector;
+
+        // System information collector
+        private readonly ISensorDataCollector _collector = collector;
+
+        // Incoming messages processor
+        private readonly IIncomingMessagesProcessor _processor = messagesProcessor;
+
         private readonly Win2MqttOptions _options = options.Value;
         private readonly ILogger<WindowsBackgroundService> _logger = logger;
 
@@ -22,25 +29,28 @@ namespace Win2Mqtt.Service
             _logger.LogInformation("Worker started");
             try
             {
-                if (await _connector.ConnectAsync() && await _connector.SubscribeAsync())
+                if (await _connector.ConnectAsync())
                 {
-                    while (!stoppingToken.IsCancellationRequested)
+                    if (await _connector.SubscribeAsync(_processor.ProcessMessageAsync))
                     {
-                        await _semaphore.WaitAsync(stoppingToken);
-                        try
+                        while (!stoppingToken.IsCancellationRequested)
                         {
-                            var sensorsData = await _collector.CollectSystemDataAsync();
-                            foreach (var sensorData in sensorsData)
+                            await _semaphore.WaitAsync(stoppingToken);
+                            try
                             {
-                                await _connector.PublishMessageAsync(sensorData.Key, sensorData.Value);
+                                var sensorsData = await _collector.CollectSystemDataAsync();
+                                foreach (var sensorData in sensorsData)
+                                {
+                                    await _connector.PublishMessageAsync(sensorData.Key, sensorData.Value);
+                                }
+                                _logger.LogDebug("{sensorCount} sensors published", sensorsData.Count);
                             }
-                            _logger.LogDebug("{sensorCount} sensors published", sensorsData.Count);
+                            finally
+                            {
+                                _semaphore.Release();
+                            }
+                            await Task.Delay(TimeSpan.FromSeconds(_options.TimerInterval), stoppingToken);
                         }
-                        finally
-                        {
-                            _semaphore.Release();
-                        }
-                        await Task.Delay(TimeSpan.FromSeconds(_options.TimerInterval), stoppingToken);
                     }
                 }
             }

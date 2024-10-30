@@ -2,6 +2,6 @@
 {
     public static class Constants
     {
-        public const string AppId = "Win Mqtt Client";
+        public const string AppId = "Win2MQTT";
     }
 }

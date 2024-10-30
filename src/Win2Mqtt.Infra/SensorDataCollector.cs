@@ -1,13 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Globalization;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Globalization;
 using Win2Mqtt.Infra.HardwareSensors;
 using Win2Mqtt.Options;
 
-namespace Win2Mqtt.Client.Mqtt
+namespace Win2Mqtt.Infra
 {
     public class SensorDataCollector(
-        IOptions<Win2MqttOptions> options, 
+        IOptions<Win2MqttOptions> options,
         ILogger<SensorDataCollector> logger)
         : ISensorDataCollector
     {
@@ -38,12 +38,12 @@ namespace Win2Mqtt.Client.Mqtt
                 data.Add("cpuprocessortime", Processor.GetProcessorTime().ToString(CultureInfo.CurrentCulture));
             }
             if (_options.Sensors.IsComputerUsed)
-            { 
-                data.Add("binary_sensor/inuse", (Processor.GetIdleTime().TotalSeconds <= 30).ToMqttBoolean());
+            {
+                data.Add("binary_sensor/inuse", (Processor.GetIdleTime().TotalSeconds <= 30).BooleanToMqttOneOrZero());
             }
             if (_options.Sensors.NetworkSensor)
             {
-                data.Add("binary_sensor/network_available", NetworkStatus.IsNetworkAvailable().ToMqttBoolean());
+                data.Add("binary_sensor/network_available", NetworkStatus.IsNetworkAvailable().BooleanToMqttOneOrZero());
             }
             return Task.FromResult<IDictionary<string, string>>(data);
         }

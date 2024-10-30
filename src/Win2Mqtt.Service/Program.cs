@@ -1,7 +1,8 @@
-using Win2Mqtt.Client.Mqtt;
+using Serilog;
+using Win2Mqtt;
+using Win2Mqtt.Infra;
 using Win2Mqtt.Options;
 using Win2Mqtt.Service;
-using Serilog;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -10,17 +11,15 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     var builder = Host.CreateApplicationBuilder(args);
-    builder.Services.AddWindowsService(options =>
-    {
-        options.ServiceName = "Win2MQTT Service";
-    });
+    builder.Services.AddWindowsService(options => options.ServiceName = $"{Constants.AppId} Service");
 
     builder.Services.AddSingleton<IMqttConnector, MqttConnector>();
     builder.Services.AddTransient<ISensorDataCollector, SensorDataCollector>();
+    builder.Services.AddTransient<IIncomingMessagesProcessor, IncomingMessagesProcessor>();
     builder.Services.AddSerilog();
     builder.Services
         .AddOptions<Win2MqttOptions>()
-        .BindConfiguration("Win2Mqtt")
+        .BindConfiguration(Win2MqttOptions.Options)
         .ValidateDataAnnotations(); ;
 
     builder.Services.AddHostedService<WindowsBackgroundService>();
