@@ -91,6 +91,36 @@
     {
         "CustomAction"
         {
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_A1A1CD873B3F41A3910E94F40BD49B12"
+            {
+            "Name" = "8:PublishItemsOutputGroup from Win2Mqtt.Service (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_F2B92C6D1F1241039F654FC8FFBAA0D6"
+            "FileType" = "3:2"
+            "InstallAction" = "3:1"
+            "Arguments" = "8:/Install"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_37F74702_A4E5_4537_959E_4E706BD1B4A9"
+            "InstallerClass" = "11:FALSE"
+            "CustomActionData" = "8:"
+            "Run64Bit" = "11:TRUE"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_BFE2DCEBA8F44470B5C83562AF7073F0"
+            {
+            "Name" = "8:PublishItemsOutputGroup from Win2Mqtt.Service (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_F2B92C6D1F1241039F654FC8FFBAA0D6"
+            "FileType" = "3:2"
+            "InstallAction" = "3:4"
+            "Arguments" = "8:/Uninstall"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_8E6782C4_FD23_4356_950D_84B08BBB8849"
+            "InstallerClass" = "11:FALSE"
+            "CustomActionData" = "8:"
+            "Run64Bit" = "11:TRUE"
+            }
         }
         "DefaultFeature"
         {
@@ -173,7 +203,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Win2MqttSetup"
         "ProductCode" = "8:{56265C46-2671-4EC5-B096-6F4A04E11A90}"
-        "PackageCode" = "8:{5B6FCEDE-606B-40EC-AF1D-42532840256E}"
+        "PackageCode" = "8:{B28ECCC7-589A-4027-9A44-0A34A86347EB}"
         "UpgradeCode" = "8:{AAE84491-F190-4775-A6C4-DEFA7F984420}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
