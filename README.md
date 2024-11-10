@@ -201,3 +201,9 @@ Value: the following payload is expected:
   * 3 = Maximized
 
 * `commandParams` is the parameters for the command; eg `"build c:/dev/src/myproject"`
+
+
+## Setup project
+
+From https://learn.microsoft.com/en-us/dotnet/core/extensions/windows-service-with-installer?tabs=wix
+
