@@ -29,16 +29,23 @@ namespace Win2Mqtt.Service
             _logger.LogInformation("Worker started");
             try
             {
+                // Connect to MQTT broker
                 if (await _connector.ConnectAsync())
                 {
+                    // Subscribe to incoming messages
+                    // Process them with IIncomingMessagesProcessor.ProcessMessageAsync()
                     if (await _connector.SubscribeAsync(_processor.ProcessMessageAsync))
                     {
                         while (!stoppingToken.IsCancellationRequested)
                         {
+                            // Allow only one thread collecting system information
                             await _semaphore.WaitAsync(stoppingToken);
                             try
                             {
+                                // Collect system information
                                 var sensorsData = await _collector.CollectSystemDataAsync();
+
+                                // Publish collected data
                                 foreach (var sensorData in sensorsData)
                                 {
                                     await _connector.PublishMessageAsync(sensorData.Key, sensorData.Value);

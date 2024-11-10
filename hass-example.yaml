@@ -78,7 +78,7 @@ switch:
     payload_on: "1"
     optimistic: false
   - platform: mqtt
-    name: "Suspend LECHUCK"
+    name: "Shutdown LECHUCK"
     command_topic: "win2mqtt/lechuck/shutdown"
     payload_on: "1"
     optimistic: false
