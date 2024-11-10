@@ -44,7 +44,7 @@ mqtt:
     - name: "LECHUCK CPU load"
       state_topic: "win2mqtt/lechuck/cpuprocessortime"
       state_class: measurement
-      unit_of_measurement: load
+      unit_of_measurement: "%"
       icon: mdi:chip
   binary_sensor:
     - name: "LECHUCK network is available"
