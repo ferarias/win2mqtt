@@ -6,8 +6,9 @@ using Win2Mqtt.Options;
 using Win2Mqtt.Service;
 
 Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
     .WriteTo.Console()
-    .CreateLogger();
+    .CreateBootstrapLogger();
 
 if (args is { Length: 1 })
 {
@@ -43,13 +44,19 @@ if (args is { Length: 1 })
 
 try
 {
+    Log.Information("Getting the motors running...");
+
     var builder = Host.CreateApplicationBuilder(args);
     builder.Services.AddWindowsService(options => options.ServiceName = $"{Constants.AppId} Service");
 
     builder.Services.AddSingleton<IMqttConnector, MqttConnector>();
     builder.Services.AddTransient<ISensorDataCollector, SensorDataCollector>();
     builder.Services.AddTransient<IIncomingMessagesProcessor, IncomingMessagesProcessor>();
-    builder.Services.AddSerilog();
+    builder.Services.AddSerilog((services, loggerConfiguration) => loggerConfiguration
+        .ReadFrom.Configuration(builder.Configuration)
+        .ReadFrom.Services(services)
+        .Enrich.FromLogContext()
+        .WriteTo.Console());
     builder.Services
         .AddOptions<Win2MqttOptions>()
         .BindConfiguration(Win2MqttOptions.Options)

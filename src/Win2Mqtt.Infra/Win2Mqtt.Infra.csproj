@@ -15,10 +15,10 @@
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.4" />
 		<PackageReference Include="MQTTnet" Version="4.2.1.781" />
-		<PackageReference Include="System.Diagnostics.PerformanceCounter" Version="8.0.0" />
+		<PackageReference Include="System.Diagnostics.PerformanceCounter" Version="9.0.4" />
 
 	</ItemGroup>
 </Project>
