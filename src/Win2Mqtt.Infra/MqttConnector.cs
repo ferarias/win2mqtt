@@ -37,9 +37,17 @@ namespace Win2Mqtt.Infra
                     mqttOptionsBuilder.WithCredentials(_options.Broker.Username, _options.Broker.Password);
                 }
 
-                var response = await _client.ConnectAsync(mqttOptionsBuilder.Build(), CancellationToken.None);
+                var mqttClientOptions = mqttOptionsBuilder
+                    .WithWillTopic(GetFullTopic("status"))
+                    .WithWillPayload("offline")
+                    .WithWillRetain(true)
+                    .Build();
+
+                var response = await _client.ConnectAsync(mqttClientOptions, CancellationToken.None);
 
                 _logger.LogInformation("The MQTT client is connected.");
+
+                await PublishMessageAsync("status", "online", retain: true);
 
                 return true;
             }
@@ -77,7 +85,7 @@ namespace Win2Mqtt.Infra
                     {
                         if (listener.Value.Enabled)
                         {
-                            string topic = GetFullTopic(listener.Value.Topic);
+                            string topic = GetFullTopic(SanitizeTopic(listener.Value.Topic));
                             await _client.SubscribeAsync(topic, MqttQualityOfServiceLevel.ExactlyOnce);
                             _logger.LogInformation("Subscribed to MQTT subtopic `{subtopic}`.", topic);
                         }
@@ -115,7 +123,7 @@ namespace Win2Mqtt.Infra
         {
             if (_client?.IsConnected == true)
             {
-                var topic = GetFullTopic(subtopic);
+                var topic = GetFullTopic(SanitizeTopic(subtopic));
 
                 await _client.PublishBinaryAsync(topic, bytes);
                 _logger.LogDebug("Bytes published: {subtopic}", topic);
@@ -126,7 +134,7 @@ namespace Win2Mqtt.Infra
         {
             if (_client?.IsConnected == true)
             {
-                var topic = GetFullTopic(subtopic);
+                var topic = GetFullTopic(SanitizeTopic(subtopic));
                 var mqttMessage = new MqttApplicationMessageBuilder()
                     .WithTopic(topic)
                     .WithPayload(Encoding.UTF8.GetBytes(message))
@@ -136,6 +144,23 @@ namespace Win2Mqtt.Infra
 
                 await _client.PublishAsync(mqttMessage);
                 _logger.LogDebug("Message published: {subtopic} value {message}", topic, message);
+            }
+        }
+
+        public async Task PublishToFullTopicAsync(string fullTopic, string message, bool retain = false)
+        {
+            if (_client?.IsConnected == true)
+            {
+                var topic = SanitizeTopic(fullTopic);
+                var mqttMessage = new MqttApplicationMessageBuilder()
+                    .WithTopic(topic)
+                    .WithPayload(Encoding.UTF8.GetBytes(message))
+                    .WithRetainFlag(retain)
+                    .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
+                    .Build();
+
+                await _client.PublishAsync(mqttMessage);
+                _logger.LogDebug("Raw message published: {topic} value {message}", topic, message);
             }
         }
 
@@ -151,6 +176,6 @@ namespace Win2Mqtt.Infra
             await DisconnectAsync();
         }
 
-
+        private static string SanitizeTopic(string topic) => topic.Trim('/');
     }
 }

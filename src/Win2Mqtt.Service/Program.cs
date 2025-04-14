@@ -2,6 +2,7 @@ using CliWrap;
 using Serilog;
 using Win2Mqtt;
 using Win2Mqtt.Infra;
+using Win2Mqtt.Infra.HomeAssistant;
 using Win2Mqtt.Options;
 using Win2Mqtt.Service;
 
@@ -52,11 +53,12 @@ try
     builder.Services.AddSingleton<IMqttConnector, MqttConnector>();
     builder.Services.AddTransient<ISensorDataCollector, SensorDataCollector>();
     builder.Services.AddTransient<IIncomingMessagesProcessor, IncomingMessagesProcessor>();
+    builder.Services.AddSingleton<Win2Mqtt.Infra.HomeAssistant.HomeAssistantDiscoveryHelper>();
+    builder.Services.AddSingleton<HomeAssistantDiscoveryPublisher>();
     builder.Services.AddSerilog((services, loggerConfiguration) => loggerConfiguration
         .ReadFrom.Configuration(builder.Configuration)
         .ReadFrom.Services(services)
-        .Enrich.FromLogContext()
-        .WriteTo.Console());
+        .Enrich.FromLogContext());
     builder.Services
         .AddOptions<Win2MqttOptions>()
         .BindConfiguration(Win2MqttOptions.Options)

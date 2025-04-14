@@ -18,24 +18,27 @@ namespace Win2Mqtt.Infra
         {
             _logger.LogDebug("Collecting sensor data from system");
 
-            var data = new Dictionary<string, string>();
+            var data = new Dictionary<string, string>
+            {
+                { "timestamp", DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture) }
+            };
             if (_options.Sensors.DiskSensor)
             {
                 foreach (var drive in Drives.GetDriveStatus())
                 {
                     var topic = "drive/" + drive.DriveName;
-                    data.Add($"{topic}/sizetotal", drive.TotalSize.ToString(CultureInfo.CurrentCulture));
-                    data.Add($"{topic}/sizefree", drive.AvailableFreeSpace.ToString(CultureInfo.CurrentCulture));
-                    data.Add($"{topic}/percentfree", drive.PercentFree.ToString(CultureInfo.CurrentCulture));
+                    data.Add($"{topic}/sizetotal", drive.TotalSize.ToString(CultureInfo.InvariantCulture));
+                    data.Add($"{topic}/sizefree", drive.AvailableFreeSpace.ToString(CultureInfo.InvariantCulture));
+                    data.Add($"{topic}/percentfree", drive.PercentFree.ToString(CultureInfo.InvariantCulture));
                 }
             }
             if (_options.Sensors.FreeMemorySensor)
             {
-                data.Add("freememory", Memory.GetFreeMemory().ToString(CultureInfo.CurrentCulture));
+                data.Add("freememory", Memory.GetFreeMemory().ToString(CultureInfo.InvariantCulture));
             }
             if (_options.Sensors.CpuSensor)
             {
-                data.Add("cpuprocessortime", Processor.GetProcessorTime().ToString(CultureInfo.CurrentCulture));
+                data.Add("cpuprocessortime", Processor.GetProcessorTime().ToString(CultureInfo.InvariantCulture));
             }
             if (_options.Sensors.IsComputerUsed)
             {

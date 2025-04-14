@@ -13,6 +13,8 @@ namespace Win2Mqtt
 
         Task PublishRawAsync(string topic, byte[] bytes);
 
+        Task PublishToFullTopicAsync(string fullTopic, string message, bool retain);
+
         Task DisconnectAsync();
     }
 }
