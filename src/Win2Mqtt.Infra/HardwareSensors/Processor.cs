@@ -5,13 +5,26 @@ namespace Win2Mqtt.Infra.HardwareSensors
 {
     public static class Processor
     {
+        private static PerformanceCounter? _cpuCounter;
+        private static readonly object _lock = new object();
+
+        static Processor()
+        {
+            // Initialize the performance counter only once
+            _cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+        }
+
         public static double GetProcessorTime()
         {
-            var perfCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-            perfCounter.NextValue();
-            Thread.Sleep(1000);
-            return Math.Round(perfCounter.NextValue(), 2);
+            if (_cpuCounter == null)
+                throw new InvalidOperationException("CPU performance counter is not initialized.");
+
+            // First call to NextValue() is discarded to avoid inaccurate reading
+            _cpuCounter.NextValue();
+            Thread.Sleep(1000);  // Sleep for 1 second to get accurate reading
+            return Math.Round(_cpuCounter.NextValue(), 2); // Return CPU usage as percentage
         }
+
 
         public static TimeSpan GetIdleTime()
         {
