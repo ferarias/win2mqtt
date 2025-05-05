@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Win2Mqtt.Options
+namespace Win2Mqtt.Common.Options
 {
     public class Win2MqttOptions
     {

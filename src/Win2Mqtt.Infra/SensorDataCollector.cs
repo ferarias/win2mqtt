@@ -2,7 +2,8 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Win2Mqtt.Infra.HardwareSensors;
-using Win2Mqtt.Options;
+using Win2Mqtt.Common.Options;
+using Win2Mqtt.Common;
 
 namespace Win2Mqtt.Infra
 {

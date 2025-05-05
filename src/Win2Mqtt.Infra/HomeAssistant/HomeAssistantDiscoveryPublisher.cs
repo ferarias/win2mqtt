@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
-using Win2Mqtt.Options;
+using Win2Mqtt.Common.Options;
 
 namespace Win2Mqtt.Infra.HomeAssistant
 {

@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Options;
+using Win2Mqtt.Common;
+using Win2Mqtt.Common.Options;
 using Win2Mqtt.Infra.HomeAssistant;
-using Win2Mqtt.Options;
 
 namespace Win2Mqtt.Service
 {
@@ -51,51 +52,48 @@ namespace Win2Mqtt.Service
             try
             {
                 // Connect to MQTT broker
-                while (!(await _mqttConnectionManager.ConnectAsync(stoppingToken)))
-                {
-                    _logger.LogWarning("MQTT connection failed. Retrying in 10 seconds...");
-                    await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
-                }
+                await ConnectToMqttBrokerAsync(stoppingToken);
+
+                // Subscribe to incoming messages and  process them with IIncomingMessagesProcessor.ProcessMessageAsync()
+                await SubscribeToIncomingMessagesAsync(stoppingToken);
 
                 // Publish Home Assistant discovery messages
                 await _haDiscoveryPublisher.PublishSensorsDiscoveryAsync(stoppingToken);
 
-                // Subscribe to incoming messages
-                // Process them with IIncomingMessagesProcessor.ProcessMessageAsync()
-                if (await _mqttSubscriber.SubscribeAsync(_incomingMessagesProcessor.ProcessMessageAsync, stoppingToken))
+                var statusTopic = $"{Constants.ServiceBaseTopic}/{_options.MachineIdentifier}/status";
+                await _mqttPublisher.PublishAsync(statusTopic, "online", retain: true, stoppingToken);
+
+                while (!stoppingToken.IsCancellationRequested)
                 {
-                    await _mqttPublisher.PublishForDeviceAsync("status", "online", retain: true, stoppingToken);
-
-                    while (!stoppingToken.IsCancellationRequested)
+                    // Allow only one thread collecting system information
+                    await _semaphore.WaitAsync(stoppingToken);
+                    try
                     {
-                        // Allow only one thread collecting system information
-                        await _semaphore.WaitAsync(stoppingToken);
-                        try
-                        {
-                            // Collect system information
-                            var sensorsData = await _sensorDataCollector.CollectSystemDataAsync();
+                        // Collect system information
+                        var sensorsData = await _sensorDataCollector.CollectSystemDataAsync();
 
-                            // Publish collected data
-                            foreach (var sensorData in sensorsData)
-                            {
-                                try
-                                {
-                                    await _mqttPublisher.PublishForDeviceAsync(sensorData.Key, sensorData.Value, cancellationToken: stoppingToken);
-                                }
-                                catch (Exception ex)
-                                {
-                                    _logger.LogWarning(ex, "Failed to publish sensor {Sensor}", sensorData.Key);
-                                }
-                            }
-                            _logger.LogDebug("{sensorCount} sensors published", sensorsData.Count);
-                        }
-                        finally
+                        // Publish collected data
+                        foreach (var sensorData in sensorsData)
                         {
-                            _semaphore.Release();
+                            try
+                            {
+                                var sensorTopic = $"{Constants.ServiceBaseTopic}/{_options.MachineIdentifier}/{sensorData.Key}";
+                                await _mqttPublisher.PublishAsync(sensorTopic, sensorData.Value, false, cancellationToken: stoppingToken);
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogWarning(ex, "Failed to publish sensor {Sensor}", sensorData.Key);
+                            }
                         }
-                        await Task.Delay(TimeSpan.FromSeconds(_options.TimerInterval), stoppingToken);
+                        _logger.LogDebug("{sensorCount} sensors published", sensorsData.Count);
                     }
+                    finally
+                    {
+                        _semaphore.Release();
+                    }
+                    await Task.Delay(TimeSpan.FromSeconds(_options.TimerInterval), stoppingToken);
                 }
+
             }
             catch (OperationCanceledException)
             {
@@ -119,9 +117,27 @@ namespace Win2Mqtt.Service
             }
         }
 
+        private async Task ConnectToMqttBrokerAsync(CancellationToken stoppingToken)
+        {
+            while (!(await _mqttConnectionManager.ConnectAsync(stoppingToken)))
+            {
+                _logger.LogWarning("MQTT connection failed. Retrying in 10 seconds...");
+                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
+            }
+        }
+        private async Task SubscribeToIncomingMessagesAsync(CancellationToken stoppingToken)
+        {
+            while (!(await _mqttSubscriber.SubscribeAsync(_incomingMessagesProcessor.ProcessMessageAsync, stoppingToken)))
+            {
+                _logger.LogWarning("MQTT subscription failed. Retrying in 10 seconds...");
+                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
+            }
+        }
+
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
-            await _mqttPublisher.PublishForDeviceAsync("status", "offline", retain: true, cancellationToken: cancellationToken);
+            var statusTopic = $"{Constants.ServiceBaseTopic}/{_options.MachineIdentifier}/status";
+            await _mqttPublisher.PublishAsync(statusTopic, "offline", retain: true, cancellationToken: cancellationToken);
             await _mqttConnectionManager.DisconnectAsync(cancellationToken);
             await base.StopAsync(cancellationToken);
         }

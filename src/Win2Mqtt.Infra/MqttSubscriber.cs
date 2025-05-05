@@ -2,7 +2,8 @@
 using Microsoft.Extensions.Options;
 using MQTTnet;
 using MQTTnet.Protocol;
-using Win2Mqtt.Options;
+using Win2Mqtt.Common;
+using Win2Mqtt.Common.Options;
 
 namespace Win2Mqtt.Infra
 {

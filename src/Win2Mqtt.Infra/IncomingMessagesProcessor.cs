@@ -2,7 +2,8 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Win2Mqtt.Infra.SystemOperations;
-using Win2Mqtt.Options;
+using Win2Mqtt.Common.Options;
+using Win2Mqtt.Common;
 
 namespace Win2Mqtt.Infra
 {
@@ -21,6 +22,7 @@ namespace Win2Mqtt.Infra
                 // Find in options the Listener that corresponds to this topic
                 var (listener, options) = _options.Listeners.First(l => l.Value.Topic.Equals(subtopic));
 
+                var processRunningTopic = $"{Constants.ServiceBaseTopic}/{_options.MachineIdentifier}/status/process/running/{message}";
                 switch (listener)
                 {
                     case "SendMessage":
@@ -40,11 +42,11 @@ namespace Win2Mqtt.Infra
 
                         break;
                     case "ProcessRunning":
-                        await _connector.PublishForDeviceAsync($"process/running/{message}", Processes.IsRunning(message).BooleanToMqttOneOrZero(), cancellationToken: cancellationToken);
+                        await _connector.PublishAsync(processRunningTopic, Processes.IsRunning(message).BooleanToMqttOneOrZero(), false, cancellationToken: cancellationToken);
                         break;
 
                     case "ProcessClose":
-                        await _connector.PublishForDeviceAsync($"process/running/{message}", Processes.Close(message).BooleanToMqttOneOrZero(), cancellationToken: cancellationToken);
+                        await _connector.PublishAsync(processRunningTopic, Processes.Close(message).BooleanToMqttOneOrZero(), false, cancellationToken: cancellationToken);
                         break;
 
                     case "Hibernate":
