@@ -17,7 +17,7 @@ namespace Win2Mqtt.Infra
 
         private readonly string _mqttBaseTopic = $"{Constants.ServiceBaseTopic}/{options.Value.MachineIdentifier}/";
 
-        public async Task<bool> SubscribeAsync(Func<string, string, Task> processMessageAsync)
+        public async Task<bool> SubscribeAsync(Func<string, string, CancellationToken, Task> processMessageAsync, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Subscribing to topics.");
             try
@@ -32,7 +32,7 @@ namespace Win2Mqtt.Infra
                             var operation = e.ApplicationMessage.Topic.Replace(_mqttBaseTopic, "");
                             var message = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
 
-                            await processMessageAsync(operation, message);
+                            await processMessageAsync(operation, message, cancellationToken);
                         }
                         catch (Exception ex)
                         {
@@ -46,7 +46,7 @@ namespace Win2Mqtt.Infra
                         {
                             var sanitizedTopic = SanitizeHelpers.Sanitize(listener.Value.Topic);
                             string topic = $"{_mqttBaseTopic}{sanitizedTopic}";
-                            await _client.SubscribeAsync(topic, MqttQualityOfServiceLevel.ExactlyOnce);
+                            await _client.SubscribeAsync(topic, MqttQualityOfServiceLevel.ExactlyOnce, cancellationToken);
                             _logger.LogInformation("Subscribed to MQTT topic `{topic}`.", topic);
                         }
                     }

@@ -14,7 +14,7 @@ namespace Win2Mqtt.Infra
         private readonly Win2MqttOptions _options = options.Value;
         private readonly ILogger<IncomingMessagesProcessor> _logger = logger;
 
-        public async Task ProcessMessageAsync(string subtopic, string message)
+        public async Task ProcessMessageAsync(string subtopic, string message, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -40,11 +40,11 @@ namespace Win2Mqtt.Infra
 
                         break;
                     case "ProcessRunning":
-                        await _connector.PublishForDeviceAsync($"process/running/{message}", Processes.IsRunning(message).BooleanToMqttOneOrZero());
+                        await _connector.PublishForDeviceAsync($"process/running/{message}", Processes.IsRunning(message).BooleanToMqttOneOrZero(), cancellationToken: cancellationToken);
                         break;
 
                     case "ProcessClose":
-                        await _connector.PublishForDeviceAsync($"process/running/{message}", Processes.Close(message).BooleanToMqttOneOrZero());
+                        await _connector.PublishForDeviceAsync($"process/running/{message}", Processes.Close(message).BooleanToMqttOneOrZero(), cancellationToken: cancellationToken);
                         break;
 
                     case "Hibernate":
