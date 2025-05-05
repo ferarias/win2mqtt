@@ -1,11 +1,12 @@
 using CliWrap;
-using MQTTnet;
 using Serilog;
+using Win2Mqtt.Broker.Mqtt2Net;
 using Win2Mqtt.Common;
 using Win2Mqtt.Common.Options;
-using Win2Mqtt.Infra;
-using Win2Mqtt.Infra.HomeAssistant;
+using Win2Mqtt.HomeAssistant;
 using Win2Mqtt.Service;
+using Win2Mqtt.System.Actions;
+using Win2Mqtt.System.Metrics;
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
@@ -41,32 +42,22 @@ try
 
     var builder = Host.CreateApplicationBuilder(args);
     builder.Services
-        .AddWindowsService(options => options.ServiceName = $"{Constants.AppId} Service");
-
-    builder.Services
         .AddSerilog((services, loggerConfiguration) => loggerConfiguration
             .ReadFrom.Configuration(builder.Configuration)
             .ReadFrom.Services(services)
             .Enrich.FromLogContext());
 
     builder.Services
-        .AddSingleton<IMqttClient>(_ =>
-        {
-            var factory = new MqttClientFactory();
-            return factory.CreateMqttClient();
-        })
-        .AddSingleton<IMqttConnectionManager, MqttConnector>()
-        .AddSingleton<IMqttPublisher, MqttPublisher>()
-        .AddSingleton<IMqttSubscriber, MqttSubscriber>()
-        .AddTransient<ISensorDataCollector, SensorDataCollector>()
-        .AddTransient<IIncomingMessagesProcessor, IncomingMessagesProcessor>()
-        .AddSingleton<IHomeAssistantDiscoveryHelper, HomeAssistantDiscoveryHelper>()
-        .AddSingleton<IHomeAssistantDiscoveryPublisher, HomeAssistantDiscoveryPublisher>()
         .AddOptions<Win2MqttOptions>()
-            .BindConfiguration(Win2MqttOptions.Options)
-            .ValidateDataAnnotations();
+        .BindConfiguration(Win2MqttOptions.Options)
+        .ValidateDataAnnotations();
 
     builder.Services
+        .AddWindowsService(options => options.ServiceName = $"{Constants.AppId} Service")
+        .AddMqtt2NetBroker()
+        .AddHomeAssistantDiscovery()
+        .AddSystemMetrics()
+        .AddSystemActions()
         .AddHostedService<Win2MqttBackgroundService>();
 
     await builder.Build().RunAsync();

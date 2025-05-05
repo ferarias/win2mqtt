@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Win2Mqtt.Infra
+namespace Win2Mqtt.Common
 {
     public static partial class SanitizeHelpers
     {

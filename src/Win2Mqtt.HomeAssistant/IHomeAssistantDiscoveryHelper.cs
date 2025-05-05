@@ -1,5 +1,4 @@
-﻿
-namespace Win2Mqtt.Infra.HomeAssistant
+﻿namespace Win2Mqtt.HomeAssistant
 {
     public interface IHomeAssistantDiscoveryHelper
     {

@@ -1,4 +1,4 @@
-﻿namespace Win2Mqtt.Infra.HomeAssistant
+﻿namespace Win2Mqtt.HomeAssistant
 {
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;

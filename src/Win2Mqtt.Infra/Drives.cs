@@ -1,4 +1,4 @@
-﻿namespace Win2Mqtt.Infra.HardwareSensors
+﻿namespace Win2Mqtt.System.Metrics
 {
     public struct DriveStatus
     {

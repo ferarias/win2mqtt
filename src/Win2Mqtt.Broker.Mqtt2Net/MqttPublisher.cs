@@ -4,7 +4,7 @@ using MQTTnet;
 using MQTTnet.Protocol;
 using Win2Mqtt.Common;
 
-namespace Win2Mqtt.Infra
+namespace Win2Mqtt.Broker.Mqtt2Net
 {
     public class MqttPublisher(IMqttClient client, ILogger<MqttPublisher> logger) : IMqttPublisher
     {

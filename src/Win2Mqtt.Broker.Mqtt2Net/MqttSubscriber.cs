@@ -5,7 +5,7 @@ using MQTTnet.Protocol;
 using Win2Mqtt.Common;
 using Win2Mqtt.Common.Options;
 
-namespace Win2Mqtt.Infra
+namespace Win2Mqtt.Broker.Mqtt2Net
 {
     public class MqttSubscriber(IMqttClient client, IOptions<Win2MqttOptions> options, ILogger<MqttSubscriber> logger) : IMqttSubscriber
     {
@@ -22,7 +22,7 @@ namespace Win2Mqtt.Infra
             {
                 if (_client?.IsConnected == true)
                 {
-                    _client.ApplicationMessageReceivedAsync += async (MqttApplicationMessageReceivedEventArgs e) =>
+                    _client.ApplicationMessageReceivedAsync += async (e) =>
                     {
                         _logger.LogInformation("New message received in `{sanitizedTopic}`.", e.ApplicationMessage.Topic);
                         try

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Win2Mqtt.Common.Options;
 
-namespace Win2Mqtt.Infra.HomeAssistant
+namespace Win2Mqtt.HomeAssistant
 {
     public class HomeAssistantDiscoveryPublisher(IHomeAssistantDiscoveryHelper homeAssistantDiscoveryHelper, IOptions<Win2MqttOptions> options)
         : IHomeAssistantDiscoveryPublisher

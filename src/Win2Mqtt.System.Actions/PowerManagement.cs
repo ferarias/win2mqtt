@@ -1,7 +1,8 @@
-﻿using System.Runtime.InteropServices;
-
-namespace Win2Mqtt.Infra.SystemOperations
+﻿namespace Win2Mqtt.System.Actions
 {
+    using global::System.Diagnostics;
+    using global::System.Runtime.InteropServices;
+
     public static partial class PowerManagement
     {
         [DllImport("Powrprof.dll", SetLastError = true, ExactSpelling = true)]
@@ -13,11 +14,11 @@ namespace Win2Mqtt.Infra.SystemOperations
 
         public static void Shutdown(int delay)
         {
-            System.Diagnostics.Process.Start("shutdown.exe", $"-s -t {delay}");
+            Process.Start("shutdown.exe", $"-s -t {delay}");
         }
         public static void Reboot(int delay)
         {
-            System.Diagnostics.Process.Start("shutdown.exe", $"-r -t {delay}");
+            Process.Start("shutdown.exe", $"-r -t {delay}");
         }
     }
 }

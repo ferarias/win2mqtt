@@ -1,11 +1,10 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Win2Mqtt.Infra.SystemOperations;
 using Win2Mqtt.Common.Options;
 using Win2Mqtt.Common;
 
-namespace Win2Mqtt.Infra
+namespace Win2Mqtt.System.Actions
 {
     public class IncomingMessagesProcessor(IMqttPublisher connector,
         IOptions<Win2MqttOptions> options,

@@ -1,4 +1,4 @@
-﻿namespace Win2Mqtt.Infra
+﻿namespace Win2Mqtt.Common
 {
     public static class MessageExtensions
     {
