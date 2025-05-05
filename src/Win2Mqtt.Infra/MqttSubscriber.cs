@@ -1,10 +1,7 @@
-﻿using System.Text;
-using System.Text.RegularExpressions;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MQTTnet.Client;
+using MQTTnet;
 using MQTTnet.Protocol;
-using MQTTnet.Server;
 using Win2Mqtt.Options;
 
 namespace Win2Mqtt.Infra
@@ -30,7 +27,7 @@ namespace Win2Mqtt.Infra
                         try
                         {
                             var operation = e.ApplicationMessage.Topic.Replace(_mqttBaseTopic, "");
-                            var message = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
+                            var message = e.ApplicationMessage.ConvertPayloadToString();
 
                             await processMessageAsync(operation, message, cancellationToken);
                         }

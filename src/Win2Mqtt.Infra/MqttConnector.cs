@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MQTTnet.Client;
+using MQTTnet;
 using Win2Mqtt.Options;
 
 namespace Win2Mqtt.Infra

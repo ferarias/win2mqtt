@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.WinUI.Notifications;
-
+﻿
 namespace Win2Mqtt.Infra.SystemOperations
 {
     public class NotifierParameters
@@ -12,17 +11,8 @@ namespace Win2Mqtt.Infra.SystemOperations
     {
         public static void Show(NotifierParameters parameters)
         {
-            var builder = new ToastContentBuilder();
-            builder.AddArgument("conversationId", Constants.AppId);
-            foreach (var item in parameters.Lines)
-            {
-                builder.AddText(item);
-            };
-            if (!string.IsNullOrWhiteSpace(parameters.Image))
-            {
-                builder.AddInlineImage(new Uri("file:///" + parameters.Image));
-            }
-            builder.Show();
+            //TODO
+            throw new NotImplementedException();
         }
     }
 }

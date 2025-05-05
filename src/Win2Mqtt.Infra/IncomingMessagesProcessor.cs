@@ -56,7 +56,7 @@ namespace Win2Mqtt.Infra
                         break;
 
                     case "Reboot":
-                        if(int.TryParse(message, out int rebootDelay))
+                        if (int.TryParse(message, out int rebootDelay))
                             PowerManagement.Reboot(message.MqttAsInt(rebootDelay));
                         else
                             PowerManagement.Reboot(message.MqttAsInt(10));

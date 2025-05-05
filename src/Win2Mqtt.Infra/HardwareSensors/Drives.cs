@@ -13,7 +13,7 @@
         public static IEnumerable<DriveStatus> GetDriveStatus()
         {
             return from drive in DriveInfo.GetDrives()
-                   where drive.IsReady 
+                   where drive.IsReady
                      && !drive.DriveType.Equals(DriveType.Network)
                    select new DriveStatus
                    {
