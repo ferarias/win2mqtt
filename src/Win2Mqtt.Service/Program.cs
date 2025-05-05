@@ -1,10 +1,13 @@
 using CliWrap;
+using MQTTnet;
+using MQTTnet.Client;
 using Serilog;
 using Win2Mqtt;
 using Win2Mqtt.Infra;
 using Win2Mqtt.Infra.HomeAssistant;
 using Win2Mqtt.Options;
 using Win2Mqtt.Service;
+using Windows.Media.Protection.PlayReady;
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
@@ -49,7 +52,14 @@ try
             .Enrich.FromLogContext());
 
     builder.Services
-        .AddSingleton<IMqttConnector, MqttConnector>()
+        .AddSingleton<IMqttClient>(sp =>
+        {
+            var factory = new MqttFactory();
+            return factory.CreateMqttClient();
+        })
+        .AddSingleton<IMqttConnectionManager, MqttConnector>()
+        .AddSingleton<IMqttPublisher, MqttPublisher>()
+        .AddSingleton<IMqttSubscriber, MqttSubscriber>()
         .AddTransient<ISensorDataCollector, SensorDataCollector>()
         .AddTransient<IIncomingMessagesProcessor, IncomingMessagesProcessor>()
         .AddSingleton<IHomeAssistantDiscoveryHelper, HomeAssistantDiscoveryHelper>()

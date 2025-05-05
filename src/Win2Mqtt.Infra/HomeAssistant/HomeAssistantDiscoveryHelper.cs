@@ -8,17 +8,17 @@
     using Win2Mqtt.Options;
 
     public class HomeAssistantDiscoveryHelper(
-        IMqttConnector connector,
+        IMqttPublisher connector,
         IOptions<Win2MqttOptions> options,
         ILogger<HomeAssistantDiscoveryHelper> logger) : IHomeAssistantDiscoveryHelper
     {
         private static readonly JsonSerializerOptions jsonSerializerOptions = new() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
-        private readonly IMqttConnector _connector = connector;
+        private readonly IMqttPublisher _connector = connector;
         private readonly Win2MqttOptions _options = options.Value;
         private readonly ILogger<HomeAssistantDiscoveryHelper> _logger = logger;
         private readonly string _mqttBaseTopic = $"{Constants.ServiceBaseTopic}/{options.Value.MachineIdentifier}";
 
-        private static string Sanitize(string value) => Regex.Replace(value.ToLowerInvariant(), @"[^a-z0-9_]+", "_");
+        private static string Sanitize(string value) => Regex.Replace(value.ToLowerInvariant(), "[^a-z0-9_]+", "_");
 
         private static string GetDiscoveryTopic(string entityType, string id) => $"{HomeAssistantTopics.BaseTopic}/{entityType}/{id}/config";
 

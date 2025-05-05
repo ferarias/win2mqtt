@@ -6,12 +6,11 @@ using Win2Mqtt.Options;
 
 namespace Win2Mqtt.Infra
 {
-
-    public class IncomingMessagesProcessor(IMqttConnector connector,
+    public class IncomingMessagesProcessor(IMqttPublisher connector,
         IOptions<Win2MqttOptions> options,
         ILogger<IncomingMessagesProcessor> logger) : IIncomingMessagesProcessor
     {
-        private readonly IMqttConnector _connector = connector;
+        private readonly IMqttPublisher _connector = connector;
         private readonly Win2MqttOptions _options = options.Value;
         private readonly ILogger<IncomingMessagesProcessor> _logger = logger;
 

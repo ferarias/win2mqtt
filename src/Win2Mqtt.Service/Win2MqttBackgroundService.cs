@@ -7,7 +7,9 @@ namespace Win2Mqtt.Service
     public class Win2MqttBackgroundService : BackgroundService
     {
         // MQTT connector
-        private readonly IMqttConnector _connector;
+        private readonly IMqttConnectionManager _mqttConnectionManager;
+        private readonly IMqttSubscriber _subscriber;
+        private readonly IMqttPublisher _publisher;
 
         // System information collector
         private readonly ISensorDataCollector _collector;
@@ -23,14 +25,16 @@ namespace Win2Mqtt.Service
 
         private readonly static SemaphoreSlim _semaphore = new(1, 1);
 
-        public Win2MqttBackgroundService(IMqttConnector connector,
-                                              ISensorDataCollector collector,
-                                              IIncomingMessagesProcessor messagesProcessor,
-                                              IHomeAssistantDiscoveryPublisher haDiscoveryEnumerator,
-                                              IOptions<Win2MqttOptions> options,
-                                              ILogger<Win2MqttBackgroundService> logger)
+        public Win2MqttBackgroundService(
+            IMqttConnectionManager mqttConnectionManager, IMqttSubscriber subscriber, IMqttPublisher publisher, ISensorDataCollector collector,
+            IIncomingMessagesProcessor messagesProcessor,
+            IHomeAssistantDiscoveryPublisher haDiscoveryEnumerator,
+            IOptions<Win2MqttOptions> options,
+            ILogger<Win2MqttBackgroundService> logger)
         {
-            _connector = connector;
+            _mqttConnectionManager = mqttConnectionManager;
+            _subscriber = subscriber;
+            _publisher = publisher;
             _collector = collector;
             _processor = messagesProcessor;
             _haDiscoveryEnumerator = haDiscoveryEnumerator;
@@ -44,16 +48,16 @@ namespace Win2Mqtt.Service
             try
             {
                 // Connect to MQTT broker
-                if (await _connector.ConnectAsync())
+                if (await _mqttConnectionManager.ConnectAsync())
                 {
                     // Publish Home Assistant discovery messages
                     await _haDiscoveryEnumerator.PublishSensorsDiscoveryAsync();
 
                     // Subscribe to incoming messages
                     // Process them with IIncomingMessagesProcessor.ProcessMessageAsync()
-                    if (await _connector.SubscribeAsync(_processor.ProcessMessageAsync))
+                    if (await _subscriber.SubscribeAsync(_processor.ProcessMessageAsync))
                     {
-                        await _connector.PublishForDeviceAsync("status", "online", retain: true);
+                        await _publisher.PublishForDeviceAsync("status", "online", retain: true);
 
                         while (!stoppingToken.IsCancellationRequested)
                         {
@@ -69,7 +73,7 @@ namespace Win2Mqtt.Service
                                 {
                                     try
                                     {
-                                        await _connector.PublishForDeviceAsync(sensorData.Key, sensorData.Value);
+                                        await _publisher.PublishForDeviceAsync(sensorData.Key, sensorData.Value);
                                     }
                                     catch (Exception ex)
                                     {
@@ -116,10 +120,9 @@ namespace Win2Mqtt.Service
 
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
-            await _connector.PublishForDeviceAsync("status", "offline", retain: true);
-            await _connector.DisconnectAsync();
+            await _publisher.PublishForDeviceAsync("status", "offline", retain: true);
+            await _mqttConnectionManager.DisconnectAsync();
             await base.StopAsync(cancellationToken);
         }
-
     }
 }
