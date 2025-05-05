@@ -4,7 +4,7 @@ using Win2Mqtt.Options;
 
 namespace Win2Mqtt.Service
 {
-    public class WindowsBackgroundService : BackgroundService
+    public class Win2MqttBackgroundService : BackgroundService
     {
         // MQTT connector
         private readonly IMqttConnector _connector;
@@ -19,16 +19,16 @@ namespace Win2Mqtt.Service
         private readonly HomeAssistantDiscoveryPublisher _haDiscoveryEnumerator;
 
         private readonly Win2MqttOptions _options;
-        private readonly ILogger<WindowsBackgroundService> _logger;
+        private readonly ILogger<Win2MqttBackgroundService> _logger;
 
         private readonly static SemaphoreSlim _semaphore = new(1, 1);
 
-        public WindowsBackgroundService(IMqttConnector connector,
+        public Win2MqttBackgroundService(IMqttConnector connector,
                                               ISensorDataCollector collector,
                                               IIncomingMessagesProcessor messagesProcessor,
                                               HomeAssistantDiscoveryPublisher haDiscoveryEnumerator,
                                               IOptions<Win2MqttOptions> options,
-                                              ILogger<WindowsBackgroundService> logger)
+                                              ILogger<Win2MqttBackgroundService> logger)
         {
             _connector = connector;
             _collector = collector;
