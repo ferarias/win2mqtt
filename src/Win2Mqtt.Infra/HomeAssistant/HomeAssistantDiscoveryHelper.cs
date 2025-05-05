@@ -8,9 +8,9 @@
     using Win2Mqtt.Options;
 
     public class HomeAssistantDiscoveryHelper(
-    IMqttConnector connector,
-    IOptions<Win2MqttOptions> options,
-    ILogger<HomeAssistantDiscoveryHelper> logger)
+        IMqttConnector connector,
+        IOptions<Win2MqttOptions> options,
+        ILogger<HomeAssistantDiscoveryHelper> logger) : IHomeAssistantDiscoveryHelper
     {
         private static readonly JsonSerializerOptions jsonSerializerOptions = new() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
         private readonly IMqttConnector _connector = connector;

@@ -52,8 +52,8 @@ try
         .AddSingleton<IMqttConnector, MqttConnector>()
         .AddTransient<ISensorDataCollector, SensorDataCollector>()
         .AddTransient<IIncomingMessagesProcessor, IncomingMessagesProcessor>()
-        .AddSingleton<HomeAssistantDiscoveryHelper>()
-        .AddSingleton<HomeAssistantDiscoveryPublisher>()
+        .AddSingleton<IHomeAssistantDiscoveryHelper, HomeAssistantDiscoveryHelper>()
+        .AddSingleton<IHomeAssistantDiscoveryPublisher, HomeAssistantDiscoveryPublisher>()
         .AddOptions<Win2MqttOptions>()
             .BindConfiguration(Win2MqttOptions.Options)
             .ValidateDataAnnotations();

@@ -16,7 +16,7 @@ namespace Win2Mqtt.Service
         private readonly IIncomingMessagesProcessor _processor;
 
         // Home Assistant discovery publisher
-        private readonly HomeAssistantDiscoveryPublisher _haDiscoveryEnumerator;
+        private readonly IHomeAssistantDiscoveryPublisher _haDiscoveryEnumerator;
 
         private readonly Win2MqttOptions _options;
         private readonly ILogger<Win2MqttBackgroundService> _logger;
@@ -26,7 +26,7 @@ namespace Win2Mqtt.Service
         public Win2MqttBackgroundService(IMqttConnector connector,
                                               ISensorDataCollector collector,
                                               IIncomingMessagesProcessor messagesProcessor,
-                                              HomeAssistantDiscoveryPublisher haDiscoveryEnumerator,
+                                              IHomeAssistantDiscoveryPublisher haDiscoveryEnumerator,
                                               IOptions<Win2MqttOptions> options,
                                               ILogger<Win2MqttBackgroundService> logger)
         {
