@@ -41,11 +41,11 @@ namespace Win2Mqtt.Infra
 
                         break;
                     case "ProcessRunning":
-                        await _connector.PublishMessageAsync($"process/running/{message}", Processes.IsRunning(message).BooleanToMqttOneOrZero());
+                        await _connector.PublishForDeviceAsync($"process/running/{message}", Processes.IsRunning(message).BooleanToMqttOneOrZero());
                         break;
 
                     case "ProcessClose":
-                        await _connector.PublishMessageAsync($"process/running/{message}", Processes.Close(message).BooleanToMqttOneOrZero());
+                        await _connector.PublishForDeviceAsync($"process/running/{message}", Processes.Close(message).BooleanToMqttOneOrZero());
                         break;
 
                     case "Hibernate":

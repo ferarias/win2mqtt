@@ -53,7 +53,7 @@ try
     builder.Services.AddSingleton<IMqttConnector, MqttConnector>();
     builder.Services.AddTransient<ISensorDataCollector, SensorDataCollector>();
     builder.Services.AddTransient<IIncomingMessagesProcessor, IncomingMessagesProcessor>();
-    builder.Services.AddSingleton<Win2Mqtt.Infra.HomeAssistant.HomeAssistantDiscoveryHelper>();
+    builder.Services.AddSingleton<HomeAssistantDiscoveryHelper>();
     builder.Services.AddSingleton<HomeAssistantDiscoveryPublisher>();
     builder.Services.AddSerilog((services, loggerConfiguration) => loggerConfiguration
         .ReadFrom.Configuration(builder.Configuration)

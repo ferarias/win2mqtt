@@ -53,7 +53,7 @@ namespace Win2Mqtt.Service
                     // Process them with IIncomingMessagesProcessor.ProcessMessageAsync()
                     if (await _connector.SubscribeAsync(_processor.ProcessMessageAsync))
                     {
-                        await _connector.PublishToFullTopicAsync("status", "online", retain: true);
+                        await _connector.PublishForDeviceAsync("status", "online", retain: true);
 
                         while (!stoppingToken.IsCancellationRequested)
                         {
@@ -69,7 +69,7 @@ namespace Win2Mqtt.Service
                                 {
                                     try
                                     {
-                                        await _connector.PublishMessageAsync(sensorData.Key, sensorData.Value);
+                                        await _connector.PublishForDeviceAsync(sensorData.Key, sensorData.Value);
                                     }
                                     catch (Exception ex)
                                     {
@@ -116,7 +116,7 @@ namespace Win2Mqtt.Service
 
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
-            await _connector.PublishMessageAsync("status", "offline", retain: true);
+            await _connector.PublishForDeviceAsync("status", "offline", retain: true);
             await _connector.DisconnectAsync();
             await base.StopAsync(cancellationToken);
         }

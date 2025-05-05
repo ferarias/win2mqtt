@@ -9,11 +9,8 @@ namespace Win2Mqtt
 
         Task<bool> SubscribeAsync(Func<string, string, Task> processMessageAsync);
 
-        Task PublishMessageAsync(string topic, string message, bool retain = false);
-
-        Task PublishRawAsync(string topic, byte[] bytes);
-
-        Task PublishToFullTopicAsync(string fullTopic, string message, bool retain);
+        Task PublishAsync(string topic, string message, bool retain);
+        Task PublishForDeviceAsync(string subtopic, string message, bool retain = false);
 
         Task DisconnectAsync();
     }

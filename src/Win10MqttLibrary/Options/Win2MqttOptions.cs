@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Win2Mqtt.Options
@@ -12,7 +13,7 @@ namespace Win2Mqtt.Options
 
         [Required()]
         [RegularExpression(@"[^/\\#]+$")]
-        public string MqttTopic { get; set; } = "unset";
+        public string MachineIdentifier { get; set; } = Environment.MachineName;
 
         public int TimerInterval { get; set; } = 5;
 
