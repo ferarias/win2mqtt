@@ -4,7 +4,7 @@ using MQTTnet;
 using Win2Mqtt.Common;
 using Win2Mqtt.Common.Options;
 
-namespace Win2Mqtt.Broker.Mqtt2Net
+namespace Win2Mqtt.Broker.MQTTNet
 {
     public class MqttConnector(
         IMqttClient client,

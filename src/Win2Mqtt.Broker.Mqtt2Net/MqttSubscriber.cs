@@ -5,7 +5,7 @@ using MQTTnet.Protocol;
 using Win2Mqtt.Common;
 using Win2Mqtt.Common.Options;
 
-namespace Win2Mqtt.Broker.Mqtt2Net
+namespace Win2Mqtt.Broker.MQTTNet
 {
     public class MqttSubscriber(IMqttClient client, IOptions<Win2MqttOptions> options, ILogger<MqttSubscriber> logger) : IMqttSubscriber
     {

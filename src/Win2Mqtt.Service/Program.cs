@@ -1,6 +1,6 @@
 using CliWrap;
 using Serilog;
-using Win2Mqtt.Broker.Mqtt2Net;
+using Win2Mqtt.Broker.MQTTNet;
 using Win2Mqtt.Common;
 using Win2Mqtt.Common.Options;
 using Win2Mqtt.HomeAssistant;
