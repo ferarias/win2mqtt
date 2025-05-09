@@ -25,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Win10MqttLibrary\Win2Mqtt.Common.csproj" />
+        <ProjectReference Include="..\Win2Mqtt.Common\Win2Mqtt.Common.csproj" />
         <ProjectReference Include="..\Win2Mqtt.Broker.Mqtt2Net\Win2Mqtt.Broker.MQTTNet.csproj" />
         <ProjectReference Include="..\Win2Mqtt.HomeAssistant\Win2Mqtt.HomeAssistant.csproj" />
         <ProjectReference Include="..\Win2Mqtt.Infra\Win2Mqtt.System.Metrics.csproj" />

@@ -10,7 +10,7 @@
         <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.1" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Win10MqttLibrary\Win2Mqtt.Common.csproj" />
+      <ProjectReference Include="..\Win2Mqtt.Common\Win2Mqtt.Common.csproj" />
     </ItemGroup>
 
 </Project>
