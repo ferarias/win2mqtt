@@ -4,8 +4,9 @@
     using Microsoft.Extensions.Options;
     using System.Text.Json;
     using System.Text.Json.Serialization;
+    using Win2Mqtt;
     using Win2Mqtt.Common;
-    using Win2Mqtt.Common.Options;
+    using Win2Mqtt.Options;
 
     public class HomeAssistantDiscoveryHelper(
         IMqttPublisher connector,

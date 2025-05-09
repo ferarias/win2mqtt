@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MQTTnet;
-using Win2Mqtt.Common;
 
 namespace Win2Mqtt.Broker.MQTTNet
 {

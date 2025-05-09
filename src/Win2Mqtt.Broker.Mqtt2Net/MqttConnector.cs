@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MQTTnet;
-using Win2Mqtt.Common;
-using Win2Mqtt.Common.Options;
+using Win2Mqtt.Options;
 
 namespace Win2Mqtt.Broker.MQTTNet
 {

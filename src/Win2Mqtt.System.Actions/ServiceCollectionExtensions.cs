@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Win2Mqtt.Common;
 
-namespace Win2Mqtt.System.Actions
+namespace Win2Mqtt.SystemActions.Windows
 {
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddSystemActions(this IServiceCollection services) =>
             services
-            .AddTransient<IIncomingMessagesProcessor, IncomingMessagesProcessor>();
+            .AddTransient<IIncomingMessagesProcessor, WindowsIncomingMessagesProcessor>();
     }
 }

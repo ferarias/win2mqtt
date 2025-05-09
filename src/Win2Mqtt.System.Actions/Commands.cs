@@ -1,8 +1,7 @@
-﻿
-namespace Win2Mqtt.System.Actions
-{
-    using global::System.Diagnostics;
+﻿using System.Diagnostics;
 
+namespace Win2Mqtt.SystemActions.Windows
+{
     public class CommandParameters
     {
         public required string CommandString { get; set; }

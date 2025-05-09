@@ -3,6 +3,6 @@
         <TargetFramework>net8.0</TargetFramework>
         <OutputType>Library</OutputType>
         <LanguageVersion>latest</LanguageVersion>
+        <RootNamespace>Win2Mqtt</RootNamespace>
     </PropertyGroup>
-
 </Project>

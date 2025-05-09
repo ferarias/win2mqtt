@@ -6,7 +6,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Win2Mqtt.Common", "src\Win2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Win2Mqtt.Service", "src\Win2Mqtt.Service\Win2Mqtt.Service.csproj", "{6986A9A0-EA1B-4610-BC5D-981EF2C7489B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Win2Mqtt.System.Metrics", "src\Win2Mqtt.Infra\Win2Mqtt.System.Metrics.csproj", "{3BAF2E9A-9646-4E5D-8828-6CA227255D41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Win2Mqtt.SystemMetrics.Windows", "src\Win2Mqtt.Infra\Win2Mqtt.SystemMetrics.Windows.csproj", "{3BAF2E9A-9646-4E5D-8828-6CA227255D41}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F3FF03FD-AD2C-4CD4-B6BD-D51C67EDA6A6}"
 	ProjectSection(SolutionItems) = preProject
@@ -23,9 +23,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win2Mqtt.Broker.MQTTNet", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win2Mqtt.HomeAssistant", "src\Win2Mqtt.HomeAssistant\Win2Mqtt.HomeAssistant.csproj", "{C98BBC15-80EE-446A-B980-CE104D5AF074}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "System", "System", "{7FEF2422-E653-4420-87D9-B2525A50C502}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SystemActions", "SystemActions", "{7FEF2422-E653-4420-87D9-B2525A50C502}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win2Mqtt.System.Actions", "src\Win2Mqtt.System.Actions\Win2Mqtt.System.Actions.csproj", "{02412E5A-7EF7-421E-8B97-EEC3E6BCB17F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win2Mqtt.SystemActions.Windows", "src\Win2Mqtt.System.Actions\Win2Mqtt.SystemActions.Windows.csproj", "{02412E5A-7EF7-421E-8B97-EEC3E6BCB17F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

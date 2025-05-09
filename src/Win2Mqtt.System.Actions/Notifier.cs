@@ -1,14 +1,8 @@
-﻿namespace Win2Mqtt.System.Actions
+﻿namespace Win2Mqtt.SystemActions.Windows
 {
-    public class NotifierParameters
-    {
-        public required string[] Lines { get; set; }
-        public string? Image { get; set; }
-    }
-
     public static class Notifier
     {
-        public static void Show(NotifierParameters parameters)
+        public static void Show(NotificationMessage parameters)
         {
             //TODO
             throw new NotImplementedException();

@@ -1,10 +1,9 @@
-﻿using System.Globalization;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Win2Mqtt.Common.Options;
-using Win2Mqtt.Common;
+using System.Globalization;
+using Win2Mqtt.Options;
 
-namespace Win2Mqtt.System.Metrics
+namespace Win2Mqtt.SystemMetrics.Windows
 {
     public class SensorDataCollector(
         IOptions<Win2MqttOptions> options,

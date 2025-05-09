@@ -1,4 +1,4 @@
-﻿namespace Win2Mqtt.Common.Options
+﻿namespace Win2Mqtt.Options
 {
     public class ListenerOptions
     {

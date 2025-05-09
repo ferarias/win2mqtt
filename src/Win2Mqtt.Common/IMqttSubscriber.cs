@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Win2Mqtt.Common
+namespace Win2Mqtt
 {
     public interface IMqttSubscriber
     {

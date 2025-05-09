@@ -1,6 +1,6 @@
 ﻿using System.Net.NetworkInformation;
 
-namespace Win2Mqtt.System.Metrics
+namespace Win2Mqtt.SystemMetrics.Windows
 {
     public static class NetworkStatus
     {

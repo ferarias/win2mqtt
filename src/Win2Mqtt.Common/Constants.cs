@@ -1,4 +1,4 @@
-﻿namespace Win2Mqtt.Common
+﻿namespace Win2Mqtt
 {
     public static class Constants
     {

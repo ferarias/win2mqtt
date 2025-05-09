@@ -1,8 +1,8 @@
-﻿namespace Win2Mqtt.System.Actions
-{
-    using global::System.Diagnostics;
-    using global::System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 
+namespace Win2Mqtt.SystemActions.Windows
+{
     public static partial class PowerManagement
     {
         [DllImport("Powrprof.dll", SetLastError = true, ExactSpelling = true)]

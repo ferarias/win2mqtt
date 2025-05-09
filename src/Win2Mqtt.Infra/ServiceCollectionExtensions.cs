@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Win2Mqtt.Common;
 
-namespace Win2Mqtt.System.Metrics
+namespace Win2Mqtt.SystemMetrics.Windows
 {
     public static class ServiceCollectionExtensions
     {

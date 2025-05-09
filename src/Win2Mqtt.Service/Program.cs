@@ -1,12 +1,12 @@
 using CliWrap;
 using Serilog;
+using Win2Mqtt;
 using Win2Mqtt.Broker.MQTTNet;
-using Win2Mqtt.Common;
-using Win2Mqtt.Common.Options;
 using Win2Mqtt.HomeAssistant;
+using Win2Mqtt.Options;
 using Win2Mqtt.Service;
-using Win2Mqtt.System.Actions;
-using Win2Mqtt.System.Metrics;
+using Win2Mqtt.SystemActions.Windows;
+using Win2Mqtt.SystemMetrics.Windows;
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
