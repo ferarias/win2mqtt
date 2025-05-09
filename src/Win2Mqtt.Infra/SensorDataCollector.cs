@@ -24,29 +24,64 @@ namespace Win2Mqtt.System.Metrics
             };
             if (_options.Sensors.DiskSensor)
             {
-                foreach (var drive in Drives.GetDriveStatus())
+                try
                 {
-                    var topic = "drive/" + drive.DriveName;
-                    data.Add($"{topic}/sizetotal", drive.TotalSize.ToString(CultureInfo.InvariantCulture));
-                    data.Add($"{topic}/sizefree", drive.AvailableFreeSpace.ToString(CultureInfo.InvariantCulture));
-                    data.Add($"{topic}/percentfree", drive.PercentFree.ToString(CultureInfo.InvariantCulture));
+                    foreach (var drive in Drives.GetDriveStatus())
+                    {
+                        var topic = "drive/" + drive.DriveName;
+                        data.Add($"{topic}/sizetotal", drive.TotalSize.ToString(CultureInfo.InvariantCulture));
+                        data.Add($"{topic}/sizefree", drive.AvailableFreeSpace.ToString(CultureInfo.InvariantCulture));
+                        data.Add($"{topic}/percentfree", drive.PercentFree.ToString(CultureInfo.InvariantCulture));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Error collecting disk sensor data");
                 }
             }
             if (_options.Sensors.FreeMemorySensor)
             {
-                data.Add("freememory", Memory.GetFreeMemory().ToString(CultureInfo.InvariantCulture));
+                try
+                {
+                    data.Add("freememory", Memory.GetFreeMemory().ToString(CultureInfo.InvariantCulture));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Error collecting free memory sensor data");
+                }
             }
             if (_options.Sensors.CpuSensor)
             {
-                data.Add("cpuprocessortime", Processor.GetProcessorTime().ToString(CultureInfo.InvariantCulture));
+                try
+                {
+                    data.Add("cpuprocessortime", Processor.GetProcessorTime().ToString(CultureInfo.InvariantCulture));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Error collecting CPU sensor data");
+                }
             }
             if (_options.Sensors.IsComputerUsed)
             {
-                data.Add("binary_sensor/inuse", (Processor.GetIdleTime().TotalSeconds <= 30).BooleanToMqttOneOrZero());
+                try
+                {
+                    data.Add("binary_sensor/inuse", (Processor.GetIdleTime().TotalSeconds <= 30).BooleanToMqttOneOrZero());
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Error collecting computer usage sensor data");
+                }
             }
             if (_options.Sensors.NetworkSensor)
             {
-                data.Add("binary_sensor/network_available", NetworkStatus.IsNetworkAvailable().BooleanToMqttOneOrZero());
+                try
+                {
+                    data.Add("binary_sensor/network_available", NetworkStatus.IsNetworkAvailable().BooleanToMqttOneOrZero());
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Error collecting network sensor data");
+                }
             }
             return Task.FromResult<IDictionary<string, string>>(data);
         }

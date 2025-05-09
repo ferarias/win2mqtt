@@ -54,11 +54,12 @@ try
 
     builder.Services
         .AddWindowsService(options => options.ServiceName = $"{Constants.AppId} Service")
+        .AddSingleton<Win2MqttService>()
         .AddMqtt2NetBroker()
         .AddHomeAssistantDiscovery()
         .AddSystemMetrics()
         .AddSystemActions()
-        .AddHostedService<Win2MqttBackgroundService>();
+        .AddHostedService<WindowsBackgroundService>();
 
     await builder.Build().RunAsync();
 }
