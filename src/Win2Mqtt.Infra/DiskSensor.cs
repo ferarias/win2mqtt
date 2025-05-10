@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using Win2Mqtt.SystemMetrics.Windows.WindowsSensors;
+using System.Globalization;
 
 namespace Win2Mqtt.SystemMetrics.Windows
 {
@@ -16,15 +16,20 @@ namespace Win2Mqtt.SystemMetrics.Windows
         {
             try
             {
-                var data = new Dictionary<string, string>();
-                foreach (var drive in Drives.GetDriveStatus())
-                {
-                    var topic = "drive/" + drive.DriveName;
-                    data.Add($"{topic}/sizetotal", drive.TotalSize.ToString(CultureInfo.InvariantCulture));
-                    data.Add($"{topic}/sizefree", drive.AvailableFreeSpace.ToString(CultureInfo.InvariantCulture));
-                    data.Add($"{topic}/percentfree", drive.PercentFree.ToString(CultureInfo.InvariantCulture));
-                }
-                return data;
+                return DriveInfo.GetDrives()
+                    .Where(di => di.IsReady && di.DriveType != DriveType.Network)
+                    .SelectMany(di =>
+                    {
+                        var driveName = di.Name.Replace(":\\", "");
+                        return new[]
+                        {
+                            new KeyValuePair<string, string>($"drive/{driveName}/sizetotal", di.TotalSize.ToString(CultureInfo.InvariantCulture)),
+                            new KeyValuePair<string, string>($"drive/{driveName}/sizefree", di.AvailableFreeSpace.ToString(CultureInfo.InvariantCulture)),
+                            new KeyValuePair<string, string>($"drive/{driveName}/percentfree",
+                            Math.Round((double)di.TotalFreeSpace / di.TotalSize * 100, 0).ToString(CultureInfo.InvariantCulture))
+                        };
+                    })
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
             catch (Exception ex)
             {

@@ -17,7 +17,7 @@ namespace Win2Mqtt.SystemMetrics.Windows
         {
             try
             {
-                var freeMemory = Memory.GetFreeMemory();
+                var freeMemory = GetFreeMemory();
                 return new Dictionary<string, string>
             {
                 { "freememory", freeMemory.ToString(CultureInfo.InvariantCulture) }
@@ -28,6 +28,11 @@ namespace Win2Mqtt.SystemMetrics.Windows
                 _logger.LogWarning(ex, "Error collecting memory data");
                 return new Dictionary<string, string>();
             }
+        }
+
+        private double GetFreeMemory()
+        {
+            throw new NotImplementedException();
         }
     }
 }

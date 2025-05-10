@@ -17,17 +17,22 @@ namespace Win2Mqtt.SystemMetrics.Windows
         {
             try
             {
-                var usage = Processor.GetProcessorTime();
+                var usage = GetProcessorTime();
                 return new Dictionary<string, string>
-            {
-                { "cpuprocessortime", usage.ToString(CultureInfo.InvariantCulture) }
-            };
+                {
+                    { "cpuprocessortime", usage.ToString(CultureInfo.InvariantCulture) }
+                };
             }
             catch (Exception ex)
             {
                 _logger.LogWarning(ex, "Error collecting CPU data");
                 return new Dictionary<string, string>();
             }
+        }
+
+        private double GetProcessorTime()
+        {
+            throw new NotImplementedException();
         }
     }
 }
