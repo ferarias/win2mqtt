@@ -9,5 +9,4 @@ namespace Win2Mqtt.SystemMetrics
         /// </summary>
         IDictionary<string, string> Collect();
     }
-
 }

@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Logging;
 using System.Globalization;
-using Win2Mqtt.SystemMetrics.Windows.WindowsSensors;
 
 namespace Win2Mqtt.SystemMetrics.Windows
 {

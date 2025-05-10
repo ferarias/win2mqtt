@@ -4,14 +4,13 @@ using Win2Mqtt.Options;
 
 namespace Win2Mqtt.SystemMetrics.Windows
 {
-    public class SystemMetricsCollectorCollector(
+
+    public class SystemMetricsCollector(
         IEnumerable<ISensor> sensors,
-        IOptions<Win2MqttOptions> options,
-        ILogger<SystemMetricsCollectorCollector> logger)
+        ILogger<SystemMetricsCollector> logger)
         : ISystemMetricsCollector
     {
-        private readonly Win2MqttOptions _options = options.Value;
-        private readonly ILogger<SystemMetricsCollectorCollector> _logger = logger;
+        private readonly ILogger<SystemMetricsCollector> _logger = logger;
 
         public Task<IDictionary<string, string>> CollectSystemDataAsync()
         {
