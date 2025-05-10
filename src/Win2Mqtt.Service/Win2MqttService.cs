@@ -10,7 +10,7 @@ namespace Win2Mqtt.Service
         IMqttConnectionManager mqttConnectionManager,
         IMqttSubscriber mqttSubscriber,
         IMqttPublisher mqttPublisher,
-        ISensorDataCollector sensorDataCollector,
+        ISystemMetricsCollector sensorDataCollector,
         IIncomingMessagesProcessor incomingMessagesProcessor,
         IHomeAssistantDiscoveryPublisher haDiscoveryPublisher,
         IOptions<Win2MqttOptions> options,

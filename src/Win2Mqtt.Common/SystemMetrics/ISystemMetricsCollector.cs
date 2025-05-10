@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Win2Mqtt.SystemMetrics
 {
-    public interface ISensorDataCollector
+    public interface ISystemMetricsCollector
     {
         Task<IDictionary<string, string>> CollectSystemDataAsync();
     }

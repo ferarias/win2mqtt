@@ -1,4 +1,4 @@
-namespace Win2Mqtt.SystemMetrics.Windows
+namespace Win2Mqtt.SystemMetrics.Windows.WindowsSensors
 {
     public static class Processor
     {
