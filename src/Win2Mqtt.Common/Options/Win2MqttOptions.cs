@@ -23,9 +23,6 @@ namespace Win2Mqtt.Options
         public SensorsOptions Sensors { get; set; }
 
         [Required]
-        public IncomingMessagesOptions IncomingMessages { get; set; }
-
-        [Required]
         public Dictionary<string, ListenerOptions> Listeners { get; set; }
     }
 }
