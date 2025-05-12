@@ -28,7 +28,7 @@ namespace Win2Mqtt.Service
             try
             {
                 // Collect system information
-                var sensorsData = await sensorDataCollector.CollectSystemDataAsync();
+                var sensorsData = await sensorDataCollector.CollectAsync();
 
                 // Publish collected data
                 foreach (var sensorData in sensorsData)

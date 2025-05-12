@@ -7,13 +7,15 @@ namespace Win2Mqtt.SystemMetrics.Windows
     {
         public static IServiceCollection AddSystemMetrics(this IServiceCollection services)
         {
+            services.Scan(scan => scan
+            .FromAssemblyOf<SystemMetricsCollector>() 
+            .AddClasses(classes => classes.AssignableTo<ISensor>())
+            .As<ISensor>()
+            .WithSingletonLifetime()
+            );
+
             services.AddSingleton<ISensorFactory, SensorFactory>();
-            services.AddSingleton<ISystemMetricsCollector>(sp =>
-            {
-                var factory = sp.GetRequiredService<ISensorFactory>();
-                var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
-                return new SystemMetricsCollector(factory.CreateSensors(), loggerFactory.CreateLogger<SystemMetricsCollector>());
-            });
+            services.AddSingleton<ISystemMetricsCollector, SystemMetricsCollector>();
             return services;
         }
     }

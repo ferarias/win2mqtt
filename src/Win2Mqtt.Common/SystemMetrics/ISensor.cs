@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Win2Mqtt.SystemMetrics
 {
@@ -7,6 +8,6 @@ namespace Win2Mqtt.SystemMetrics
         /// <summary>
         /// Returns one or more topic/value pairs.
         /// </summary>
-        IDictionary<string, string> Collect();
+        Task<IDictionary<string, string>> CollectAsync();
     }
 }

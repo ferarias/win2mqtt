@@ -14,11 +14,11 @@ namespace Win2Mqtt.HomeAssistant
             {
                 await homeAssistantDiscoveryHelper.PublishSensorDiscoveryAsync("cpuprocessortime", "CPU Usage", "%", null, "measurement", cancellationToken);
             }
-            if (_options.Sensors.FreeMemorySensor)
+            if (_options.Sensors.MemorySensor)
             {
                 await homeAssistantDiscoveryHelper.PublishSensorDiscoveryAsync("freememory", "Free Memory", "MB", "data_size", "measurement", cancellationToken);
             }
-            if (_options.Sensors.IsComputerUsed)
+            if (_options.Sensors.ComputerInUseSensor)
             {
                 await homeAssistantDiscoveryHelper.PublishBinarySensorDiscoveryAsync("network_available", "Network Available", "connectivity", cancellationToken);
             }

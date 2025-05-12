@@ -5,6 +5,6 @@ namespace Win2Mqtt.SystemMetrics
 {
     public interface ISystemMetricsCollector
     {
-        Task<IDictionary<string, string>> CollectSystemDataAsync();
+        Task<IDictionary<string, string>> CollectAsync();
     }
 }

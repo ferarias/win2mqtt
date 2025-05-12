@@ -49,7 +49,7 @@ try
 
     builder.Services
         .AddOptions<Win2MqttOptions>()
-        .BindConfiguration(Win2MqttOptions.Options)
+        .BindConfiguration(Win2MqttOptions.SectionName)
         .ValidateDataAnnotations();
 
     builder.Services

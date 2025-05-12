@@ -1,26 +1,30 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Win2Mqtt.Options;
 
 namespace Win2Mqtt.SystemMetrics.Windows
 {
 
-    public class SystemMetricsCollector(
-        IEnumerable<ISensor> sensors,
-        ILogger<SystemMetricsCollector> logger)
-        : ISystemMetricsCollector
+    public class SystemMetricsCollector : ISystemMetricsCollector
     {
-        private readonly ILogger<SystemMetricsCollector> _logger = logger;
+        private readonly IEnumerable<ISensor> _sensors;
+        private readonly ILogger<SystemMetricsCollector> logger;
 
-        public Task<IDictionary<string, string>> CollectSystemDataAsync()
+        public SystemMetricsCollector(
+            ISensorFactory sensorFactory,
+            ILogger<SystemMetricsCollector> logger)
         {
-            _logger.LogDebug("Collecting sensor data from system");
+            _sensors = sensorFactory.GetEnabledSensors();
+            this.logger = logger;
+        }
+
+        public async Task<IDictionary<string, string>> CollectAsync()
+        {
+            logger.LogDebug("Collecting sensor data from system");
             var data = new Dictionary<string, string>();
-            foreach (var sensor in sensors)
+            foreach (var sensor in _sensors)
             {
                 try
                 {
-                    var sensorData = sensor.Collect();
+                    var sensorData = await sensor.CollectAsync();
                     foreach (var kvp in sensorData)
                     {
                         data[kvp.Key] = kvp.Value;
@@ -28,11 +32,11 @@ namespace Win2Mqtt.SystemMetrics.Windows
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogWarning(ex, "Error collecting sensor data");
+                    logger.LogWarning(ex, "Error collecting sensor data");
                 }
             }
 
-            return Task.FromResult<IDictionary<string, string>>(data);
+            return data;
         }
     }
 }

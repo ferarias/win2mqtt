@@ -1,27 +1,37 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
+using System.Reflection;
 using Win2Mqtt.Options;
 
 namespace Win2Mqtt.SystemMetrics.Windows
 {
-    public class SensorFactory(IOptions<Win2MqttOptions> options, ILoggerFactory loggerFactory) : ISensorFactory
+    public class SensorFactory : ISensorFactory
     {
-        public IEnumerable<ISensor> CreateSensors()
+        private readonly IEnumerable<ISensor> _allSensors;
+        private readonly SensorsOptions _sensorOptions;
+
+        public SensorFactory(IEnumerable<ISensor> allSensors, IOptions<Win2MqttOptions> options)
         {
-            var sensors = new List<ISensor>();
+            _allSensors = allSensors;
+            _sensorOptions = options.Value.Sensors;
 
-            if (options.Value.Sensors.CpuSensor)
-                sensors.Add(new CpuSensor(loggerFactory.CreateLogger<CpuSensor>()));
+        }
 
-            if (options.Value.Sensors.FreeMemorySensor)
-                sensors.Add(new MemorySensor(loggerFactory.CreateLogger<MemorySensor>()));
+        public IEnumerable<ISensor> GetEnabledSensors()
+        {
+            foreach (var sensor in _allSensors)
+            {
+                var keyAttr = sensor.GetType().GetCustomAttribute<SensorKeyAttribute>();
+                if (keyAttr == null) continue;
 
-            if (options.Value.Sensors.DiskSensor)
-                sensors.Add(new DiskSensor(loggerFactory.CreateLogger<DiskSensor>()));
+                var key = keyAttr.Key;
 
-            // and so on...
-
-            return sensors;
+                // Reflectively check if the config key is enabled
+                var prop = _sensorOptions.GetType().GetProperty(key);
+                if (prop?.PropertyType == typeof(bool) && (bool)prop.GetValue(_sensorOptions) == true)
+                {
+                    yield return sensor;
+                }
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Globalization;
 
 namespace Win2Mqtt.SystemMetrics.Windows
 {
+    [SensorKey("DiskSensor")]
     public class DiskSensor : ISensor
     {
         private readonly ILogger<DiskSensor> _logger;
@@ -12,11 +13,11 @@ namespace Win2Mqtt.SystemMetrics.Windows
             _logger = logger;
         }
 
-        public IDictionary<string, string> Collect()
+        public Task<IDictionary<string, string>> CollectAsync()
         {
             try
             {
-                return DriveInfo.GetDrives()
+                return Task.FromResult<IDictionary<string, string>>(DriveInfo.GetDrives()
                     .Where(di => di.IsReady && di.DriveType != DriveType.Network)
                     .SelectMany(di =>
                     {
@@ -29,12 +30,12 @@ namespace Win2Mqtt.SystemMetrics.Windows
                             Math.Round((double)di.TotalFreeSpace / di.TotalSize * 100, 0).ToString(CultureInfo.InvariantCulture))
                         };
                     })
-                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
             }
             catch (Exception ex)
             {
                 _logger.LogWarning(ex, "Error collecting disk data");
-                return new Dictionary<string, string>();
+                return Task.FromResult<IDictionary<string, string>>(new Dictionary<string, string>());
             }
         }
     }

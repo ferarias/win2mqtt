@@ -6,7 +6,7 @@ namespace Win2Mqtt.Options
 {
     public class Win2MqttOptions
     {
-        public static readonly string Options = Constants.AppId;
+        public static readonly string SectionName = Constants.AppId;
 
         [Required]
         public MqttBrokerOptions Broker { get; set; }
@@ -21,6 +21,8 @@ namespace Win2Mqtt.Options
 
         [Required]
         public SensorsOptions Sensors { get; set; }
+        [Required]
+        public IncomingMessagesOptions IncomingMessages { get; set; }
 
         [Required]
         public Dictionary<string, ListenerOptions> Listeners { get; set; }

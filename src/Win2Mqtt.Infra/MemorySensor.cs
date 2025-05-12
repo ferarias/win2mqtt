@@ -3,6 +3,7 @@ using System.Globalization;
 
 namespace Win2Mqtt.SystemMetrics.Windows
 {
+    [SensorKey("MemorySensor")]
     public class MemorySensor : ISensor
     {
         private readonly ILogger<MemorySensor> _logger;
@@ -12,20 +13,20 @@ namespace Win2Mqtt.SystemMetrics.Windows
             _logger = logger;
         }
 
-        public IDictionary<string, string> Collect()
+        public Task<IDictionary<string, string>> CollectAsync()
         {
             try
             {
                 var freeMemory = GetFreeMemory();
-                return new Dictionary<string, string>
+                return Task.FromResult<IDictionary<string, string>>(new Dictionary<string, string>
             {
                 { "freememory", freeMemory.ToString(CultureInfo.InvariantCulture) }
-            };
+            });
             }
             catch (Exception ex)
             {
                 _logger.LogWarning(ex, "Error collecting memory data");
-                return new Dictionary<string, string>();
+                return Task.FromResult<IDictionary<string, string>>(new Dictionary<string, string>());
             }
         }
 
