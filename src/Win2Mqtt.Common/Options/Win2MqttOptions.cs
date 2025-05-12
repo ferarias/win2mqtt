@@ -15,12 +15,13 @@ namespace Win2Mqtt.Options
         [RegularExpression(@"[^/\\#]+$")]
         public string MachineIdentifier { get; set; } = Environment.MachineName;
 
-        public int TimerInterval { get; set; } = 5;
+        public int MqttTopicQoS { get; set; } = 1;
 
-        public bool EnableNotifications { get; set; }
+        public int TimerInterval { get; set; } = 5;
 
         [Required]
         public SensorsOptions Sensors { get; set; }
+
         [Required]
         public IncomingMessagesOptions IncomingMessages { get; set; }
 

@@ -38,7 +38,7 @@ try
         return;
     }
 
-    Log.Information("Start service.");
+    Log.Information("Start application.");
 
     var builder = Host.CreateApplicationBuilder(args);
     builder.Services
@@ -48,7 +48,7 @@ try
             .Enrich.FromLogContext());
 
     builder.Services
-        .AddOptions<Win2MqttOptions>()
+        .AddOptionsWithValidateOnStart<Win2MqttOptions>()
         .BindConfiguration(Win2MqttOptions.SectionName)
         .ValidateDataAnnotations();
 
