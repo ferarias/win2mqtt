@@ -20,7 +20,7 @@ namespace Win2Mqtt.Options
         public int TimerInterval { get; set; } = 5;
 
         [Required]
-        public SensorsOptions Sensors { get; set; }
+        public Dictionary<string, SensorOptions> Sensors { get; set; }
 
         [Required]
         public Dictionary<string, ListenerOptions> Listeners { get; set; }

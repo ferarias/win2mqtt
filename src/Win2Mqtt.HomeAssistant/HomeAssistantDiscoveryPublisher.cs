@@ -10,22 +10,22 @@ namespace Win2Mqtt.HomeAssistant
 
         public async Task PublishSensorsDiscoveryAsync(CancellationToken cancellationToken = default)
         {
-            if (_options.Sensors.CpuSensor)
-            {
-                await homeAssistantDiscoveryHelper.PublishSensorDiscoveryAsync("cpuprocessortime", "CPU Usage", "%", null, "measurement", cancellationToken);
-            }
-            if (_options.Sensors.MemorySensor)
-            {
-                await homeAssistantDiscoveryHelper.PublishSensorDiscoveryAsync("freememory", "Free Memory", "MB", "data_size", "measurement", cancellationToken);
-            }
-            if (_options.Sensors.ComputerInUseSensor)
-            {
-                await homeAssistantDiscoveryHelper.PublishBinarySensorDiscoveryAsync("network_available", "Network Available", "connectivity", cancellationToken);
-            }
-            if (_options.Sensors.NetworkSensor)
-            {
-                await homeAssistantDiscoveryHelper.PublishBinarySensorDiscoveryAsync("inuse", "User Activity", "occupancy", cancellationToken);
-            }
+            //if (_options.Sensors.CpuProcessorTimeSensor)
+            //{
+            //    await homeAssistantDiscoveryHelper.PublishSensorDiscoveryAsync("cpuprocessortime", "CPU Usage", "%", null, "measurement", cancellationToken);
+            //}
+            //if (_options.Sensors.FreeMemorySensor)
+            //{
+            //    await homeAssistantDiscoveryHelper.PublishSensorDiscoveryAsync("freememory", "Free Memory", "MB", "data_size", "measurement", cancellationToken);
+            //}
+            //if (_options.Sensors.ComputerInUseSensor)
+            //{
+            //    await homeAssistantDiscoveryHelper.PublishBinarySensorDiscoveryAsync("network_available", "Network Available", "connectivity", cancellationToken);
+            //}
+            //if (_options.Sensors.NetworkAvailabilitySensor)
+            //{
+            //    await homeAssistantDiscoveryHelper.PublishBinarySensorDiscoveryAsync("inuse", "User Activity", "occupancy", cancellationToken);
+            //}
         }
     }
 }

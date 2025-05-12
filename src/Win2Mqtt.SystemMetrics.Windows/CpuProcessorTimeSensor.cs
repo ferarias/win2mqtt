@@ -3,12 +3,11 @@ using System.Globalization;
 
 namespace Win2Mqtt.SystemMetrics.Windows
 {
-    [SensorKey("CpuSensor")]
-    public class CpuSensor : ISensor
+    public class CpuProcessorTimeSensor : ISensor
     {
-        private readonly ILogger<CpuSensor> _logger;
+        private readonly ILogger<CpuProcessorTimeSensor> _logger;
 
-        public CpuSensor(ILogger<CpuSensor> logger)
+        public CpuProcessorTimeSensor(ILogger<CpuProcessorTimeSensor> logger)
         {
             _logger = logger;
         }

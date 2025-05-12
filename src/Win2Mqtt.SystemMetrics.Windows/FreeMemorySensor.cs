@@ -3,12 +3,11 @@ using System.Globalization;
 
 namespace Win2Mqtt.SystemMetrics.Windows
 {
-    [SensorKey("MemorySensor")]
-    public class MemorySensor : ISensor
+    public class FreeMemorySensor : ISensor
     {
-        private readonly ILogger<MemorySensor> _logger;
+        private readonly ILogger<FreeMemorySensor> _logger;
 
-        public MemorySensor(ILogger<MemorySensor> logger)
+        public FreeMemorySensor(ILogger<FreeMemorySensor> logger)
         {
             _logger = logger;
         }

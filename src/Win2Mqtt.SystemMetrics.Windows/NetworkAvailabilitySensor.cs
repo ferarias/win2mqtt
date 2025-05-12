@@ -3,12 +3,11 @@ using System.Net.NetworkInformation;
 
 namespace Win2Mqtt.SystemMetrics.Windows
 {
-    [SensorKey("NetworkSensor")]
-    public class NetworkSensor : ISensor
+    public class NetworkAvailabilitySensor : ISensor
     {
-        private readonly ILogger<NetworkSensor> _logger;
+        private readonly ILogger<NetworkAvailabilitySensor> _logger;
 
-        public NetworkSensor(ILogger<NetworkSensor> logger)
+        public NetworkAvailabilitySensor(ILogger<NetworkAvailabilitySensor> logger)
         {
             _logger = logger;
         }

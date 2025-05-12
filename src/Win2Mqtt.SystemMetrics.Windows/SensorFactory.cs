@@ -1,33 +1,19 @@
 ﻿using Microsoft.Extensions.Options;
-using System.Reflection;
 using Win2Mqtt.Options;
 
 namespace Win2Mqtt.SystemMetrics.Windows
 {
-    public class SensorFactory : ISensorFactory
+    public class SensorFactory(IEnumerable<ISensor> allSensors, IOptions<Win2MqttOptions> options) : ISensorFactory
     {
-        private readonly IEnumerable<ISensor> _allSensors;
-        private readonly SensorsOptions _sensorOptions;
-
-        public SensorFactory(IEnumerable<ISensor> allSensors, IOptions<Win2MqttOptions> options)
-        {
-            _allSensors = allSensors;
-            _sensorOptions = options.Value.Sensors;
-
-        }
+        private readonly Dictionary<string, SensorOptions> _sensorOptions = options.Value.Sensors;
 
         public IEnumerable<ISensor> GetEnabledSensors()
         {
-            foreach (var sensor in _allSensors)
+            foreach (var sensor in allSensors)
             {
-                var keyAttr = sensor.GetType().GetCustomAttribute<SensorKeyAttribute>();
-                if (keyAttr == null) continue;
+                var key = sensor.GetType().Name;
 
-                var key = keyAttr.Key;
-
-                // Reflectively check if the config key is enabled
-                var prop = _sensorOptions.GetType().GetProperty(key);
-                if (prop?.PropertyType == typeof(bool) && (bool)prop.GetValue(_sensorOptions) == true)
+                if (_sensorOptions[key].Enabled)
                 {
                     yield return sensor;
                 }

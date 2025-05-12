@@ -3,12 +3,11 @@ using System.Globalization;
 
 namespace Win2Mqtt.SystemMetrics.Windows
 {
-    [SensorKey("DiskSensor")]
-    public class DiskSensor : ISensor
+    public class DriveSensor : ISensor
     {
-        private readonly ILogger<DiskSensor> _logger;
+        private readonly ILogger<DriveSensor> _logger;
 
-        public DiskSensor(ILogger<DiskSensor> logger)
+        public DriveSensor(ILogger<DriveSensor> logger)
         {
             _logger = logger;
         }
