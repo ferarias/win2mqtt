@@ -1,106 +1,44 @@
-using Microsoft.Extensions.Options;
-using Win2Mqtt.Infra.HomeAssistant;
-using Win2Mqtt.Options;
-
 namespace Win2Mqtt.Service
 {
-    public class WindowsBackgroundService : BackgroundService
+    public class WindowsBackgroundService(
+        Win2MqttService service, 
+        ILogger<WindowsBackgroundService> logger) : BackgroundService
     {
-        // MQTT connector
-        private readonly IMqttConnector _connector;
 
-        // System information collector
-        private readonly ISensorDataCollector _collector;
-
-        // Incoming messages processor
-        private readonly IIncomingMessagesProcessor _processor;
-
-        // Home Assistant discovery publisher
-        private readonly HomeAssistantDiscoveryPublisher _haDiscoveryEnumerator;
-
-        private readonly Win2MqttOptions _options;
-        private readonly ILogger<WindowsBackgroundService> _logger;
-
-        private readonly static SemaphoreSlim _semaphore = new(1, 1);
-
-        public WindowsBackgroundService(IMqttConnector connector,
-                                              ISensorDataCollector collector,
-                                              IIncomingMessagesProcessor messagesProcessor,
-                                              HomeAssistantDiscoveryPublisher haDiscoveryEnumerator,
-                                              IOptions<Win2MqttOptions> options,
-                                              ILogger<WindowsBackgroundService> logger)
+        public override async Task StartAsync(CancellationToken cancellationToken)
         {
-            _connector = connector;
-            _collector = collector;
-            _processor = messagesProcessor;
-            _haDiscoveryEnumerator = haDiscoveryEnumerator;
-            _options = options.Value;
-            _logger = logger;
+            logger.LogInformation("Worker started");
+
+            // Connect to MQTT broker
+            await service.ConnectToMqttBrokerAsync(cancellationToken);
+
+            // Subscribe to incoming messages and  process them with IIncomingMessagesProcessor.ProcessMessageAsync()
+            await service.SubscribeToIncomingMessagesAsync(cancellationToken);
+
+            // Publish Home Assistant discovery messages and online status
+            await service.StartAsync(cancellationToken);
+
+            await base.StartAsync(cancellationToken);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Worker started");
             try
             {
-                // Connect to MQTT broker
-                if (await _connector.ConnectAsync())
+                while (!stoppingToken.IsCancellationRequested)
                 {
-                    // Publish Home Assistant discovery messages
-                    await _haDiscoveryEnumerator.PublishSensorsDiscoveryAsync();
-
-                    // Subscribe to incoming messages
-                    // Process them with IIncomingMessagesProcessor.ProcessMessageAsync()
-                    if (await _connector.SubscribeAsync(_processor.ProcessMessageAsync))
-                    {
-                        await _connector.PublishToFullTopicAsync("status", "online", retain: true);
-
-                        while (!stoppingToken.IsCancellationRequested)
-                        {
-                            // Allow only one thread collecting system information
-                            await _semaphore.WaitAsync(stoppingToken);
-                            try
-                            {
-                                // Collect system information
-                                var sensorsData = await _collector.CollectSystemDataAsync();
-
-                                // Publish collected data
-                                foreach (var sensorData in sensorsData)
-                                {
-                                    try
-                                    {
-                                        await _connector.PublishMessageAsync(sensorData.Key, sensorData.Value);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        _logger.LogWarning(ex, "Failed to publish sensor {Sensor}", sensorData.Key);
-                                    }
-                                }
-                                _logger.LogDebug("{sensorCount} sensors published", sensorsData.Count);
-                            }
-                            finally
-                            {
-                                _semaphore.Release();
-                            }
-                            await Task.Delay(TimeSpan.FromSeconds(_options.TimerInterval), stoppingToken);
-                        }
-                    }
-                }
-                else
-                {
-                    _logger.LogWarning("MQTT connection failed. Retrying in 10 seconds...");
-                    await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
-                    return;
+                    await service.CollectAndPublish(stoppingToken);
                 }
             }
             catch (OperationCanceledException)
             {
                 // When the stopping token is canceled, for example, a call made from services.msc,
                 // we shouldn't exit with a non-zero exit code. In other words, this is expected...
+                logger.LogInformation("Cancelling pending operations.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Message}", ex.Message);
+                logger.LogError(ex, "{Message}", ex.Message);
 
                 // Terminates this process and returns an exit code to the operating system.
                 // This is required to avoid the 'BackgroundServiceExceptionBehavior', which
@@ -116,10 +54,8 @@ namespace Win2Mqtt.Service
 
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
-            await _connector.PublishMessageAsync("status", "offline", retain: true);
-            await _connector.DisconnectAsync();
+            await service.StopAsync(cancellationToken);
             await base.StopAsync(cancellationToken);
         }
-
     }
 }
