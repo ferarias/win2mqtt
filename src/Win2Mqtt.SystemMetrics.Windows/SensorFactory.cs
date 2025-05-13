@@ -1,55 +1,55 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Win2Mqtt.Options;
 
 namespace Win2Mqtt.SystemMetrics.Windows
 {
-    public class SensorFactory : ISensorFactory
+    public class SensorFactory(
+    IOptions<Win2MqttOptions> options,
+    IServiceProvider serviceProvider) : ISensorFactory
     {
-        private readonly IEnumerable<ISensor> _individualSensors;
-        private readonly IEnumerable<IMultiSensor> _multiSensors;
-        private readonly Win2MqttOptions _options;
-        private readonly IServiceProvider _serviceProvider;
+        //TODO check if enabled from options
+        private readonly Win2MqttOptions _options = options.Value;
 
-
-        public SensorFactory(
-        IEnumerable<ISensor> individualSensors,
-        IEnumerable<IMultiSensor> multiSensors,
-        IOptions<Win2MqttOptions> options,
-        IServiceProvider serviceProvider)
+        public IEnumerable<ISensorWrapper> GetEnabledSensors()
         {
-            _individualSensors = individualSensors;
-            _multiSensors = multiSensors;
-            _options = options.Value;
-            _serviceProvider = serviceProvider;
-        }
+            var wrappers = new List<ISensorWrapper>();
 
-
-        public IEnumerable<ISensor> GetEnabledSensors()
-        {
-            foreach (var sensor in _individualSensors)
+            // Regular sensors
+            var sensors = serviceProvider.GetServices<ISensor>();
+            foreach (var sensor in sensors)
             {
-                var key = sensor.GetType().Name;
-                if (_options.Sensors.TryGetValue(key, out var config) && config.Enabled)
+                var sensorType = sensor.GetType();
+                var iface = sensorType
+                    .GetInterfaces()
+                    .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISensor<>));
+                if (iface != null)
                 {
-                    yield return sensor;
+                    var wrapperType = typeof(SensorWrapper<>).MakeGenericType(iface.GenericTypeArguments[0]);
+                    if (Activator.CreateInstance(wrapperType, sensor) is ISensorWrapper wrapper)
+                        wrappers.Add(wrapper);
                 }
             }
 
-            foreach (var multi in _multiSensors)
+            // Multi-sensors
+            var multiSensors = serviceProvider.GetServices<IMultiSensor>();
+            foreach (var multi in multiSensors)
             {
-                var key = multi.GetType().Name;
-                if (_options.MultiSensors.TryGetValue(key, out var config) && config.Enabled)
+                var sensorsFromMulti = multi.CreateSensors(serviceProvider);
+                foreach (var sensor in sensorsFromMulti)
                 {
-                    foreach (var sensor in multi.CreateSensors(_serviceProvider))
+                    var iface = sensor.GetType()
+                        .GetInterfaces()
+                        .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISensor<>));
+                    if (iface != null)
                     {
-                        var sensorKey = sensor.GetType().Name;
-                        if (config.Sensors.TryGetValue(sensorKey, out var sensorCfg) && sensorCfg.Enabled)
-                        {
-                            yield return sensor;
-                        }
+                        var wrapperType = typeof(SensorWrapper<>).MakeGenericType(iface.GenericTypeArguments[0]);
+                        if (Activator.CreateInstance(wrapperType, sensor) is ISensorWrapper wrapper)
+                            wrappers.Add(wrapper);
                     }
                 }
             }
+            return wrappers;
 
         }
     }

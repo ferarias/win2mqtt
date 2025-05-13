@@ -5,20 +5,24 @@ namespace Win2Mqtt.SystemMetrics.Windows
 {
     public static partial class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Add sensors for system metrics to the service collection.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public static IServiceCollection AddSystemMetrics(this IServiceCollection services)
         {
             services.Scan(scan => scan
             .FromAssemblyOf<SensorFactory>()
-            .AddClasses(classes => classes.AssignableTo<ISensor>())
-            .UsingRegistrationStrategy(RegistrationStrategy.Skip)
+            .AddClasses(c => c.WithAttribute<MultiSensorAttribute>().AssignableTo<IMultiSensor>())
             .AsImplementedInterfaces()
-            .WithSingletonLifetime()
-            );
+            .WithSingletonLifetime());
 
             services.Scan(scan => scan
             .FromAssemblyOf<SensorFactory>()
-            .AddClasses(c => c.AssignableTo<IMultiSensor>())
-            .As<IMultiSensor>()
+            .AddClasses(c => c.WithAttribute<SensorAttribute>())
+            .UsingRegistrationStrategy(RegistrationStrategy.Append)
+            .As<ISensor>()
             .WithSingletonLifetime());
 
             services.AddSingleton<ISensorFactory, SensorFactory>();

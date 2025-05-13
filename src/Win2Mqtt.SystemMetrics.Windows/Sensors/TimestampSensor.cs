@@ -1,8 +1,16 @@
-﻿namespace Win2Mqtt.SystemMetrics.Windows.Sensors
+﻿using Microsoft.Extensions.Logging;
+
+namespace Win2Mqtt.SystemMetrics.Windows.Sensors
 {
     [Sensor("TimestampSensor")]
-    public class TimestampSensor : ISensor
+    public class TimestampSensor(ILogger<TimestampSensor> logger) : ISensor<DateTime>
     {
-        public Task<IDictionary<string, string>> CollectAsync() => Task.FromResult<IDictionary<string, string>>(new Dictionary<string, string> { { "timestamp", DateTime.UtcNow.ToString("o") } });
+        public Task<SensorValue<DateTime>> CollectAsync()
+        {
+            var key = "timestamp";
+            var value = DateTime.UtcNow;
+            logger.LogDebug("Collect {Key}: {Value}", key, value);
+            return Task.FromResult(new SensorValue<DateTime>(key, value));
+        }
     }
 }
