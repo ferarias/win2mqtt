@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Net.NetworkInformation;
 
-namespace Win2Mqtt.SystemMetrics.Windows
+namespace Win2Mqtt.SystemMetrics.Windows.Sensors
 {
+    [Sensor("NetworkAvailabilitySensor")]
     public class NetworkAvailabilitySensor : ISensor
     {
         private readonly ILogger<NetworkAvailabilitySensor> _logger;

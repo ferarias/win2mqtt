@@ -21,6 +21,8 @@ namespace Win2Mqtt.Options
 
         [Required]
         public Dictionary<string, SensorOptions> Sensors { get; set; }
+        [Required]
+        public Dictionary<string, MultiSensorOptions> MultiSensors { get; set; }
 
         [Required]
         public Dictionary<string, ListenerOptions> Listeners { get; set; }

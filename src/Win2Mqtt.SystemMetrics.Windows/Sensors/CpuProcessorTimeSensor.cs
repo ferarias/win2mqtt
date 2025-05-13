@@ -1,13 +1,14 @@
 using Microsoft.Extensions.Logging;
 using System.Globalization;
 
-namespace Win2Mqtt.SystemMetrics.Windows
+namespace Win2Mqtt.SystemMetrics.Windows.Sensors
 {
-    public class FreeMemorySensor : ISensor
+    [Sensor("CpuProcessorTimeSensor")]
+    public class CpuProcessorTimeSensor : ISensor
     {
-        private readonly ILogger<FreeMemorySensor> _logger;
+        private readonly ILogger<CpuProcessorTimeSensor> _logger;
 
-        public FreeMemorySensor(ILogger<FreeMemorySensor> logger)
+        public CpuProcessorTimeSensor(ILogger<CpuProcessorTimeSensor> logger)
         {
             _logger = logger;
         }
@@ -16,20 +17,20 @@ namespace Win2Mqtt.SystemMetrics.Windows
         {
             try
             {
-                var freeMemory = GetFreeMemory();
+                var usage = GetProcessorTime();
                 return Task.FromResult<IDictionary<string, string>>(new Dictionary<string, string>
-            {
-                { "freememory", freeMemory.ToString(CultureInfo.InvariantCulture) }
-            });
+                {
+                    { "cpuprocessortime", usage.ToString(CultureInfo.InvariantCulture) }
+                });
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Error collecting memory data");
+                _logger.LogWarning(ex, "Error collecting CPU data");
                 return Task.FromResult<IDictionary<string, string>>(new Dictionary<string, string>());
             }
         }
 
-        private double GetFreeMemory()
+        private double GetProcessorTime()
         {
             throw new NotImplementedException();
         }
