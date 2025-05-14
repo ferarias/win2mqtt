@@ -2,12 +2,17 @@
 
 namespace Win2Mqtt.SystemMetrics.Windows.MultiSensors.Drive
 {
-    [ManualSensor("DriveFreeSizeSensor")]
-    public class DriveFreeSizeSensor(DriveInfo driveInfo, ILogger<DriveFreeSizeSensor> logger) : ISensor<long>
+    [ManualSensor("drive/{0}/sizefree",
+    name: "Drive {0} Free Space",
+    unitOfMeasurement: "B",
+    deviceClass: "storage",
+    stateClass: "measurement")]
+    public class DriveFreeSizeSensor(DriveInfo driveInfo, ILogger<DriveFreeSizeSensor> logger) : AttributedSensorBase<long>
     {
-        public Task<SensorValue<long>> CollectAsync()
+        public override Task<SensorValue<long>> CollectAsync()
         {
-            var key = $"drive/{driveInfo.Name.Replace(":\\", "")}/sizefree";
+            var key = string.Format(Metadata.Key, driveInfo.Name.Replace(":\\", ""));
+
             var value = driveInfo.AvailableFreeSpace;
             logger.LogDebug("Collect {Key}: {Value}", key, value);
             return Task.FromResult(new SensorValue<long>(key, value));

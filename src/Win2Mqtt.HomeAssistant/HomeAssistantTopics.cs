@@ -5,4 +5,5 @@
         public const string BaseTopic = "homeassistant";
 
     }
+
 }

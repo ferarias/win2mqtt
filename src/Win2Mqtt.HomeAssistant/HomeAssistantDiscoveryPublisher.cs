@@ -1,31 +1,32 @@
-﻿using Microsoft.Extensions.Options;
-using Win2Mqtt.Options;
+﻿using Win2Mqtt.SystemMetrics;
 
 namespace Win2Mqtt.HomeAssistant
 {
-    public class HomeAssistantDiscoveryPublisher(IHomeAssistantDiscoveryHelper homeAssistantDiscoveryHelper, IOptions<Win2MqttOptions> options)
+    public class HomeAssistantDiscoveryPublisher(
+        ISensorFactory sensorFactory,
+        IHomeAssistantDiscoveryHelper homeAssistantDiscoveryHelper)
         : IHomeAssistantDiscoveryPublisher
     {
-        private readonly Win2MqttOptions _options = options.Value;
+        private readonly IEnumerable<ISensorWrapper> _sensors = sensorFactory.GetEnabledSensors();
+
 
         public async Task PublishSensorsDiscoveryAsync(CancellationToken cancellationToken = default)
         {
-            //if (_options.Sensors.CpuProcessorTimeSensor)
-            //{
-            //    await homeAssistantDiscoveryHelper.PublishSensorDiscoveryAsync("cpuprocessortime", "CPU Usage", "%", null, "measurement", cancellationToken);
-            //}
-            //if (_options.Sensors.FreeMemorySensor)
-            //{
-            //    await homeAssistantDiscoveryHelper.PublishSensorDiscoveryAsync("freememory", "Free Memory", "MB", "data_size", "measurement", cancellationToken);
-            //}
-            //if (_options.Sensors.ComputerInUseSensor)
-            //{
-            //    await homeAssistantDiscoveryHelper.PublishBinarySensorDiscoveryAsync("network_available", "Network Available", "connectivity", cancellationToken);
-            //}
-            //if (_options.Sensors.NetworkAvailabilitySensor)
-            //{
-            //    await homeAssistantDiscoveryHelper.PublishBinarySensorDiscoveryAsync("inuse", "User Activity", "occupancy", cancellationToken);
-            //}
+            foreach (var sensor in _sensors)
+            {
+                var meta = sensor.Metadata;
+                if (meta.IsBinary)
+                {
+                    await homeAssistantDiscoveryHelper.PublishBinarySensorDiscoveryAsync(
+                        meta.Key, meta.Name, meta.DeviceClass, cancellationToken);
+                }
+                else
+                {
+                    await homeAssistantDiscoveryHelper.PublishSensorDiscoveryAsync(
+                        meta.Key, meta.Name, meta.UnitOfMeasurement, meta.DeviceClass, meta.StateClass, cancellationToken);
+                }
+                await homeAssistantDiscoveryHelper.PublishSensorDiscoveryAsync("", "", "", null, "", cancellationToken);
+            }
         }
     }
 }

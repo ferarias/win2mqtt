@@ -2,12 +2,16 @@
 
 namespace Win2Mqtt.SystemMetrics.Windows.MultiSensors.Drive
 {
-    [ManualSensor("DriveTotalSizeSensor")]
-    public class DriveTotalSizeSensor(DriveInfo driveInfo, ILogger<DriveTotalSizeSensor> logger) : ISensor<long>
+    [ManualSensor("drive/{0}/sizetotal",
+    name: "Drive {0} Total Space",
+    unitOfMeasurement: "B",
+    deviceClass: "storage",
+    stateClass: "measurement")]
+    public class DriveTotalSizeSensor(DriveInfo driveInfo, ILogger<DriveTotalSizeSensor> logger) : AttributedSensorBase<long>
     {
-        public Task<SensorValue<long>> CollectAsync()
+        public override Task<SensorValue<long>> CollectAsync()
         {
-            var key = $"drive/{driveInfo.Name.Replace(":\\", "")}/sizetotal";
+            var key = string.Format(Metadata.Key, driveInfo.Name.Replace(":\\", ""));
             var value = driveInfo.TotalSize;
             logger.LogDebug("Collect {Key}: {Value}", key, value);
             return Task.FromResult(new SensorValue<long>(key, value));

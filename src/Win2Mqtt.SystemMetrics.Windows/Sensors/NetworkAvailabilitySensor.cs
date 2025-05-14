@@ -3,15 +3,18 @@ using System.Net.NetworkInformation;
 
 namespace Win2Mqtt.SystemMetrics.Windows.Sensors
 {
-    [Sensor("NetworkAvailabilitySensor")]
-    public class NetworkAvailabilitySensor(ILogger<NetworkAvailabilitySensor> logger) : ISensor<bool>
+    [Sensor(
+    "networkavailability",
+    name: "Network Availability",
+    deviceClass: "connectivity",
+    isBinary: true)]
+    public class NetworkAvailabilitySensor(ILogger<NetworkAvailabilitySensor> logger) : AttributedSensorBase<bool>
     {
-        public Task<SensorValue<bool>> CollectAsync()
+        public override Task<SensorValue<bool>> CollectAsync()
         {
-            var key = "networkavailability";
             var value = NetworkInterface.GetIsNetworkAvailable();
-            logger.LogDebug("Collect {Key}: {Value}", key, value);
-            return Task.FromResult(new SensorValue<bool>(key, value));
+            logger.LogDebug("Collect {Key}: {Value}", Metadata.Key, value);
+            return Task.FromResult(new SensorValue<bool>(Metadata.Key, value));
         }
     }
 }

@@ -20,6 +20,22 @@ namespace Win2Mqtt.Service
         private readonly static SemaphoreSlim _semaphore = new(1, 1);
 
 
+        public async Task StartAsync(CancellationToken stoppingToken)
+        {
+            // Connect to MQTT broker
+            await ConnectToMqttBrokerAsync(stoppingToken);
+
+            // Subscribe to incoming messages and  process them with IIncomingMessagesProcessor.ProcessMessageAsync()
+            await SubscribeToIncomingMessagesAsync(stoppingToken);
+
+            // Publish Home Assistant discovery messages
+            await haDiscoveryPublisher.PublishSensorsDiscoveryAsync(stoppingToken);
+
+            var statusTopic = $"{Constants.ServiceBaseTopic}/{_options.MachineIdentifier}/status";
+            await mqttPublisher.PublishAsync(statusTopic, "online", retain: true, stoppingToken);
+
+        }
+
         public async Task CollectAndPublish(CancellationToken stoppingToken)
         {
 
@@ -53,21 +69,6 @@ namespace Win2Mqtt.Service
 
         }
 
-        public async Task StartAsync(CancellationToken stoppingToken)
-        {
-            // Connect to MQTT broker
-            await ConnectToMqttBrokerAsync(stoppingToken);
-
-            // Subscribe to incoming messages and  process them with IIncomingMessagesProcessor.ProcessMessageAsync()
-            await SubscribeToIncomingMessagesAsync(stoppingToken);
-
-            // Publish Home Assistant discovery messages
-            await haDiscoveryPublisher.PublishSensorsDiscoveryAsync(stoppingToken);
-
-            var statusTopic = $"{Constants.ServiceBaseTopic}/{_options.MachineIdentifier}/status";
-            await mqttPublisher.PublishAsync(statusTopic, "online", retain: true, stoppingToken);
-
-        }
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             var statusTopic = $"{Constants.ServiceBaseTopic}/{_options.MachineIdentifier}/status";

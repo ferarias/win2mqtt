@@ -2,15 +2,20 @@ using Microsoft.Extensions.Logging;
 
 namespace Win2Mqtt.SystemMetrics.Windows.Sensors
 {
-    [Sensor("CpuProcessorTimeSensor")]
-    public class CpuProcessorTimeSensor(ILogger<CpuProcessorTimeSensor> logger) : ISensor<double>
+    [Sensor(
+    "cpuprocessortime",
+    name: "CPU Processor Time",
+    unitOfMeasurement: "ms",
+    deviceClass: "cpu",
+    stateClass: "measurement")]
+    public class CpuProcessorTimeSensor(ILogger<CpuProcessorTimeSensor> logger) : AttributedSensorBase<double>
     {
-        public Task<SensorValue<double>> CollectAsync()
+
+        public override Task<SensorValue<double>> CollectAsync()
         {
-            var key = "cpuprocessortime";
             var value = GetProcessorTime();
-            logger.LogDebug("Collect {Key}: {Value}", key, value);
-            return Task.FromResult(new SensorValue<double>(key, value));
+            logger.LogDebug("Collect {Key}: {Value}", Metadata.Key, value);
+            return Task.FromResult(new SensorValue<double>(Metadata.Key, value));
         }
 
         private double GetProcessorTime()
