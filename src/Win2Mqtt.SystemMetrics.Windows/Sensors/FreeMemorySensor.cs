@@ -1,21 +1,47 @@
 using Microsoft.Extensions.Logging;
+using System.Runtime.InteropServices;
 
 namespace Win2Mqtt.SystemMetrics.Windows.Sensors
 {
-    [Sensor("freememory", name: "Free Memory", unitOfMeasurement: "MB", deviceClass: "memory", stateClass: "measurement")]
-    public class FreeMemorySensor(ILogger<FreeMemorySensor> logger) : Sensor<double>
+    [Sensor("freememory", name: "Free Memory", unitOfMeasurement: "B", deviceClass: "memory", stateClass: "measurement")]
+    public partial class FreeMemorySensor(ILogger<FreeMemorySensor> logger) : Sensor<double>
     {
-
-        public override Task<SensorValue<double>> CollectAsync()
+        public override async Task<SensorValue<double>> CollectAsync()
         {
-            var value = GetFreeMemory();
-            logger.LogDebug("Collect {Key}: {Value}", Metadata.Key, value);
-            return Task.FromResult(new SensorValue<double>(Metadata.Key, value));
+            var value = await GetFreeMemoryAsync();
+            logger.LogDebug("Collect {Key}: {Value} B", Metadata.Key, value);
+            return new SensorValue<double>(Metadata.Key, value);
         }
 
-        private double GetFreeMemory()
+        private static Task<double> GetFreeMemoryAsync()
         {
-            throw new NotImplementedException();
+            MEMORYSTATUSEX memoryStatus = new() { dwLength = (uint)Marshal.SizeOf<MEMORYSTATUSEX>() };
+
+            if (!GlobalMemoryStatusEx(ref memoryStatus))
+            {
+                throw new InvalidOperationException("Unable to query memory status.");
+            }
+
+            double freeMemory = memoryStatus.ullAvailPhys;
+            return Task.FromResult(freeMemory);
         }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        private struct MEMORYSTATUSEX
+        {
+            public uint dwLength;
+            public uint dwMemoryLoad;
+            public ulong ullTotalPhys;
+            public ulong ullAvailPhys;
+            public ulong ullTotalPageFile;
+            public ulong ullAvailPageFile;
+            public ulong ullTotalVirtual;
+            public ulong ullAvailVirtual;
+            public ulong ullAvailExtendedVirtual;
+        }
+
+        [LibraryImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool GlobalMemoryStatusEx(ref MEMORYSTATUSEX lpBuffer);
     }
 }

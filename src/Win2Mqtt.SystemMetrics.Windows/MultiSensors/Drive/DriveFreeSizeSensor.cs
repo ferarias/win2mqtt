@@ -5,7 +5,7 @@ namespace Win2Mqtt.SystemMetrics.Windows.MultiSensors.Drive
     [ChildSensor("drive/{0}/sizefree",
     namePattern: "Drive {0} Free Space",
     unitOfMeasurement: "B",
-    deviceClass: "storage",
+    deviceClass: "data_size",
     stateClass: "measurement")]
     public class DriveFreeSizeSensor(DriveInfo driveInfo, ILogger<DriveFreeSizeSensor> logger) 
         : ChildSensor<long>(driveInfo.Name.Replace(":\\", ""))
