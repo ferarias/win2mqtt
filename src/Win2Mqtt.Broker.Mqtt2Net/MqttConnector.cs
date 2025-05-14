@@ -23,7 +23,7 @@ namespace Win2Mqtt.Broker.MQTTNet
 
         public async Task<bool> ConnectAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Connecting to MQTT broker.");
+            _logger.LogDebug("Connecting to MQTT broker.");
             try
             {
                 var mqttOptionsBuilder = new MqttClientOptionsBuilder()

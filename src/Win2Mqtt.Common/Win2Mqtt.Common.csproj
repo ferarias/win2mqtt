@@ -4,5 +4,6 @@
         <OutputType>Library</OutputType>
         <LanguageVersion>latest</LanguageVersion>
         <RootNamespace>Win2Mqtt</RootNamespace>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 </Project>

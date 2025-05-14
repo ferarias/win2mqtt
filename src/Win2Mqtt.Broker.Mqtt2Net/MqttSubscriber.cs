@@ -15,42 +15,44 @@ namespace Win2Mqtt.Broker.MQTTNet
 
         private readonly string _mqttBaseTopic = $"{Constants.ServiceBaseTopic}/{options.Value.MachineIdentifier}/";
 
-        public async Task<bool> SubscribeAsync(Func<string, string, CancellationToken, Task> processMessageAsync, CancellationToken cancellationToken = default)
+        public async Task<bool> SubscribeAsync(
+            Func<string, string, CancellationToken, Task> ProcessIncomingMessageAsync,
+            CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Subscribing to topics.");
             try
             {
-                if (_client?.IsConnected == true)
+                if (_client?.IsConnected != true) return false;
+
+                _client.ApplicationMessageReceivedAsync += async (e) =>
                 {
-                    _client.ApplicationMessageReceivedAsync += async (e) =>
+                    _logger.LogDebug("New message received in `{Topic}`.", e.ApplicationMessage.Topic);
+                    try
                     {
-                        _logger.LogInformation("New message received in `{sanitizedTopic}`.", e.ApplicationMessage.Topic);
-                        try
-                        {
-                            var operation = e.ApplicationMessage.Topic.Replace(_mqttBaseTopic, "");
-                            var message = e.ApplicationMessage.ConvertPayloadToString();
+                        var operation = e.ApplicationMessage.Topic.Replace(_mqttBaseTopic, "");
+                        var message = e.ApplicationMessage.ConvertPayloadToString();
 
-                            await processMessageAsync(operation, message, cancellationToken);
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.LogError(ex, "Exception receiving");
-                        }
-                    };
-
-                    foreach (var listener in _options.Listeners)
-                    {
-                        if (listener.Value.Enabled)
-                        {
-                            var sanitizedTopic = SanitizeHelpers.Sanitize(listener.Value.Topic);
-                            string topic = $"{_mqttBaseTopic}{sanitizedTopic}";
-                            await _client.SubscribeAsync(topic, MqttQualityOfServiceLevel.ExactlyOnce, cancellationToken);
-                            _logger.LogInformation("Subscribed to MQTT topic `{topic}`.", topic);
-                        }
+                        await ProcessIncomingMessageAsync(operation, message, cancellationToken);
                     }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Exception receiving");
+                    }
+                };
 
-                    return true;
+                foreach (var listener in _options.Listeners)
+                {
+                    if (listener.Value.Enabled)
+                    {
+                        var sanitizedTopic = SanitizeHelpers.Sanitize(listener.Value.Topic);
+                        string topic = $"{_mqttBaseTopic}{sanitizedTopic}";
+                        await _client.SubscribeAsync(topic, MqttQualityOfServiceLevel.ExactlyOnce, cancellationToken);
+                        _logger.LogDebug("Subscribed to MQTT topic `{Topic}`.", topic);
+                    }
                 }
+
+                return true;
+
             }
             catch (Exception ex)
             {

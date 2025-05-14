@@ -1,91 +1,72 @@
 ﻿namespace Win2Mqtt.HomeAssistant
 {
-    using Microsoft.Extensions.Logging;
-    using Microsoft.Extensions.Options;
     using System.Text.Json;
     using System.Text.Json.Serialization;
     using Win2Mqtt;
     using Win2Mqtt.Common;
-    using Win2Mqtt.Options;
+    using Win2Mqtt.SystemMetrics;
 
-    public class HomeAssistantDiscoveryHelper(
-        IMqttPublisher connector,
-        IOptions<Win2MqttOptions> options,
-        ILogger<HomeAssistantDiscoveryHelper> logger) : IHomeAssistantDiscoveryHelper
+    public class HomeAssistantDiscoveryHelper
     {
-        private static readonly JsonSerializerOptions jsonSerializerOptions = new() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
-        private readonly IMqttPublisher _connector = connector;
-        private readonly Win2MqttOptions _options = options.Value;
-        private readonly ILogger<HomeAssistantDiscoveryHelper> _logger = logger;
-        private readonly string _mqttBaseTopic = $"{Constants.ServiceBaseTopic}/{options.Value.MachineIdentifier}";
-
-        private static string GetDiscoveryTopic(string entityType, string id) => $"{HomeAssistantTopics.BaseTopic}/{entityType}/{id}/config";
-
-        private string GetSensorId(string sensorKey) => $"{Constants.ServiceBaseTopic}_{SanitizeHelpers.Sanitize(_options.MachineIdentifier)}_{SanitizeHelpers.Sanitize(sensorKey)}";
-
-        public async Task PublishSensorDiscoveryAsync(string sensorKey, string name, string? unit = null, string? deviceClass = null, string? stateClass = null, CancellationToken cancellationToken = default)
+        private static readonly JsonSerializerOptions jsonSerializerOptions = new()
         {
-            var sensorId = GetSensorId(sensorKey); // e.g.: "win2mqtt_winsrv02_cpu_usage"
-            var configTopic = GetDiscoveryTopic("sensor", sensorId); // e.g.: "homeassistant/sensor/win2mqtt_winsrv02_cpu_usage/config"
-            var stateTopic = $"{_mqttBaseTopic}/{SanitizeHelpers.Sanitize(sensorKey)}"; // e.g.: "win2mqtt/winsrv02/cpu_usage"
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
 
-            var payload = new
+        public static (string HomeAssistantConfigTopic, string Payload) GetSensorDiscoveryPayload(
+            string machineIdentifier,
+            SensorMetadata meta)
+        {
+            // Common values
+            // e.g.: "win2mqtt_winsrv02"
+            var machineUniqueId = $"{Constants.ServiceBaseTopic}_{machineIdentifier}";
+
+            // e.g.: "win2mqtt_winsrv02_cpu_usage"
+            var sensorUniqueId = $"{Constants.ServiceBaseTopic}_{machineIdentifier}_{SanitizeHelpers.Sanitize(meta.Key)}";
+
+            // e.g.: "homeassistant/sensor/win2mqtt_winsrv02_cpu_usage/config"
+            var homeAssistantConfigTopic = $"{HomeAssistantTopics.BaseTopic}/{(meta.IsBinary ? "binary_sensor" : "sensor")}/{sensorUniqueId}/config";
+
+            // e.g.: "win2mqtt/winsrv02"
+            string mqttBaseTopic = $"{Constants.ServiceBaseTopic}/{machineIdentifier}";
+
+            // e.g.: "win2mqtt/winsrv02/win2mqtt_winsrv02_cpu_usage"
+            string stateTopic = $"{mqttBaseTopic}/{sensorUniqueId}";
+
+            // e.g.: "win2mqtt/winsrv02/status"
+            string availTopic = $"{mqttBaseTopic}/status";
+
+            // Extract device info once
+            var deviceInfo = new
             {
-                name,
-                state_topic = stateTopic,
-                unique_id = sensorId,
-                availability_topic = $"{_mqttBaseTopic}/status",
-                device = new
-                {
-                    identifiers = new[] { $"{Constants.ServiceBaseTopic}_{_options.MachineIdentifier}" },
-                    name = $"Win2MQTT - {_options.MachineIdentifier}",
-                    manufacturer = "Win2MQTT",
-                    model = "System Monitoring"
-                },
-                unit_of_measurement = unit,
-                device_class = deviceClass,
-                state_class = stateClass
+                identifiers = new[] { machineUniqueId },
+                name = $"Win2MQTT - {machineIdentifier}",
+                manufacturer = "Win2MQTT",
+                model = "System Monitoring"
             };
 
-            await _connector.PublishAsync(configTopic, JsonSerializer.Serialize(payload, jsonSerializerOptions), retain: true, cancellationToken: cancellationToken);
-            _logger.LogInformation("Published HA discovery config for {sensor}", sensorKey);
-        }
-
-        public async Task PublishBinarySensorDiscoveryAsync(string sensorKey, string name, string? deviceClass = null, CancellationToken cancellationToken = default)
-        {
-            var sensorId = GetSensorId(sensorKey);
-            var configTopic = GetDiscoveryTopic("binary_sensor", sensorId);
-            var stateTopic = $"{_mqttBaseTopic}/{SanitizeHelpers.Sanitize(sensorKey)}";
-
-            var payload = new
+            // Build the common payload dictionary
+            var payloadDict = new Dictionary<string, object>
             {
-                name,
-                state_topic = stateTopic,
-                unique_id = sensorId,
-                availability_topic = $"{_mqttBaseTopic}/status",
-                payload_on = "1",
-                payload_off = "0",
-                device = new
-                {
-                    identifiers = new[] { $"{Constants.ServiceBaseTopic}_{_options.MachineIdentifier}" },
-                    name = $"Win2MQTT - {_options.MachineIdentifier}",
-                    manufacturer = "Win2MQTT",
-                    model = "System Monitoring"
-                },
-                device_class = deviceClass
+                ["name"] = meta.Name,
+                ["state_topic"] = stateTopic,
+                ["unique_id"] = sensorUniqueId,
+                ["availability_topic"] = availTopic,
+                ["device"] = deviceInfo
             };
 
-            var json = JsonSerializer.Serialize(payload, jsonSerializerOptions);
-            await _connector.PublishAsync(configTopic, json, retain: true, cancellationToken: cancellationToken);
-            _logger.LogInformation("Published HA binary_sensor config for {sensor}", sensorKey);
-        }
+            if(!string.IsNullOrWhiteSpace(meta?.UnitOfMeasurement)) payloadDict["unit_of_measurement"] = meta.UnitOfMeasurement;
+            if (!string.IsNullOrWhiteSpace(meta?.StateClass)) payloadDict["state_class"] = meta.StateClass;
+            if (!string.IsNullOrWhiteSpace(meta?.DeviceClass)) payloadDict["device_class"] = meta.DeviceClass;
 
-        public async Task UnpublishSensorDiscoveryAsync(string sensorKey, bool isBinary = false, CancellationToken cancellationToken = default)
-        {
-            var sensorId = GetSensorId(sensorKey);
-            var topic = GetDiscoveryTopic(isBinary ? "binary_sensor" : "sensor", sensorId);
-            await _connector.PublishAsync(topic, "", retain: true, cancellationToken: cancellationToken);
-            _logger.LogInformation("Unpublished HA discovery config for {sensor}", sensorKey);
+            if (meta?.IsBinary == true)
+            {
+                // Binary-specific fields
+                payloadDict["payload_on"] = "1";
+                payloadDict["payload_off"] = "0";
+            }
+
+            return (homeAssistantConfigTopic, JsonSerializer.Serialize(payloadDict, jsonSerializerOptions));
         }
     }
 }

@@ -12,13 +12,28 @@ namespace Win2Mqtt.Service
         IMqttPublisher mqttPublisher,
         ISystemMetricsCollector sensorDataCollector,
         IIncomingMessagesProcessor incomingMessagesProcessor,
-        IHomeAssistantDiscoveryPublisher haDiscoveryPublisher,
+        IHomeAssistantPublisher haPublisher,
         IOptions<Win2MqttOptions> options,
         ILogger<Win2MqttService> logger)
     {
         private readonly Win2MqttOptions _options = options.Value;
         private readonly static SemaphoreSlim _semaphore = new(1, 1);
 
+
+        public async Task StartAsync(CancellationToken stoppingToken)
+        {
+            // Connect to MQTT broker
+            await ConnectToMqttBrokerAsync(stoppingToken);
+
+            // Subscribe to incoming messages and  process them with IIncomingMessagesProcessor.ProcessMessageAsync()
+            await SubscribeToIncomingMessagesAsync(stoppingToken);
+
+            // Publish Home Assistant discovery messages
+            await haPublisher.PublishSensorsDiscoveryAsync(stoppingToken);
+
+            // Publish online status
+            await haPublisher.NotifyOnlineStatus(stoppingToken);
+        }
 
         public async Task CollectAndPublish(CancellationToken stoppingToken)
         {
@@ -53,19 +68,10 @@ namespace Win2Mqtt.Service
 
         }
 
-        public async Task StartAsync(CancellationToken stoppingToken)
-        {
-            // Publish Home Assistant discovery messages
-            await haDiscoveryPublisher.PublishSensorsDiscoveryAsync(stoppingToken);
-
-            var statusTopic = $"{Constants.ServiceBaseTopic}/{_options.MachineIdentifier}/status";
-            await mqttPublisher.PublishAsync(statusTopic, "online", retain: true, stoppingToken);
-
-        }
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            var statusTopic = $"{Constants.ServiceBaseTopic}/{_options.MachineIdentifier}/status";
-            await mqttPublisher.PublishAsync(statusTopic, "offline", retain: true, cancellationToken: cancellationToken);
+            // Publish offline status
+            await haPublisher.NotifyOfflineStatus(cancellationToken);
             await mqttConnectionManager.DisconnectAsync(cancellationToken);
 
         }

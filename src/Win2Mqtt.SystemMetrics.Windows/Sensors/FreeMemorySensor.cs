@@ -1,33 +1,16 @@
 using Microsoft.Extensions.Logging;
-using System.Globalization;
 
 namespace Win2Mqtt.SystemMetrics.Windows.Sensors
 {
-    [Sensor("FreeMemorySensor")]
-    public class FreeMemorySensor : ISensor
+    [Sensor("freememory", name: "Free Memory", unitOfMeasurement: "MB", deviceClass: "memory", stateClass: "measurement")]
+    public class FreeMemorySensor(ILogger<FreeMemorySensor> logger) : Sensor<double>
     {
-        private readonly ILogger<FreeMemorySensor> _logger;
 
-        public FreeMemorySensor(ILogger<FreeMemorySensor> logger)
+        public override Task<SensorValue<double>> CollectAsync()
         {
-            _logger = logger;
-        }
-
-        public Task<IDictionary<string, string>> CollectAsync()
-        {
-            try
-            {
-                var freeMemory = GetFreeMemory();
-                return Task.FromResult<IDictionary<string, string>>(new Dictionary<string, string>
-            {
-                { "freememory", freeMemory.ToString(CultureInfo.InvariantCulture) }
-            });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex, "Error collecting memory data");
-                return Task.FromResult<IDictionary<string, string>>(new Dictionary<string, string>());
-            }
+            var value = GetFreeMemory();
+            logger.LogDebug("Collect {Key}: {Value}", Metadata.Key, value);
+            return Task.FromResult(new SensorValue<double>(Metadata.Key, value));
         }
 
         private double GetFreeMemory()

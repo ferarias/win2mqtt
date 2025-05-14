@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Win2Mqtt.SystemMetrics;
 
 namespace Win2Mqtt.HomeAssistant
 {
@@ -6,7 +7,7 @@ namespace Win2Mqtt.HomeAssistant
     {
         public static IServiceCollection AddHomeAssistantDiscovery(this IServiceCollection services) =>
             services
-            .AddSingleton<IHomeAssistantDiscoveryHelper, HomeAssistantDiscoveryHelper>()
-            .AddSingleton<IHomeAssistantDiscoveryPublisher, HomeAssistantDiscoveryPublisher>();
+            .AddSingleton<ISensorValueFormatter, HomeAssistantSensorValueFormatter>()
+            .AddSingleton<IHomeAssistantPublisher, HomeAssistantPublisher>();
     }
 }

@@ -9,13 +9,7 @@ namespace Win2Mqtt.Service
         {
             logger.LogInformation("Worker started");
 
-            // Connect to MQTT broker
-            await service.ConnectToMqttBrokerAsync(cancellationToken);
-
-            // Subscribe to incoming messages and  process them with IIncomingMessagesProcessor.ProcessMessageAsync()
-            await service.SubscribeToIncomingMessagesAsync(cancellationToken);
-
-            // Publish Home Assistant discovery messages and online status
+            // Connect to MQTT broker, Subscribe to incoming messages and Publish Home Assistant discovery messages/online status
             await service.StartAsync(cancellationToken);
 
             await base.StartAsync(cancellationToken);
@@ -56,6 +50,7 @@ namespace Win2Mqtt.Service
         {
             await service.StopAsync(cancellationToken);
             await base.StopAsync(cancellationToken);
+            logger.LogInformation("Worker stopped.");
         }
     }
 }

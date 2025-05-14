@@ -2,33 +2,24 @@
 
 namespace Win2Mqtt.SystemMetrics.Windows
 {
-
-    public class SystemMetricsCollector : ISystemMetricsCollector
+    public class SystemMetricsCollector(
+        ISensorFactory sensorFactory,
+        ISensorValueFormatter sensorValueFormatter,
+        ILogger<SystemMetricsCollector> logger) : ISystemMetricsCollector
     {
-        private readonly IEnumerable<ISensor> _sensors;
-        private readonly ILogger<SystemMetricsCollector> logger;
-
-        public SystemMetricsCollector(
-            ISensorFactory sensorFactory,
-            ILogger<SystemMetricsCollector> logger)
-        {
-            _sensors = sensorFactory.GetEnabledSensors();
-            this.logger = logger;
-        }
+        private readonly IEnumerable<ISensorWrapper> _sensors = sensorFactory.GetEnabledSensors();
 
         public async Task<IDictionary<string, string>> CollectAsync()
         {
             logger.LogDebug("Collecting sensor data from system");
             var data = new Dictionary<string, string>();
+
             foreach (var sensor in _sensors)
             {
                 try
                 {
-                    var sensorData = await sensor.CollectAsync();
-                    foreach (var kvp in sensorData)
-                    {
-                        data[kvp.Key] = kvp.Value;
-                    }
+                    var (key, value) = await sensor.CollectAsync();
+                    data[key] = sensorValueFormatter.Format(value);
                 }
                 catch (Exception ex)
                 {

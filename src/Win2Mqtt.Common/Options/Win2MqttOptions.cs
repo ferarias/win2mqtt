@@ -9,7 +9,7 @@ namespace Win2Mqtt.Options
         public static readonly string SectionName = Constants.AppId;
 
         [Required]
-        public MqttBrokerOptions Broker { get; set; }
+        public required MqttBrokerOptions Broker { get; set; }
 
         [Required()]
         [RegularExpression(@"[^/\\#]+$")]
@@ -20,11 +20,11 @@ namespace Win2Mqtt.Options
         public int TimerInterval { get; set; } = 5;
 
         [Required]
-        public Dictionary<string, SensorOptions> Sensors { get; set; }
+        public required Dictionary<string, SensorOptions> Sensors { get; set; }
         [Required]
-        public Dictionary<string, MultiSensorOptions> MultiSensors { get; set; }
+        public Dictionary<string, MultiSensorOptions> MultiSensors { get; set; } = [];
 
         [Required]
-        public Dictionary<string, ListenerOptions> Listeners { get; set; }
+        public Dictionary<string, ListenerOptions> Listeners { get; set; } = [];
     }
 }

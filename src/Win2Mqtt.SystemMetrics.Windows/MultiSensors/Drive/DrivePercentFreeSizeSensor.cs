@@ -1,17 +1,19 @@
-﻿using System.Globalization;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Win2Mqtt.SystemMetrics.Windows.MultiSensors.Drive
 {
-    [Sensor("DrivePercentFreeSizeSensor")]
-    public class DrivePercentFreeSizeSensor(DriveInfo driveInfo) : ISensor
+    [ChildSensor("drive/{0}/percentfree",
+    namePattern: "Drive {0} Percent Free",
+    unitOfMeasurement: "%",
+    stateClass: "measurement")]
+    public class DrivePercentFreeSizeSensor(DriveInfo driveInfo, ILogger<DrivePercentFreeSizeSensor> logger) 
+        : ChildSensor<double>(driveInfo.Name.Replace(":\\", ""))
     {
-        public Task<IDictionary<string, string>> CollectAsync()
+        public override Task<SensorValue<double>> CollectAsync()
         {
-            var dic = new Dictionary<string, string>
-            {
-                [$"drive/{driveInfo.Name.Replace(":\\", "")}/percentfree"] = Math.Round((double)driveInfo.TotalFreeSpace / driveInfo.TotalSize * 100, 0).ToString(CultureInfo.InvariantCulture)
-            };
-            return Task.FromResult<IDictionary<string, string>>(dic);
+            var value = Math.Round((double)driveInfo.TotalFreeSpace / driveInfo.TotalSize * 100, 1);
+            logger.LogDebug("Collect {Key}: {Value}", Metadata.Key, value);
+            return Task.FromResult(new SensorValue<double>(Metadata.Key, value));
         }
     }
 }

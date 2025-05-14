@@ -53,6 +53,13 @@ try
         .ValidateDataAnnotations();
 
     builder.Services
+        .PostConfigure<Win2MqttOptions>(o =>
+        {
+            o.Sensors = new Dictionary<string, SensorOptions>(o.Sensors, StringComparer.OrdinalIgnoreCase);
+            o.MultiSensors = new Dictionary<string, MultiSensorOptions>(o.MultiSensors, StringComparer.OrdinalIgnoreCase);
+        });
+
+    builder.Services
         .AddWindowsService(options => options.ServiceName = $"{Constants.AppId} Service")
         .AddSingleton<Win2MqttService>()
         .AddMqtt2NetBroker()

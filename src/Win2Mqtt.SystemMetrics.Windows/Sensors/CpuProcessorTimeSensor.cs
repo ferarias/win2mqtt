@@ -1,33 +1,21 @@
 using Microsoft.Extensions.Logging;
-using System.Globalization;
 
 namespace Win2Mqtt.SystemMetrics.Windows.Sensors
 {
-    [Sensor("CpuProcessorTimeSensor")]
-    public class CpuProcessorTimeSensor : ISensor
+    [Sensor(
+    "cpuprocessortime",
+    name: "CPU Processor Time",
+    unitOfMeasurement: "%",
+    deviceClass: "",
+    stateClass: "measurement")]
+    public class CpuProcessorTimeSensor(ILogger<CpuProcessorTimeSensor> logger) : Sensor<double>
     {
-        private readonly ILogger<CpuProcessorTimeSensor> _logger;
 
-        public CpuProcessorTimeSensor(ILogger<CpuProcessorTimeSensor> logger)
+        public override Task<SensorValue<double>> CollectAsync()
         {
-            _logger = logger;
-        }
-
-        public Task<IDictionary<string, string>> CollectAsync()
-        {
-            try
-            {
-                var usage = GetProcessorTime();
-                return Task.FromResult<IDictionary<string, string>>(new Dictionary<string, string>
-                {
-                    { "cpuprocessortime", usage.ToString(CultureInfo.InvariantCulture) }
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex, "Error collecting CPU data");
-                return Task.FromResult<IDictionary<string, string>>(new Dictionary<string, string>());
-            }
+            var value = GetProcessorTime();
+            logger.LogDebug("Collect {Key}: {Value}", Metadata.Key, value);
+            return Task.FromResult(new SensorValue<double>(Metadata.Key, value));
         }
 
         private double GetProcessorTime()
