@@ -55,6 +55,12 @@ namespace Win2Mqtt.Service
 
         public async Task StartAsync(CancellationToken stoppingToken)
         {
+            // Connect to MQTT broker
+            await ConnectToMqttBrokerAsync(stoppingToken);
+
+            // Subscribe to incoming messages and  process them with IIncomingMessagesProcessor.ProcessMessageAsync()
+            await SubscribeToIncomingMessagesAsync(stoppingToken);
+
             // Publish Home Assistant discovery messages
             await haDiscoveryPublisher.PublishSensorsDiscoveryAsync(stoppingToken);
 
