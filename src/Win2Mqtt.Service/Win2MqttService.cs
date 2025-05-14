@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using Win2Mqtt.Common;
 using Win2Mqtt.HomeAssistant;
 using Win2Mqtt.Options;
 using Win2Mqtt.SystemActions;
@@ -50,8 +51,10 @@ namespace Win2Mqtt.Service
                 {
                     try
                     {
-                        var sensorTopic = $"{Constants.ServiceBaseTopic}/{_options.MachineIdentifier}/{sensorData.Key}";
-                        await mqttPublisher.PublishAsync(sensorTopic, sensorData.Value, false, cancellationToken: stoppingToken);
+                        var sensorUniqueId = $"{Constants.ServiceBaseTopic}_{_options.MachineIdentifier}_{SanitizeHelpers.Sanitize(sensorData.Key)}";
+                        string mqttBaseTopic = $"{Constants.ServiceBaseTopic}/{_options.MachineIdentifier}";
+                        string stateTopic = $"{mqttBaseTopic}/{sensorUniqueId}";
+                        await mqttPublisher.PublishAsync(stateTopic, sensorData.Value, false, cancellationToken: stoppingToken);
                     }
                     catch (Exception ex)
                     {
