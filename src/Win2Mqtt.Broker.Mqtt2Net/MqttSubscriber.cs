@@ -24,7 +24,7 @@ namespace Win2Mqtt.Broker.MQTTNet
                 {
                     _client.ApplicationMessageReceivedAsync += async (e) =>
                     {
-                        _logger.LogInformation("New message received in `{sanitizedTopic}`.", e.ApplicationMessage.Topic);
+                        _logger.LogDebug("New message received in `{sanitizedTopic}`.", e.ApplicationMessage.Topic);
                         try
                         {
                             var operation = e.ApplicationMessage.Topic.Replace(_mqttBaseTopic, "");
@@ -45,7 +45,7 @@ namespace Win2Mqtt.Broker.MQTTNet
                             var sanitizedTopic = SanitizeHelpers.Sanitize(listener.Value.Topic);
                             string topic = $"{_mqttBaseTopic}{sanitizedTopic}";
                             await _client.SubscribeAsync(topic, MqttQualityOfServiceLevel.ExactlyOnce, cancellationToken);
-                            _logger.LogInformation("Subscribed to MQTT topic `{topic}`.", topic);
+                            _logger.LogDebug("Subscribed to MQTT topic `{topic}`.", topic);
                         }
                     }
 

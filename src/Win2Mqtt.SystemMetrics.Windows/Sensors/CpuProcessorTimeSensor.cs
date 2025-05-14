@@ -5,10 +5,10 @@ namespace Win2Mqtt.SystemMetrics.Windows.Sensors
     [Sensor(
     "cpuprocessortime",
     name: "CPU Processor Time",
-    unitOfMeasurement: "ms",
-    deviceClass: "cpu",
+    unitOfMeasurement: "%",
+    deviceClass: "",
     stateClass: "measurement")]
-    public class CpuProcessorTimeSensor(ILogger<CpuProcessorTimeSensor> logger) : AttributedSensorBase<double>
+    public class CpuProcessorTimeSensor(ILogger<CpuProcessorTimeSensor> logger) : Sensor<double>
     {
 
         public override Task<SensorValue<double>> CollectAsync()

@@ -9,7 +9,7 @@ namespace Win2Mqtt.SystemMetrics
     public interface ISensorWrapper
     {
         SensorMetadata Metadata { get; }
-        Task<(string Key, string Value)> CollectAsync();
+        Task<(string Key, object? Value)> CollectAsync();
     }
 
     /// <summary>
@@ -21,12 +21,11 @@ namespace Win2Mqtt.SystemMetrics
     {
         public SensorMetadata Metadata => sensor.Metadata;
 
-        public async Task<(string Key, string Value)> CollectAsync()
+        public async Task<(string, object?)> CollectAsync()
         {
-            var (key, value) = await sensor.CollectAsync();
-            //TODO You can improve formatting later (e.g., format DateTime or round double)
-            return (key, value?.ToString() ?? string.Empty);
+            return await sensor.CollectAsync();
         }
+
     }
 
 }

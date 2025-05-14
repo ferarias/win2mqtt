@@ -8,7 +8,7 @@ namespace Win2Mqtt.SystemMetrics.Windows.Sensors
     name: "Network Availability",
     deviceClass: "connectivity",
     isBinary: true)]
-    public class NetworkAvailabilitySensor(ILogger<NetworkAvailabilitySensor> logger) : AttributedSensorBase<bool>
+    public class NetworkAvailabilitySensor(ILogger<NetworkAvailabilitySensor> logger) : Sensor<bool>
     {
         public override Task<SensorValue<bool>> CollectAsync()
         {

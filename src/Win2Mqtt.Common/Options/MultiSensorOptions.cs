@@ -4,9 +4,9 @@ namespace Win2Mqtt.Options
 {
     public class MultiSensorOptions
     {
-        public string Topic { get; set; }
-        public bool Enabled { get; set; }
-        public Dictionary<string, SensorOptions> Sensors { get; set; }
+        public required string Topic { get; set; }
+        public bool Enabled { get; set; } = true;
+        public required Dictionary<string, SensorOptions> Sensors { get; set; }
 
     }
 }

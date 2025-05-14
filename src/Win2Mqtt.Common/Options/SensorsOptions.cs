@@ -2,8 +2,8 @@
 {
     public class SensorOptions
     {
-        public string Topic { get; set; }
-        public bool Enabled { get; set; }
+        public required string Topic { get; set; }
+        public bool Enabled { get; set; } = true;
 
     }
 }

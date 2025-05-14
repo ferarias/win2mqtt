@@ -4,10 +4,10 @@ using Win2Mqtt.SystemMetrics.Windows.MultiSensors.Drive;
 
 namespace Win2Mqtt.SystemMetrics.Windows.MultiSensors
 {
-    [MultiSensor("DriveMultiSensor")]
-    public class DriveMultiSensor() : IMultiSensor
+    [MultiSensor("drives")]
+    public class DriveMultiSensor() : MultiSensor
     {
-        public IEnumerable<ISensor> CreateSensors(IServiceProvider serviceProvider)
+        public override IEnumerable<ISensor> CreateSensors(IServiceProvider serviceProvider)
         {
             var drives = DriveInfo.GetDrives().Where(di => di.IsReady && di.DriveType != DriveType.Network);
             foreach (var item in drives)

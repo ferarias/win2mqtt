@@ -15,16 +15,15 @@ namespace Win2Mqtt.Broker.MQTTNet
         {
             if (_client.IsConnected)
             {
-                var sanitizedTopic = SanitizeHelpers.Sanitize(topic);
                 var mqttMessage = new MqttApplicationMessageBuilder()
-                    .WithTopic(sanitizedTopic)
+                    .WithTopic(topic)
                     .WithPayload(Encoding.UTF8.GetBytes(message))
                     .WithRetainFlag(retain)
                     .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
                 .Build();
 
                 await _client.PublishAsync(mqttMessage, cancellationToken);
-                _logger.LogDebug("Message published: {Topic} value {Message}", sanitizedTopic, message);
+                _logger.LogDebug("Message published: {Topic} value {Message}", topic, message);
             }
         }
     }

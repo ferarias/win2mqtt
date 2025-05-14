@@ -4,6 +4,7 @@ namespace Win2Mqtt.SystemMetrics.Windows
 {
     public class SystemMetricsCollector(
         ISensorFactory sensorFactory,
+        ISensorValueFormatter sensorValueFormatter,
         ILogger<SystemMetricsCollector> logger) : ISystemMetricsCollector
     {
         private readonly IEnumerable<ISensorWrapper> _sensors = sensorFactory.GetEnabledSensors();
@@ -18,7 +19,7 @@ namespace Win2Mqtt.SystemMetrics.Windows
                 try
                 {
                     var (key, value) = await sensor.CollectAsync();
-                    data[key] = value;
+                    data[key] = sensorValueFormatter.Format(value);
                 }
                 catch (Exception ex)
                 {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Win2Mqtt.Options;
 
@@ -6,7 +7,8 @@ namespace Win2Mqtt.SystemMetrics.Windows
 {
     public class SensorFactory(
     IOptions<Win2MqttOptions> options,
-    IServiceProvider serviceProvider) : ISensorFactory
+    IServiceProvider serviceProvider,
+    ILogger<SensorFactory> logger) : ISensorFactory
     {
         private readonly Win2MqttOptions _options = options.Value;
 
@@ -19,16 +21,22 @@ namespace Win2Mqtt.SystemMetrics.Windows
             foreach (var sensor in sensors)
             {
                 var sensorType = sensor.GetType();
-                if (_options.Sensors[sensorType.Name].Enabled)
+                var iface = sensorType
+                    .GetInterfaces()
+                    .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISensor<>));
+                if (iface != null)
                 {
-                    var iface = sensorType
-                        .GetInterfaces()
-                        .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISensor<>));
-                    if (iface != null)
+                    var wrapperType = typeof(SensorWrapper<>).MakeGenericType(iface.GenericTypeArguments[0]);
+                    if (Activator.CreateInstance(wrapperType, sensor) is ISensorWrapper wrapper)
                     {
-                        var wrapperType = typeof(SensorWrapper<>).MakeGenericType(iface.GenericTypeArguments[0]);
-                        if (Activator.CreateInstance(wrapperType, sensor) is ISensorWrapper wrapper)
+                        if (_options.Sensors[wrapper.Metadata.Key].Enabled)
+                        {
                             wrappers.Add(wrapper);
+                        }
+                        else
+                        {
+                            logger.LogInformation("Sensor {sensor} is disabled in the configuration.", wrapper.Metadata.Key);
+                        }
                     }
                 }
             }
@@ -37,23 +45,37 @@ namespace Win2Mqtt.SystemMetrics.Windows
             var multiSensors = serviceProvider.GetServices<IMultiSensor>();
             foreach (var multi in multiSensors)
             {
-                if (_options.MultiSensors[multi.GetType().Name].Enabled)
+                if (_options.MultiSensors[multi.Key].Enabled)
                 {
                     var sensorsFromMulti = multi.CreateSensors(serviceProvider);
                     foreach (var sensor in sensorsFromMulti)
                     {
-                        if (_options.MultiSensors[multi.GetType().Name].Sensors[sensor.GetType().Name].Enabled)
+                        var iface = sensor.GetType()
+                        .GetInterfaces()
+                        .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISensor<>));
+                        if (iface != null)
                         {
-                            var iface = sensor.GetType()
-                            .GetInterfaces()
-                            .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISensor<>));
-                            if (iface != null)
+                            var wrapperType = typeof(SensorWrapper<>).MakeGenericType(iface.GenericTypeArguments[0]);
+                            if (Activator.CreateInstance(wrapperType, sensor) is ISensorWrapper wrapper)
                             {
-                                var wrapperType = typeof(SensorWrapper<>).MakeGenericType(iface.GenericTypeArguments[0]);
-                                if (Activator.CreateInstance(wrapperType, sensor) is ISensorWrapper wrapper)
+                                var childSensorsOptions = _options.MultiSensors[multi.Key].Sensors;
+                                var sensorName = sensor.GetType().Name;
+                                if(sensorName.LastIndexOf("sensor", StringComparison.OrdinalIgnoreCase) != -1)
+                                {
+                                    sensorName = sensorName[..sensorName.LastIndexOf("sensor", StringComparison.OrdinalIgnoreCase)];
+                                }
+                                if (childSensorsOptions.TryGetValue(sensorName, out SensorOptions? value) && value.Enabled)
+                                {
                                     wrappers.Add(wrapper);
+                                }
+                                else
+                                {
+                                    logger.LogInformation("Sensor {sensor} is disabled in the configuration.", sensorName);
+                                }
                             }
+                                
                         }
+
                     }
                 }
             }

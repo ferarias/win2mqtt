@@ -12,7 +12,7 @@ namespace Win2Mqtt.Service
         IMqttPublisher mqttPublisher,
         ISystemMetricsCollector sensorDataCollector,
         IIncomingMessagesProcessor incomingMessagesProcessor,
-        IHomeAssistantDiscoveryPublisher haDiscoveryPublisher,
+        IHomeAssistantPublisher haPublisher,
         IOptions<Win2MqttOptions> options,
         ILogger<Win2MqttService> logger)
     {
@@ -29,11 +29,10 @@ namespace Win2Mqtt.Service
             await SubscribeToIncomingMessagesAsync(stoppingToken);
 
             // Publish Home Assistant discovery messages
-            await haDiscoveryPublisher.PublishSensorsDiscoveryAsync(stoppingToken);
+            await haPublisher.PublishSensorsDiscoveryAsync(stoppingToken);
 
-            var statusTopic = $"{Constants.ServiceBaseTopic}/{_options.MachineIdentifier}/status";
-            await mqttPublisher.PublishAsync(statusTopic, "online", retain: true, stoppingToken);
-
+            // Publish online status
+            await haPublisher.NotifyOnlineStatus(stoppingToken);
         }
 
         public async Task CollectAndPublish(CancellationToken stoppingToken)
@@ -71,8 +70,8 @@ namespace Win2Mqtt.Service
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            var statusTopic = $"{Constants.ServiceBaseTopic}/{_options.MachineIdentifier}/status";
-            await mqttPublisher.PublishAsync(statusTopic, "offline", retain: true, cancellationToken: cancellationToken);
+            // Publish offline status
+            await haPublisher.NotifyOfflineStatus(cancellationToken);
             await mqttConnectionManager.DisconnectAsync(cancellationToken);
 
         }
