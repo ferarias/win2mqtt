@@ -28,11 +28,11 @@ namespace Win2Mqtt.Service
             // Publish Home Assistant discovery messages
             foreach (var sensor in _activeSensors)
             {
-                await messagePublisher.PublishSensorDiscoveryMessage(sensor, stoppingToken);
+                await messagePublisher.PublishSensorDiscoveryMessage(sensor.Metadata, stoppingToken);
             }
 
             // Publish online status
-            await messagePublisher.NotifyOnlineStatus(stoppingToken);
+            await messagePublisher.PublishOnlineStatus(stoppingToken);
         }
 
         public async Task CollectAndPublish(CancellationToken stoppingToken)
@@ -59,7 +59,7 @@ namespace Win2Mqtt.Service
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             // Disonnect from MQTT broker
-            await messagePublisher.NotifyOfflineStatus(cancellationToken);
+            await messagePublisher.PublishOfflineStatus(cancellationToken);
 
             // Publish offline status
             await connectionManager.DisconnectAsync(cancellationToken);

@@ -6,11 +6,11 @@ namespace Win2Mqtt
 {
     public interface IMessagePublisher
     {
-        Task NotifyOnlineStatus(CancellationToken cancellationToken = default);
+        Task PublishOnlineStatus(CancellationToken cancellationToken = default);
 
-        Task NotifyOfflineStatus(CancellationToken cancellationToken = default);
+        Task PublishOfflineStatus(CancellationToken cancellationToken = default);
 
-        Task PublishSensorDiscoveryMessage(ISensorWrapper sensor, CancellationToken cancellationToken = default);
+        Task PublishSensorDiscoveryMessage(SensorMetadata sensor, CancellationToken cancellationToken = default);
 
         Task PublishSensorValue(ISensorWrapper sensor, object? value, CancellationToken cancellationToken = default);
 
