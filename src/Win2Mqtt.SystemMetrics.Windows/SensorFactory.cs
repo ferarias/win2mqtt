@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Win2Mqtt.Common;
 using Win2Mqtt.Options;
 
 namespace Win2Mqtt.SystemMetrics.Windows
@@ -31,6 +32,8 @@ namespace Win2Mqtt.SystemMetrics.Windows
                     {
                         if (_options.Sensors[wrapper.Metadata.Key].Enabled)
                         {
+                            wrapper.Metadata.SensorUniqueId = $"{options.Value.DeviceUniqueId}_{SanitizeHelpers.Sanitize(wrapper.Metadata.Key)}";
+                            wrapper.Metadata.SensorStateTopic = $"{options.Value.MqttBaseTopic}/{wrapper.Metadata.SensorUniqueId}";
                             wrappers.Add(wrapper);
                         }
                         else
@@ -66,6 +69,8 @@ namespace Win2Mqtt.SystemMetrics.Windows
                                 }
                                 if (childSensorsOptions.TryGetValue(sensorName, out SensorOptions? value) && value.Enabled)
                                 {
+                                    wrapper.Metadata.SensorUniqueId = $"{options.Value.DeviceUniqueId}_{SanitizeHelpers.Sanitize(wrapper.Metadata.Key)}";
+                                    wrapper.Metadata.SensorStateTopic = $"{options.Value.MqttBaseTopic}/{wrapper.Metadata.SensorUniqueId}";
                                     wrappers.Add(wrapper);
                                 }
                                 else

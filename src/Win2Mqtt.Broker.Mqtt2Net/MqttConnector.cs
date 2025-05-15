@@ -17,8 +17,6 @@ namespace Win2Mqtt.Broker.MQTTNet
         private readonly Win2MqttOptions _options = options.Value;
         private readonly ILogger _logger = logger;
 
-        private readonly string _mqttBaseTopic = $"{Constants.Win2MqttTopic}/{options.Value.MachineIdentifier}/";
-
         public bool IsConnected => _client.IsConnected;
 
         public async Task<bool> ConnectAsync(CancellationToken cancellationToken)
@@ -36,7 +34,7 @@ namespace Win2Mqtt.Broker.MQTTNet
                 }
 
                 var mqttClientOptions = mqttOptionsBuilder
-                    .WithWillTopic($"{_mqttBaseTopic}status")
+                    .WithWillTopic($"{options.Value.MqttBaseTopic}/status")
                     .WithWillPayload("offline")
                     .WithWillRetain(true)
                     .Build();
@@ -45,7 +43,7 @@ namespace Win2Mqtt.Broker.MQTTNet
 
                 _logger.LogInformation("The MQTT client is connected.");
 
-                await publisher.PublishAsync($"{_mqttBaseTopic}status", "online", retain: true, cancellationToken: cancellationToken);
+                await publisher.PublishAsync($"{options.Value.MqttBaseTopic}/status", "online", retain: true, cancellationToken: cancellationToken);
 
                 return true;
             }
@@ -61,7 +59,7 @@ namespace Win2Mqtt.Broker.MQTTNet
             if (_client?.IsConnected == true)
             {
                 var unsubscribeOptions = new MqttClientUnsubscribeOptionsBuilder()
-                    .WithTopicFilter($"{_mqttBaseTopic}#")
+                    .WithTopicFilter($"{options.Value.MqttBaseTopic}/#")
                     .Build();
                 await _client.UnsubscribeAsync(unsubscribeOptions, cancellationToken);
                 _logger.LogInformation("Unsubscribed from MQTT topics.");

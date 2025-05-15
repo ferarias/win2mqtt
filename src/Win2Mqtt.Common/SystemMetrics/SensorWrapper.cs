@@ -9,6 +9,7 @@ namespace Win2Mqtt.SystemMetrics
     public interface ISensorWrapper
     {
         SensorMetadata Metadata { get; }
+
         Task<(string Key, object? Value)> CollectAsync();
     }
 

@@ -13,8 +13,6 @@ namespace Win2Mqtt.Broker.MQTTNet
         private readonly Win2MqttOptions _options = options.Value;
         private readonly ILogger<MqttSubscriber> _logger = logger;
 
-        private readonly string _mqttBaseTopic = $"{Constants.Win2MqttTopic}/{options.Value.MachineIdentifier}/";
-
         public async Task<bool> SubscribeAsync(
             Func<string, string, CancellationToken, Task> ProcessIncomingMessageAsync,
             CancellationToken cancellationToken = default)
@@ -29,7 +27,8 @@ namespace Win2Mqtt.Broker.MQTTNet
                     _logger.LogDebug("New message received in `{Topic}`.", e.ApplicationMessage.Topic);
                     try
                     {
-                        var operation = e.ApplicationMessage.Topic.Replace(_mqttBaseTopic, "");
+                        var operation = e.ApplicationMessage.Topic.Replace(options.Value.MqttBaseTopic, ""); //TODO fix exxtra '/'
+
                         var message = e.ApplicationMessage.ConvertPayloadToString();
 
                         await ProcessIncomingMessageAsync(operation, message, cancellationToken);
@@ -45,7 +44,7 @@ namespace Win2Mqtt.Broker.MQTTNet
                     if (listener.Value.Enabled)
                     {
                         var sanitizedTopic = SanitizeHelpers.Sanitize(listener.Value.Topic);
-                        string topic = $"{_mqttBaseTopic}{sanitizedTopic}";
+                        string topic = $"{options.Value.MqttBaseTopic}/{sanitizedTopic}";
                         await _client.SubscribeAsync(topic, MqttQualityOfServiceLevel.ExactlyOnce, cancellationToken);
                         _logger.LogDebug("Subscribed to MQTT topic `{Topic}`.", topic);
                     }

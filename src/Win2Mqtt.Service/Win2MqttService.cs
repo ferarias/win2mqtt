@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using System.Threading;
+using Microsoft.Extensions.Options;
 using Win2Mqtt.Common;
 using Win2Mqtt.HomeAssistant;
 using Win2Mqtt.Options;
@@ -11,7 +12,8 @@ namespace Win2Mqtt.Service
         IMqttConnectionManager mqttConnectionManager,
         IMqttSubscriber mqttSubscriber,
         IMqttPublisher mqttPublisher,
-        ISystemMetricsCollector sensorDataCollector,
+        ISensorFactory sensorFactory,
+        ISensorValueFormatter sensorValueFormatter,
         IIncomingMessagesProcessor incomingMessagesProcessor,
         IHomeAssistantPublisher haPublisher,
         IOptions<Win2MqttOptions> options,
@@ -19,6 +21,7 @@ namespace Win2Mqtt.Service
     {
         private readonly Win2MqttOptions _options = options.Value;
         private readonly static SemaphoreSlim _semaphore = new(1, 1);
+        private readonly IEnumerable<ISensorWrapper> _sensors = sensorFactory.GetEnabledSensors();
 
 
         public async Task StartAsync(CancellationToken stoppingToken)
@@ -30,7 +33,16 @@ namespace Win2Mqtt.Service
             await SubscribeToIncomingMessagesAsync(stoppingToken);
 
             // Publish Home Assistant discovery messages
-            await haPublisher.PublishSensorsDiscoveryAsync(stoppingToken);
+            foreach (var sensor in _sensors)
+            {
+                await mqttPublisher.PublishAsync(
+                    HomeAssistantDiscoveryHelper.GetSensorDiscoveryMessage(options.Value.MqttBaseTopic, options.Value.DeviceUniqueId, sensor), 
+                    retain: true, 
+                    cancellationToken: stoppingToken);
+
+                logger.LogInformation("Published HA binary_sensor config for {sensor}", sensor.Metadata.Key);
+
+            }
 
             // Publish online status
             await haPublisher.NotifyOnlineStatus(stoppingToken);
@@ -43,25 +55,22 @@ namespace Win2Mqtt.Service
             await _semaphore.WaitAsync(stoppingToken);
             try
             {
-                // Collect system information
-                var sensorsData = await sensorDataCollector.CollectAsync();
-
-                // Publish collected data
-                foreach (var sensorData in sensorsData)
+                // Collect system information / Publish collected data
+                foreach (var sensor in _sensors)
                 {
                     try
                     {
-                        var sensorUniqueId = $"{Constants.Win2MqttTopic}_{_options.MachineIdentifier}_{SanitizeHelpers.Sanitize(sensorData.Key)}";
-                        string mqttBaseTopic = $"{Constants.Win2MqttTopic}/{_options.MachineIdentifier}";
-                        string stateTopic = $"{mqttBaseTopic}/{sensorUniqueId}";
-                        await mqttPublisher.PublishAsync(stateTopic, sensorData.Value, false, cancellationToken: stoppingToken);
+                        var (key, value) = await sensor.CollectAsync();
+                        var sensorUniqueId = $"{_options.DeviceUniqueId}_{SanitizeHelpers.Sanitize(key)}";
+                        string stateTopic = $"{_options.MqttBaseTopic}/{sensorUniqueId}";
+                        await mqttPublisher.PublishAsync(stateTopic, sensorValueFormatter.Format(value), false, cancellationToken: stoppingToken);
                     }
                     catch (Exception ex)
                     {
-                        logger.LogWarning(ex, "Failed to publish sensor {Sensor}", sensorData.Key);
+                        logger.LogWarning(ex, "Failed to publish sensor {Sensor}", sensor.Metadata.Key);
                     }
                 }
-                logger.LogDebug("{sensorCount} sensors published", sensorsData.Count);
+                logger.LogDebug("{sensorCount} sensors published", _sensors.Count());
             }
             finally
             {
