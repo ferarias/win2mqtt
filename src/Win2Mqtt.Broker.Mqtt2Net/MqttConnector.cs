@@ -42,19 +42,25 @@ namespace Win2Mqtt.Broker.MQTTNet
                         .Build();
 
                     var response = await _client.ConnectAsync(mqttClientOptions, cancellationToken);
-
-                    _logger.LogInformation("The MQTT client is connected.");
-
-                    return true;
+                    if (response.ResultCode != MqttClientConnectResultCode.Success)
+                    {
+                        _logger.LogError("Could not connect to MQTT broker. Result code: {ResultCode}", response.ResultCode);
+                    }
+                    else
+                    {
+                        _logger.LogInformation("The MQTT client is connected.");
+                        return true;
+                    }
                 }
                 catch (Exception ex)
                 {
                     _logger.LogCritical(ex, "Could not connect; check connection settings");
                 }
+
                 logger.LogWarning("MQTT connection failed. Retrying in 10 seconds...");
                 await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
             }
-            while (!cancellationToken.IsCancellationRequested);
+            while (!cancellationToken.IsCancellationRequested && !_client.IsConnected);
             return false;
         }
 

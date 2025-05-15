@@ -1,9 +1,15 @@
+using Microsoft.Extensions.Options;
+using Win2Mqtt.Options;
+
 namespace Win2Mqtt.Service
 {
     public class WindowsBackgroundService(
-        Win2MqttService service, 
+        Win2MqttService service,
+        IOptionsMonitor<Win2MqttOptions> options,
         ILogger<WindowsBackgroundService> logger) : BackgroundService
     {
+        private readonly static SemaphoreSlim _semaphore = new(1, 1);
+
 
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
@@ -21,7 +27,18 @@ namespace Win2Mqtt.Service
             {
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    await service.CollectAndPublish(stoppingToken);
+                    // Allow only one thread collecting system information
+                    await _semaphore.WaitAsync(stoppingToken);
+                    try
+                    {
+
+                        await service.CollectAndPublish(stoppingToken);
+                    }
+                    finally
+                    {
+                        _semaphore.Release();
+                    }
+                    await Task.Delay(TimeSpan.FromSeconds(options.CurrentValue.TimerInterval), stoppingToken);
                 }
             }
             catch (OperationCanceledException)

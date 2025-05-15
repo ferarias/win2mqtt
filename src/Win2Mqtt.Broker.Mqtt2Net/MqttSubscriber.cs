@@ -4,59 +4,67 @@ using MQTTnet;
 using MQTTnet.Protocol;
 using Win2Mqtt.Common;
 using Win2Mqtt.Options;
+using Win2Mqtt.SystemActions;
 
 namespace Win2Mqtt.Broker.MQTTNet
 {
-    public class MqttSubscriber(IMqttClient client, IOptions<Win2MqttOptions> options, ILogger<MqttSubscriber> logger) : IMqttSubscriber
+    public class MqttSubscriber(
+        IMqttClient client,
+        IOptions<Win2MqttOptions> options,
+        IIncomingMessagesProcessor incomingMessagesProcessor,
+        ILogger<MqttSubscriber> logger) : IMqttSubscriber
     {
         private readonly IMqttClient _client = client;
         private readonly Win2MqttOptions _options = options.Value;
-        private readonly ILogger<MqttSubscriber> _logger = logger;
 
-        public async Task<bool> SubscribeAsync(
-            Func<string, string, CancellationToken, Task> ProcessIncomingMessageAsync,
-            CancellationToken cancellationToken = default)
+        public async Task<bool> SubscribeAsync(CancellationToken cancellationToken = default)
         {
-            _logger.LogInformation("Subscribing to topics.");
-            try
+            do
             {
-                if (_client?.IsConnected != true) return false;
-
-                _client.ApplicationMessageReceivedAsync += async (e) =>
+                logger.LogInformation("Subscribing to topics.");
+                try
                 {
-                    _logger.LogDebug("New message received in `{Topic}`.", e.ApplicationMessage.Topic);
-                    try
-                    {
-                        var operation = e.ApplicationMessage.Topic.Replace(options.Value.MqttBaseTopic, ""); //TODO fix exxtra '/'
+                    if (_client?.IsConnected != true) return false;
 
-                        var message = e.ApplicationMessage.ConvertPayloadToString();
-
-                        await ProcessIncomingMessageAsync(operation, message, cancellationToken);
-                    }
-                    catch (Exception ex)
+                    _client.ApplicationMessageReceivedAsync += async (e) =>
                     {
-                        _logger.LogError(ex, "Exception receiving");
-                    }
-                };
+                        logger.LogDebug("New message received in `{Topic}`.", e.ApplicationMessage.Topic);
+                        try
+                        {
+                            var operation = e.ApplicationMessage.Topic[(options.Value.MqttBaseTopic.Length + 1)..];
 
-                foreach (var listener in _options.Listeners)
-                {
-                    if (listener.Value.Enabled)
+                            var message = e.ApplicationMessage.ConvertPayloadToString();
+                            await incomingMessagesProcessor.ProcessMessageAsync(operation, message, cancellationToken);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.LogError(ex, "Exception receiving");
+                        }
+                    };
+
+                    foreach (var listener in _options.Listeners)
                     {
-                        var sanitizedTopic = SanitizeHelpers.Sanitize(listener.Value.Topic);
-                        string topic = $"{options.Value.MqttBaseTopic}/{sanitizedTopic}";
-                        await _client.SubscribeAsync(topic, MqttQualityOfServiceLevel.ExactlyOnce, cancellationToken);
-                        _logger.LogDebug("Subscribed to MQTT topic `{Topic}`.", topic);
+                        if (listener.Value.Enabled)
+                        {
+                            var sanitizedTopic = SanitizeHelpers.Sanitize(listener.Value.Topic);
+                            string topic = $"{options.Value.MqttBaseTopic}/{sanitizedTopic}";
+                            await _client.SubscribeAsync(topic, MqttQualityOfServiceLevel.ExactlyOnce, cancellationToken);
+                            logger.LogDebug("Subscribed to MQTT topic `{Topic}`.", topic);
+                        }
                     }
+
+                    return true;
+
                 }
+                catch (Exception ex)
+                {
+                    logger.LogCritical(ex, "Could not subscribe; check settings");
+                }
+                logger.LogWarning("MQTT subscription failed. Retrying in 10 seconds...");
+                await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
 
-                return true;
+            } while (!cancellationToken.IsCancellationRequested);
 
-            }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex, "Could not subscribe; check settings");
-            }
             return false;
         }
     }
