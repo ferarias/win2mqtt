@@ -13,7 +13,7 @@ namespace Win2Mqtt.Broker.MQTTNet
         private readonly Win2MqttOptions _options = options.Value;
         private readonly ILogger<MqttSubscriber> _logger = logger;
 
-        private readonly string _mqttBaseTopic = $"{Constants.ServiceBaseTopic}/{options.Value.MachineIdentifier}/";
+        private readonly string _mqttBaseTopic = $"{Constants.Win2MqttTopic}/{options.Value.MachineIdentifier}/";
 
         public async Task<bool> SubscribeAsync(
             Func<string, string, CancellationToken, Task> ProcessIncomingMessageAsync,

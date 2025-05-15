@@ -19,16 +19,16 @@
         {
             // Common values
             // e.g.: "win2mqtt_winsrv02"
-            var machineUniqueId = $"{Constants.ServiceBaseTopic}_{machineIdentifier}";
+            var machineUniqueId = $"{Constants.Win2MqttTopic}_{machineIdentifier}";
 
             // e.g.: "win2mqtt_winsrv02_cpu_usage"
-            var sensorUniqueId = $"{Constants.ServiceBaseTopic}_{machineIdentifier}_{SanitizeHelpers.Sanitize(meta.Key)}";
+            var sensorUniqueId = $"{Constants.Win2MqttTopic}_{machineIdentifier}_{SanitizeHelpers.Sanitize(meta.Key)}";
 
             // e.g.: "homeassistant/sensor/win2mqtt_winsrv02_cpu_usage/config"
             var homeAssistantConfigTopic = $"{HomeAssistantTopics.BaseTopic}/{(meta.IsBinary ? "binary_sensor" : "sensor")}/{sensorUniqueId}/config";
 
             // e.g.: "win2mqtt/winsrv02"
-            string mqttBaseTopic = $"{Constants.ServiceBaseTopic}/{machineIdentifier}";
+            string mqttBaseTopic = $"{Constants.Win2MqttTopic}/{machineIdentifier}";
 
             // e.g.: "win2mqtt/winsrv02/win2mqtt_winsrv02_cpu_usage"
             string stateTopic = $"{mqttBaseTopic}/{sensorUniqueId}";

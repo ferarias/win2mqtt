@@ -20,7 +20,7 @@ namespace Win2Mqtt.SystemActions.Windows
                 // Find in options the Listener that corresponds to this topic
                 var (listener, options) = _options.Listeners.First(l => l.Value.Topic.Equals(subtopic));
 
-                var processRunningTopic = $"{Constants.ServiceBaseTopic}/{_options.MachineIdentifier}/status/process/running/{message}";
+                var processRunningTopic = $"{Constants.Win2MqttTopic}/{_options.MachineIdentifier}/status/process/running/{message}";
                 switch (listener)
                 {
                     case "SendMessage":

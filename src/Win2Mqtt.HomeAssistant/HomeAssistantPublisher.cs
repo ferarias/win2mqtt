@@ -32,14 +32,14 @@ namespace Win2Mqtt.HomeAssistant
 
         public async Task NotifyOnlineStatus(CancellationToken cancellationToken = default)
         {
-            var statusTopic = $"{Constants.ServiceBaseTopic}/{options.Value.MachineIdentifier}/status";
+            var statusTopic = $"{Constants.Win2MqttTopic}/{options.Value.MachineIdentifier}/status";
             await connector.PublishAsync(statusTopic, "online", retain: true, cancellationToken);
             logger.LogDebug("Published HA online status for {machineIdentifier}", options.Value.MachineIdentifier);
         }
 
         public async Task NotifyOfflineStatus(CancellationToken cancellationToken = default)
         {
-            var statusTopic = $"{Constants.ServiceBaseTopic}/{options.Value.MachineIdentifier}/status";
+            var statusTopic = $"{Constants.Win2MqttTopic}/{options.Value.MachineIdentifier}/status";
             await connector.PublishAsync(statusTopic, "offline", retain: true, cancellationToken: cancellationToken);
             logger.LogDebug("Published HA offline status for {machineIdentifier}", options.Value.MachineIdentifier);
         }

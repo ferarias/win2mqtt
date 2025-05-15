@@ -51,8 +51,8 @@ namespace Win2Mqtt.Service
                 {
                     try
                     {
-                        var sensorUniqueId = $"{Constants.ServiceBaseTopic}_{_options.MachineIdentifier}_{SanitizeHelpers.Sanitize(sensorData.Key)}";
-                        string mqttBaseTopic = $"{Constants.ServiceBaseTopic}/{_options.MachineIdentifier}";
+                        var sensorUniqueId = $"{Constants.Win2MqttTopic}_{_options.MachineIdentifier}_{SanitizeHelpers.Sanitize(sensorData.Key)}";
+                        string mqttBaseTopic = $"{Constants.Win2MqttTopic}/{_options.MachineIdentifier}";
                         string stateTopic = $"{mqttBaseTopic}/{sensorUniqueId}";
                         await mqttPublisher.PublishAsync(stateTopic, sensorData.Value, false, cancellationToken: stoppingToken);
                     }
