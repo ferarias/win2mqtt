@@ -4,6 +4,7 @@
     {
         public const string AppId = "Win2MQTT";
         public const string ServiceName = "Win2MQTT Service";
-        public const string ServiceBaseTopic = "win2mqtt";
+
+        public const string Win2MqttTopic = "win2mqtt";
     }
 }

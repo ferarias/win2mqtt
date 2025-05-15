@@ -6,11 +6,11 @@ namespace Win2Mqtt.SystemMetrics.Windows.Sensors
     [Sensor("freememory", name: "Free Memory", unitOfMeasurement: "B", deviceClass: "memory", stateClass: "measurement")]
     public partial class FreeMemorySensor(ILogger<FreeMemorySensor> logger) : Sensor<double>
     {
-        public override async Task<SensorValue<double>> CollectAsync()
+        public override async Task<double> CollectAsync()
         {
             var value = await GetFreeMemoryAsync();
             logger.LogDebug("Collect {Key}: {Value} B", Metadata.Key, value);
-            return new SensorValue<double>(Metadata.Key, value);
+            return value;
         }
 
         private static Task<double> GetFreeMemoryAsync()

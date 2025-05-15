@@ -26,7 +26,6 @@ namespace Win2Mqtt.SystemMetrics.Windows
             .WithSingletonLifetime());
 
             services.AddSingleton<ISensorFactory, SensorFactory>();
-            services.AddSingleton<ISystemMetricsCollector, SystemMetricsCollector>();
             return services;
         }
     }

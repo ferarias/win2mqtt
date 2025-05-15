@@ -10,11 +10,11 @@ namespace Win2Mqtt.SystemMetrics.Windows.MultiSensors.Drive
     public class DriveTotalSizeSensor(DriveInfo driveInfo, ILogger<DriveTotalSizeSensor> logger) 
         : ChildSensor<long>(driveInfo.Name.Replace(":\\", ""))
     {
-        public override Task<SensorValue<long>> CollectAsync()
+        public override Task<long> CollectAsync()
         {
             var value = driveInfo.TotalSize;
             logger.LogDebug("Collect {Key}: {Value}", Metadata.Key, value);
-            return Task.FromResult(new SensorValue<long>(Metadata.Key, value));
+            return Task.FromResult(value);
         }
     }
 }

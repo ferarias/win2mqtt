@@ -16,5 +16,10 @@ namespace Win2Mqtt.SystemMetrics
         public string? DeviceClass { get; init; }
         public string? StateClass { get; init; }
         public bool IsBinary { get; init; }
+
+
+        public string? SensorUniqueId { get; set; }
+        public string? SensorStateTopic { get; set; }
+
     }
 }

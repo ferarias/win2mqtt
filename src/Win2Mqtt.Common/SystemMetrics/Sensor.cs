@@ -15,7 +15,7 @@ namespace Win2Mqtt.SystemMetrics
 
         public SensorMetadata Metadata => _metadata;
 
-        public abstract Task<SensorValue<T>> CollectAsync();
+        public abstract Task<T> CollectAsync();
     }
 
     public abstract class ChildSensor<T> : ISensor<T>
@@ -29,7 +29,7 @@ namespace Win2Mqtt.SystemMetrics
 
         public SensorMetadata Metadata => _metadata;
 
-        public abstract Task<SensorValue<T>> CollectAsync();
+        public abstract Task<T> CollectAsync();
     }
 
     public abstract class MultiSensor : IMultiSensor
