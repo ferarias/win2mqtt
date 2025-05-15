@@ -1,4 +1,6 @@
 ﻿### Disk drives sensors
+ 
+THIS IS WORK-IN-PROGRESS. DO NOT BELIEVE WHAT YOU SEE HERE.
 
 Status of each mounted drive in the system
 
