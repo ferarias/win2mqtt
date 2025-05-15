@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using Microsoft.Extensions.Options;
-using Win2Mqtt.Common;
+﻿using Microsoft.Extensions.Options;
 using Win2Mqtt.HomeAssistant;
 using Win2Mqtt.Options;
 using Win2Mqtt.SystemActions;
@@ -22,7 +20,8 @@ namespace Win2Mqtt.Service
         private readonly Win2MqttOptions _options = options.Value;
         private readonly static SemaphoreSlim _semaphore = new(1, 1);
         private readonly IEnumerable<ISensorWrapper> _sensors = sensorFactory.GetEnabledSensors();
-
+        
+        private readonly object DeviceInfo = HomeAssistantDiscoveryHelper.GetHADeviceInfo(options.Value.DeviceUniqueId);
 
         public async Task StartAsync(CancellationToken stoppingToken)
         {
@@ -36,7 +35,7 @@ namespace Win2Mqtt.Service
             foreach (var sensor in _sensors)
             {
                 await mqttPublisher.PublishAsync(
-                    HomeAssistantDiscoveryHelper.GetSensorDiscoveryMessage(options.Value.MqttBaseTopic, options.Value.DeviceUniqueId, sensor), 
+                    HomeAssistantDiscoveryHelper.GetHADiscoveryMessage(options.Value.MqttBaseTopic, sensor.Metadata, DeviceInfo), 
                     retain: true, 
                     cancellationToken: stoppingToken);
 
@@ -60,10 +59,13 @@ namespace Win2Mqtt.Service
                 {
                     try
                     {
-                        var (key, value) = await sensor.CollectAsync();
-                        var sensorUniqueId = $"{_options.DeviceUniqueId}_{SanitizeHelpers.Sanitize(key)}";
-                        string stateTopic = $"{_options.MqttBaseTopic}/{sensorUniqueId}";
-                        await mqttPublisher.PublishAsync(stateTopic, sensorValueFormatter.Format(value), false, cancellationToken: stoppingToken);
+                        if(sensor.Metadata.SensorStateTopic == null)
+                        {
+                            logger.LogWarning("Sensor {Sensor} has no state topic", sensor.Metadata.Key);
+                            continue;
+                        }
+                        var value = await sensor.CollectAsync();
+                        await mqttPublisher.PublishAsync(sensor.Metadata.SensorStateTopic, sensorValueFormatter.Format(value), false, cancellationToken: stoppingToken);
                     }
                     catch (Exception ex)
                     {
