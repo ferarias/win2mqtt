@@ -1,6 +1,6 @@
 ## MQTT listeners
 
-The predefined is optional due safety resons
+THIS IS WORK-IN-PROGRESS. DO NOT BELIEVE WHAT YOU SEE HERE.
 
 ### Monitor
 
