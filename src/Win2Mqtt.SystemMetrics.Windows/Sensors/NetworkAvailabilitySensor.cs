@@ -10,11 +10,11 @@ namespace Win2Mqtt.SystemMetrics.Windows.Sensors
     isBinary: true)]
     public class NetworkAvailabilitySensor(ILogger<NetworkAvailabilitySensor> logger) : Sensor<bool>
     {
-        public override Task<SensorValue<bool>> CollectAsync()
+        public override Task<bool> CollectAsync()
         {
             var value = NetworkInterface.GetIsNetworkAvailable();
             logger.LogDebug("Collect {Key}: {Value}", Metadata.Key, value);
-            return Task.FromResult(new SensorValue<bool>(Metadata.Key, value));
+            return Task.FromResult(value);
         }
     }
 }

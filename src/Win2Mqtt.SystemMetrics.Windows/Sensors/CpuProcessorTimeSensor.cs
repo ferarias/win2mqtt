@@ -11,11 +11,11 @@ namespace Win2Mqtt.SystemMetrics.Windows.Sensors
     stateClass: "measurement")]
     public class CpuProcessorTimeSensor(ILogger<CpuProcessorTimeSensor> logger) : Sensor<double>
     {
-        public override async Task<SensorValue<double>> CollectAsync()
+        public override async Task<double> CollectAsync()
         {
             var cpuUsage = await GetCpuUsageAsync();
             logger.LogDebug("Collect {Key}: {Value}%", Metadata.Key, cpuUsage);
-            return new SensorValue<double>(Metadata.Key, cpuUsage);
+            return cpuUsage;
 
         }
 

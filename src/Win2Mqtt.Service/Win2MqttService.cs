@@ -87,7 +87,6 @@ namespace Win2Mqtt.Service
             // Publish offline status
             await haPublisher.NotifyOfflineStatus(cancellationToken);
             await mqttConnectionManager.DisconnectAsync(cancellationToken);
-
         }
 
         public async Task ConnectToMqttBrokerAsync(CancellationToken stoppingToken)
