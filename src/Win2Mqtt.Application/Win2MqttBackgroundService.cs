@@ -1,13 +1,14 @@
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Win2Mqtt.Application;
 using Win2Mqtt.Options;
 
-namespace Win2Mqtt.Service
+namespace Win2Mqtt.Application
 {
-    public class WindowsBackgroundService(
+    public class Win2MqttBackgroundService(
         Win2MqttService service,
         IOptionsMonitor<Win2MqttOptions> options,
-        ILogger<WindowsBackgroundService> logger) : BackgroundService
+        ILogger<Win2MqttBackgroundService> logger) : BackgroundService
     {
         private readonly static SemaphoreSlim _semaphore = new(1, 1);
 

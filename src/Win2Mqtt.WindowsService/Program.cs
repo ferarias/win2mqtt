@@ -5,7 +5,6 @@ using Win2Mqtt.Application;
 using Win2Mqtt.Broker.MQTTNet;
 using Win2Mqtt.HomeAssistant;
 using Win2Mqtt.Options;
-using Win2Mqtt.Service;
 using Win2Mqtt.SystemActions.Windows;
 using Win2Mqtt.SystemMetrics.Windows;
 
@@ -68,7 +67,7 @@ try
         .AddWindowsSystemMetrics()
         .AddWindowsSystemActions()
         .AddSingleton<Win2MqttService>()
-        .AddHostedService<WindowsBackgroundService>();
+        .AddHostedService<Win2MqttBackgroundService>();
 
     await builder.Build().RunAsync();
 }

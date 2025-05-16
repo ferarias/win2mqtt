@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Serilog;
+﻿using Serilog;
+using Win2Mqtt.Application;
+using Win2Mqtt.Broker.MQTTNet;
+using Win2Mqtt.HomeAssistant;
 using Win2Mqtt.Options;
 
 Log.Logger = new LoggerConfiguration()
@@ -14,10 +15,14 @@ try
 
     var builder = Host.CreateApplicationBuilder(args);
     builder.Services
+        .AddHostedService<Win2MqttBackgroundService>();
+
+    builder.Services
         .AddSerilog((services, loggerConfiguration) => loggerConfiguration
             .ReadFrom.Configuration(builder.Configuration)
             .ReadFrom.Services(services)
-            .Enrich.FromLogContext());
+            .Enrich.FromLogContext()
+            .WriteTo.Console());
 
     builder.Services
     .AddOptionsWithValidateOnStart<Win2MqttOptions>()
@@ -31,11 +36,17 @@ try
             o.MultiSensors = new Dictionary<string, MultiSensorOptions>(o.MultiSensors, StringComparer.OrdinalIgnoreCase);
             o.Listeners = new Dictionary<string, ListenerOptions>(o.Listeners, StringComparer.OrdinalIgnoreCase);
         });
+
+    builder.Services
+        .AddMqtt2NetBroker()
+        .AddHomeAssistant()
+        .AddSingleton<Win2MqttService>();
+
     await builder.Build().RunAsync();
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Application terminated unexpectedly");
+    Log.Fatal(ex, ex.Message);
 }
 finally
 {
