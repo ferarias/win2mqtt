@@ -1,6 +1,6 @@
 ﻿using Win2Mqtt.SystemMetrics;
 
-namespace Win2Mqtt.Service
+namespace Win2Mqtt.Application
 {
     public sealed class Win2MqttService(
         IMqttConnectionManager connectionManager,

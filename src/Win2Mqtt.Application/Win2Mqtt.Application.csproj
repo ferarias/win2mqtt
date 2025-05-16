@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Win2Mqtt.Common\Win2Mqtt.Common.csproj" />
+    <ProjectReference Include="..\Win2Mqtt.Broker.Mqtt2Net\Win2Mqtt.Broker.MQTTNet.csproj" />
+    <ProjectReference Include="..\Win2Mqtt.HomeAssistant\Win2Mqtt.HomeAssistant.csproj" />
+  </ItemGroup>
+
+</Project>

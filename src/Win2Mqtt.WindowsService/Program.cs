@@ -1,6 +1,7 @@
 using CliWrap;
 using Serilog;
 using Win2Mqtt;
+using Win2Mqtt.Application;
 using Win2Mqtt.Broker.MQTTNet;
 using Win2Mqtt.HomeAssistant;
 using Win2Mqtt.Options;
@@ -49,23 +50,24 @@ try
 
     builder.Services
         .AddOptionsWithValidateOnStart<Win2MqttOptions>()
-        .BindConfiguration(Win2MqttOptions.SectionName)
-        .ValidateDataAnnotations();
+            .BindConfiguration(Win2MqttOptions.SectionName)
+            .ValidateDataAnnotations();
 
     builder.Services
         .PostConfigure<Win2MqttOptions>(o =>
         {
             o.Sensors = new Dictionary<string, SensorOptions>(o.Sensors, StringComparer.OrdinalIgnoreCase);
             o.MultiSensors = new Dictionary<string, MultiSensorOptions>(o.MultiSensors, StringComparer.OrdinalIgnoreCase);
+            o.Listeners = new Dictionary<string, ListenerOptions>(o.Listeners, StringComparer.OrdinalIgnoreCase);
         });
 
     builder.Services
         .AddWindowsService(options => options.ServiceName = $"{Constants.AppId} Service")
-        .AddSingleton<Win2MqttService>()
         .AddMqtt2NetBroker()
-        .AddHomeAssistantDiscovery()
-        .AddSystemMetrics()
-        .AddSystemActions()
+        .AddHomeAssistant()
+        .AddWindowsSystemMetrics()
+        .AddWindowsSystemActions()
+        .AddSingleton<Win2MqttService>()
         .AddHostedService<WindowsBackgroundService>();
 
     await builder.Build().RunAsync();

@@ -10,7 +10,7 @@ namespace Win2Mqtt.SystemMetrics.Windows
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddSystemMetrics(this IServiceCollection services)
+        public static IServiceCollection AddWindowsSystemMetrics(this IServiceCollection services)
         {
             services.Scan(scan => scan
             .FromAssemblyOf<SensorFactory>()
