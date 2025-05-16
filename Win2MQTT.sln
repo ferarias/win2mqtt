@@ -34,6 +34,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win2Mqtt.Application", "src\Win2Mqtt.Application\Win2Mqtt.Application.csproj", "{A190059D-9052-4D3D-80C2-973E2C21649E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win2Mqtt.LinuxService", "src\Win2Mqtt.LinuxService\Win2Mqtt.LinuxService.csproj", "{E3E498E6-DA00-461F-BF64-79AE4475C198}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -128,6 +130,18 @@ Global
 		{A190059D-9052-4D3D-80C2-973E2C21649E}.Release|x64.Build.0 = Release|Any CPU
 		{A190059D-9052-4D3D-80C2-973E2C21649E}.Release|x86.ActiveCfg = Release|Any CPU
 		{A190059D-9052-4D3D-80C2-973E2C21649E}.Release|x86.Build.0 = Release|Any CPU
+		{E3E498E6-DA00-461F-BF64-79AE4475C198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3E498E6-DA00-461F-BF64-79AE4475C198}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3E498E6-DA00-461F-BF64-79AE4475C198}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E3E498E6-DA00-461F-BF64-79AE4475C198}.Debug|x64.Build.0 = Debug|Any CPU
+		{E3E498E6-DA00-461F-BF64-79AE4475C198}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E3E498E6-DA00-461F-BF64-79AE4475C198}.Debug|x86.Build.0 = Debug|Any CPU
+		{E3E498E6-DA00-461F-BF64-79AE4475C198}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3E498E6-DA00-461F-BF64-79AE4475C198}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3E498E6-DA00-461F-BF64-79AE4475C198}.Release|x64.ActiveCfg = Release|Any CPU
+		{E3E498E6-DA00-461F-BF64-79AE4475C198}.Release|x64.Build.0 = Release|Any CPU
+		{E3E498E6-DA00-461F-BF64-79AE4475C198}.Release|x86.ActiveCfg = Release|Any CPU
+		{E3E498E6-DA00-461F-BF64-79AE4475C198}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,6 +154,7 @@ Global
 		{C98BBC15-80EE-446A-B980-CE104D5AF074} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{02412E5A-7EF7-421E-8B97-EEC3E6BCB17F} = {7FEF2422-E653-4420-87D9-B2525A50C502}
 		{A190059D-9052-4D3D-80C2-973E2C21649E} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{E3E498E6-DA00-461F-BF64-79AE4475C198} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2634DCE7-2679-4467-8AC5-E8382EE43EC1}
