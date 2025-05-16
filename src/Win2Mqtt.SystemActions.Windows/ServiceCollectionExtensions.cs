@@ -8,7 +8,6 @@ namespace Win2Mqtt.SystemActions.Windows
         public static IServiceCollection AddWindowsSystemActions(this IServiceCollection services) =>
             services
             .AddSingleton<HibernateHandler>()
-            .AddSingleton<IMqttActionHandler, HibernateHandler>()
-            .AddTransient<IIncomingMessagesProcessor, WindowsIncomingMessagesProcessor>();
+            .AddSingleton<IMqttActionHandler, HibernateHandler>();
     }
 }
