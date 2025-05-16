@@ -1,17 +1,12 @@
-﻿using System.Runtime.Loader;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Win2Mqtt.Options;
-
-AssemblyLoadContext.Default.Unloading += SigTermEventHandler;
-Console.CancelKeyPress += CancelHandler;
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .WriteTo.Console()
     .CreateBootstrapLogger();
-
 
 try
 {
@@ -45,14 +40,4 @@ catch (Exception ex)
 finally
 {
     await Log.CloseAndFlushAsync();
-}
-
-void CancelHandler(object? sender, ConsoleCancelEventArgs e)
-{
-    Console.WriteLine("App was stopped by the user.");
-}
-
-void SigTermEventHandler(AssemblyLoadContext context)
-{
-    Console.WriteLine("Service was stopped.");
 }
