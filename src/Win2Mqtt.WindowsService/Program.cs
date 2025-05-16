@@ -34,6 +34,7 @@ try
 
     builder.Services
         .AddWin2MqttOptions()
+        .AddWin2MqttApplication()
         .AddMqtt2NetBroker()
         .AddHomeAssistant()
         .AddWindowsSystemMetrics()

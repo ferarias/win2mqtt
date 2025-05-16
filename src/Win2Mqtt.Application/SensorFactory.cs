@@ -3,8 +3,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Win2Mqtt.Common;
 using Win2Mqtt.Options;
+using Win2Mqtt.SystemMetrics;
 
-namespace Win2Mqtt.SystemMetrics.Windows
+namespace Win2Mqtt.Application
 {
     public class SensorFactory(
     IOptions<Win2MqttOptions> options,
