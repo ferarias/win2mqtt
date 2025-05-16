@@ -25,22 +25,9 @@ try
             .WriteTo.Console());
 
     builder.Services
-    .AddOptionsWithValidateOnStart<Win2MqttOptions>()
-        .BindConfiguration(Win2MqttOptions.SectionName)
-        .ValidateDataAnnotations();
-
-    builder.Services
-        .PostConfigure<Win2MqttOptions>(o =>
-        {
-            o.Sensors = new Dictionary<string, SensorOptions>(o.Sensors, StringComparer.OrdinalIgnoreCase);
-            o.MultiSensors = new Dictionary<string, MultiSensorOptions>(o.MultiSensors, StringComparer.OrdinalIgnoreCase);
-            o.Listeners = new Dictionary<string, ListenerOptions>(o.Listeners, StringComparer.OrdinalIgnoreCase);
-        });
-
-    builder.Services
+        .AddWin2MqttOptions()
         .AddMqtt2NetBroker()
-        .AddHomeAssistant()
-        .AddSingleton<Win2MqttService>();
+        .AddHomeAssistant();
 
     await builder.Build().RunAsync();
 }
