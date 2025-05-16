@@ -1,24 +1,44 @@
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Win2Mqtt.Options;
+using Win2Mqtt.SystemMetrics;
 
-namespace Win2Mqtt.Service
+namespace Win2Mqtt.Application
 {
-    public class WindowsBackgroundService(
-        Win2MqttService service,
+    public class Win2MqttBackgroundService(
+        IMqttConnectionManager connectionManager,
+        ISensorFactory sensorFactory,
+        IMessagePublisher publisher,
+        IMqttSubscriber subscriber,
         IOptionsMonitor<Win2MqttOptions> options,
-        ILogger<WindowsBackgroundService> logger) : BackgroundService
+        ILogger<Win2MqttBackgroundService> logger) : BackgroundService
     {
         private readonly static SemaphoreSlim _semaphore = new(1, 1);
+        private readonly IEnumerable<ISensorWrapper> _activeSensors = sensorFactory.GetEnabledSensors();
 
 
-        public override async Task StartAsync(CancellationToken cancellationToken)
+        public override async Task StartAsync(CancellationToken stoppingToken)
         {
+            // Connect to MQTT broker, Subscribe to incoming messages and Publish Home Assistant discovery messages/online status
+            // Connect to MQTT broker
+            await connectionManager.ConnectAsync(stoppingToken);
+
+            // Subscribe to incoming messages
+            await subscriber.SubscribeAsync(stoppingToken);
+
+            // Publish Home Assistant discovery messages
+            foreach (var sensor in _activeSensors)
+            {
+                await publisher.PublishSensorDiscoveryMessage(sensor.Metadata, stoppingToken);
+            }
+
+            // Publish online status
+            await publisher.PublishOnlineStatus(stoppingToken);
+
+            await base.StartAsync(stoppingToken);
             logger.LogInformation("Worker started");
 
-            // Connect to MQTT broker, Subscribe to incoming messages and Publish Home Assistant discovery messages/online status
-            await service.StartAsync(cancellationToken);
-
-            await base.StartAsync(cancellationToken);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -32,7 +52,11 @@ namespace Win2Mqtt.Service
                     try
                     {
 
-                        await service.CollectAndPublish(stoppingToken);
+                        foreach (var sensor in _activeSensors)
+                        {
+                            var sensorValue = await sensor.CollectAsync();
+                            await publisher.PublishSensorValue(sensor, sensorValue, stoppingToken);
+                        }
                     }
                     finally
                     {
@@ -65,7 +89,11 @@ namespace Win2Mqtt.Service
 
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
-            await service.StopAsync(cancellationToken);
+            // Disonnect from MQTT broker
+            await publisher.PublishOfflineStatus(cancellationToken);
+
+            // Publish offline status
+            await connectionManager.DisconnectAsync(cancellationToken);
             await base.StopAsync(cancellationToken);
             logger.LogInformation("Worker stopped.");
         }
