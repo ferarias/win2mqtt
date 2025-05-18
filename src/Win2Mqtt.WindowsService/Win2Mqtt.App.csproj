@@ -1,18 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
     <PropertyGroup>
-        <TargetFramework>net8.0-windows8.0</TargetFramework>
+        <TargetFrameworks>net8.0;net8.0-windows8.0</TargetFrameworks>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <UserSecretsId>dotnet-Win2Mqtt.Service-1b9a5605-98fc-4784-bb9d-1b6a3ef40c18</UserSecretsId>
         <OutputType>exe</OutputType>
-        <PublishSingleFile Condition="'$(Configuration)' == 'Release'">true</PublishSingleFile>
+    </PropertyGroup>
+
+    <!-- Windows-specific tweaks -->
+    <PropertyGroup Condition="'$(TargetFramework)'=='net8.0-windows8.0'">
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-        <PlatformTarget>x64</PlatformTarget>
+        <PublishSingleFile Condition="'$(Configuration)'=='Release'">true</PublishSingleFile>
+        <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CliWrap" Version="3.8.2" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.0" />
         <PackageReference Include="Serilog" Version="4.2.0" />
@@ -23,8 +25,16 @@
         <PackageReference Include="Serilog.Sinks.Seq" Version="8.0.0" />
     </ItemGroup>
 
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-windows8.0' ">
+        <PackageReference Include="CliWrap" Version="3.8.2" />
+    </ItemGroup>
+    
     <ItemGroup>
         <ProjectReference Include="..\Win2Mqtt.Application\Win2Mqtt.Application.csproj" />
+        <ProjectReference Include="..\Win2Mqtt.SystemMetrics\Win2Mqtt.SystemMetrics.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-windows8.0' ">
         <ProjectReference Include="..\Win2Mqtt.SystemMetrics.Windows\Win2Mqtt.SystemMetrics.Windows.csproj" />
         <ProjectReference Include="..\Win2Mqtt.SystemActions.Windows\Win2Mqtt.SystemActions.Windows.csproj" />
     </ItemGroup>

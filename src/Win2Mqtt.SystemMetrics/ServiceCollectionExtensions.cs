@@ -1,16 +1,16 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Scrutor;
 
-namespace Win2Mqtt.SystemMetrics.Windows
+namespace Win2Mqtt.SystemMetrics
 {
-    public static class ServiceCollectionExtensions
+    public static partial class ServiceCollectionExtensions
     {
         /// <summary>
         /// Add sensors for system metrics to the service collection.
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddWindowsSpecificSensors(this IServiceCollection services)
+        public static IServiceCollection AddSystemSensors(this IServiceCollection services)
         {
             services.Scan(scan => scan
             .FromAssemblies([typeof(ServiceCollectionExtensions).Assembly])

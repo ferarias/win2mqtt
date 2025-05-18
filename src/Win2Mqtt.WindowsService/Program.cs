@@ -1,21 +1,27 @@
 using Serilog;
-using Win2Mqtt;
 using Win2Mqtt.Application;
 using Win2Mqtt.Broker.MQTTNet;
 using Win2Mqtt.HomeAssistant;
 using Win2Mqtt.Options;
+using Win2Mqtt.SystemMetrics;
+
+
+#if WINDOWS
+using Win2Mqtt;
 using Win2Mqtt.SystemActions.Windows;
 using Win2Mqtt.SystemMetrics.Windows;
-using Win2Mqtt.WindowsService;
+#endif
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .WriteTo.Console()
     .CreateBootstrapLogger();
 
+#if WINDOWS
 // Manage installation and uninstallation of the service (CliWrap)
 if (await WindowsServiceInstaller.HandleServiceInstallationAsync(args))
     return;
+#endif
 
 try
 {
@@ -37,9 +43,13 @@ try
         .AddWin2MqttApplication()
         .AddMqtt2NetBroker()
         .AddHomeAssistant()
-        .AddWindowsSystemMetrics()
+        .AddSystemSensors();
+#if WINDOWS
+    builder.Services
+        .AddWindowsSpecificSensors()
         .AddWindowsSystemActions()
         .AddWindowsService(options => options.ServiceName = $"{Constants.AppId} Service");
+#endif
 
     await builder.Build().RunAsync();
 }
