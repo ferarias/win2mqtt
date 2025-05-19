@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Win2Mqtt.SystemMetrics.Windows.Sensors
+namespace Win2Mqtt.SystemMetrics.Sensors
 {
     [Sensor(
     "timestamp",

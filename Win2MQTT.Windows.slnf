@@ -1,0 +1,11 @@
+{
+  "solution": {
+    "path": "Win2MQTT.sln",
+    "projects": [
+      "src/Win2Mqtt.App/Win2Mqtt.App.csproj",
+      "src/Win2Mqtt.SystemMetrics.Windows/Win2Mqtt.SystemMetrics.Windows.csproj",
+      "src/Win2Mqtt.SystemActions.Windows/Win2Mqtt.SystemActions.Windows.csproj",
+      "src/Win2Mqtt.*/*.csproj"   // add the rest that are platform-agnostic
+    ]
+  }
+}

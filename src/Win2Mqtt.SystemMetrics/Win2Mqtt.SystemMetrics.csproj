@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0-windows</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
@@ -13,9 +12,12 @@
         <PackageReference Include="Scrutor" Version="6.0.1" />
         <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="8.0.1" />
     </ItemGroup>
+    
+    <ItemGroup>
+        <Folder Include="MultiSensors\" />
+    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Win2Mqtt.Common\Win2Mqtt.Common.csproj" />
     </ItemGroup>
-    
 </Project>
