@@ -7,14 +7,14 @@ namespace Win2Mqtt.SystemActions.Windows
     {
         public static IServiceCollection AddWindowsSystemActions(this IServiceCollection services) =>
             services
-            .AddSingleton<GetProcessesHandler>()
-            .AddSingleton<GetProcessHandler>()
-            .AddSingleton<HibernateHandler>()
-            .AddSingleton<KillProcessHandler>()
-            .AddSingleton<RebootHandler>()
-            .AddSingleton<ShutdownHandler>()
-            .AddSingleton<StartProcessHandler>()
-            .AddSingleton<SuspendHandler>()
+            .AddSingleton<IMqttActionHandler<ProcessInfo[]>, GetProcessesHandler>()
+            .AddSingleton<IMqttActionHandler<bool>, GetProcessHandler>()
+            .AddSingleton<IMqttActionHandler, HibernateHandler>()
+            .AddSingleton<IMqttActionHandler<bool>, KillProcessHandler>()
+            .AddSingleton<IMqttActionHandler, RebootHandler>()
+            .AddSingleton<IMqttActionHandler, ShutdownHandler>()
+            .AddSingleton<IMqttActionHandler, StartProcessHandler>()
+            .AddSingleton<IMqttActionHandler, SuspendHandler>()
             .AddSingleton<IMqttActionHandler, HibernateHandler>();
     }
 }
