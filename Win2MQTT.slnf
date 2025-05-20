@@ -4,6 +4,7 @@
     "projects": [
       "src/Win2Mqtt.App/Win2Mqtt.App.csproj",
       "src/Win2Mqtt.SystemMetrics/Win2Mqtt.SystemMetrics.csproj",
+      "src/Win2Mqtt.SystemMetrics/Win2Mqtt.SystemActions.csproj",
       "src/Win2Mqtt.*/*.csproj"
     ]
   }

@@ -43,6 +43,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{A01ABF5F-6536-4E0A-AF5F-2C4487CB6550}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win2Mqtt.SystemActions", "src\Win2Mqtt.SystemActions\Win2Mqtt.SystemActions.csproj", "{5DDC641D-949E-9BFA-6249-CAD26FCB5836}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -198,6 +200,24 @@ Global
 		{A7007CFA-92E6-47EE-92FD-F9EC32EC7596}.Release-Windows|x64.Build.0 = Release|Any CPU
 		{A7007CFA-92E6-47EE-92FD-F9EC32EC7596}.Release-Windows|x86.ActiveCfg = Release|Any CPU
 		{A7007CFA-92E6-47EE-92FD-F9EC32EC7596}.Release-Windows|x86.Build.0 = Release|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Debug|x64.Build.0 = Debug|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Debug|x86.Build.0 = Debug|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Release|x64.ActiveCfg = Release|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Release|x64.Build.0 = Release|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Release|x86.ActiveCfg = Release|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Release|x86.Build.0 = Release|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Release-Windows|Any CPU.ActiveCfg = Release|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Release-Windows|Any CPU.Build.0 = Release|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Release-Windows|x64.ActiveCfg = Release|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Release-Windows|x64.Build.0 = Release|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Release-Windows|x86.ActiveCfg = Release|Any CPU
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836}.Release-Windows|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -214,6 +234,7 @@ Global
 		{A190059D-9052-4D3D-80C2-973E2C21649E} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{A7007CFA-92E6-47EE-92FD-F9EC32EC7596} = {7FEF2422-E653-4420-87D9-B2525A50C502}
 		{A01ABF5F-6536-4E0A-AF5F-2C4487CB6550} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{5DDC641D-949E-9BFA-6249-CAD26FCB5836} = {A01ABF5F-6536-4E0A-AF5F-2C4487CB6550}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2634DCE7-2679-4467-8AC5-E8382EE43EC1}
