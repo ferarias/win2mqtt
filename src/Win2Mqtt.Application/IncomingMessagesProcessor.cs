@@ -70,28 +70,6 @@ namespace Win2Mqtt.Application
                 //        await connector.PublishAsync(processRunningTopic, sensorValueFormatter.Format(Processes.Close(message)), false, cancellationToken: cancellationToken);
                 //        break;
 
-                //    case "Hibernate":
-                //        PowerManagement.HibernateSystem();
-                //        break;
-
-                //    case "Suspend":
-                //        PowerManagement.SuspendSystem();
-                //        break;
-
-                //    case "Reboot":
-                //        if (int.TryParse(message, out int rebootDelay))
-                //            PowerManagement.Reboot(rebootDelay);
-                //        else
-                //            PowerManagement.Reboot(10);
-                //        break;
-
-                //    case "Shutdown":
-                //        if (int.TryParse(message, out int shutdownDelay))
-                //            PowerManagement.Reboot(shutdownDelay);
-                //        else
-                //            PowerManagement.Reboot(10);
-                //        break;
-
                 //    default:
                 //        _logger.LogError("An invalid topic or message received: `{topic}` `{message}`", subtopic, message);
                 //        break;

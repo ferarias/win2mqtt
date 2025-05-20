@@ -12,10 +12,6 @@
         <PackageReference Include="Scrutor" Version="6.0.1" />
         <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="8.0.1" />
     </ItemGroup>
-    
-    <ItemGroup>
-        <Folder Include="MultiSensors\" />
-    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Win2Mqtt.Common\Win2Mqtt.Common.csproj" />
