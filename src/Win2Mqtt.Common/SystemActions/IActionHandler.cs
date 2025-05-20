@@ -8,4 +8,8 @@ namespace Win2Mqtt.SystemActions
         Task HandleAsync(string payload, CancellationToken cancellationToken);
     }
 
+    public interface IMqttActionHandler<T>
+    {
+        Task<T> HandleAsync(string payload, CancellationToken cancellationToken);
+    }
 }

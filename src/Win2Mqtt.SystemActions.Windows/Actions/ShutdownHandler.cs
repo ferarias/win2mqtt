@@ -7,9 +7,9 @@
         public Task HandleAsync(string payload, CancellationToken cancellationToken)
         {
             if (int.TryParse(payload, out int shutdownDelay))
-                PowerManagement.Shutdown(shutdownDelay);
+                WindowsPowerManagement.Shutdown(shutdownDelay);
             else
-                PowerManagement.Shutdown(DefaultShutdownDelay);
+                WindowsPowerManagement.Shutdown(DefaultShutdownDelay);
 
             return Task.CompletedTask;
         }

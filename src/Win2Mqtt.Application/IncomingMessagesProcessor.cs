@@ -39,23 +39,12 @@ namespace Win2Mqtt.Application
                     logger.LogWarning("Handler not implemented for listener `{Listener}`", match.Key);
                 }
 
-
-                //    case "SendMessage":
+                //TODO: Notifier
                 //        var notifierParameters = JsonSerializer.Deserialize<NotificationMessage>(message);
                 //        if (notifierParameters != null)
                 //        {
                 //            Notifier.Show(notifierParameters);
                 //        }
-                //        break;
-
-                //        break;
-                //    case "ProcessRunning":
-                //        await connector.PublishAsync(processRunningTopic, sensorValueFormatter.Format(Processes.IsRunning(message)), false, cancellationToken: cancellationToken);
-                //        break;
-
-                //    case "ProcessClose":
-                //        await connector.PublishAsync(processRunningTopic, sensorValueFormatter.Format(Processes.Close(message)), false, cancellationToken: cancellationToken);
-                //        break;
 
             }
             catch (Exception ex)

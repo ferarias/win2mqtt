@@ -7,9 +7,9 @@
         public Task HandleAsync(string payload, CancellationToken cancellationToken)
         {
             if (int.TryParse(payload, out int rebootDelay))
-                PowerManagement.Reboot(rebootDelay);
+                WindowsPowerManagement.Reboot(rebootDelay);
             else
-                PowerManagement.Reboot(DefaultRebootDelay);
+                WindowsPowerManagement.Reboot(DefaultRebootDelay);
 
             return Task.CompletedTask;
         }

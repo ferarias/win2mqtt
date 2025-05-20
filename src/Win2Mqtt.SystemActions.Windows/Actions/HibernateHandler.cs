@@ -4,7 +4,7 @@
     {
         public Task HandleAsync(string payload, CancellationToken cancellationToken)
         {
-            PowerManagement.HibernateSystem();
+            WindowsPowerManagement.HibernateSystem();
             return Task.CompletedTask;
         }
     }
