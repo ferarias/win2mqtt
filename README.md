@@ -43,7 +43,7 @@ Install as a **Linux Service**
 First, build a a self-containing exe:
 
 ```powershell
-dotnet publish .\src\Win2Mqtt\ --configuration Release -f net8.0 --runtime linux-x64 --self-contained  --output ./publish/
+dotnet publish ./src/Win2Mqtt --configuration Release --framework net8.0 --runtime linux-x64 --self-contained  --output ./publish
 ```
 
 ## Sensors
