@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <OutputType>exe</OutputType>
+        <AssemblyName>win2mqtt</AssemblyName>
     </PropertyGroup>
 
     <!-- Windows-specific tweaks -->
@@ -12,6 +13,7 @@
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
         <PublishSingleFile Condition="'$(Configuration)'=='Release'">true</PublishSingleFile>
         <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
+        <AssemblyName>Win2Mqtt</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>

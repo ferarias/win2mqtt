@@ -17,22 +17,34 @@ It uses the MQTT protocol to communicate with the broker and publish sensor data
 
 ## Installation
 
+### Microsoft Windows
+
 Install as a **Windows Service**
 
 First, build a a self-containing exe:
 
 ```powershell
-dotnet publish .\src\Win2Mqtt.Service\ --configuration Release --runtime win-x64 --self-contained  --output c:\Win2MQTT
+dotnet publish .\src\Win2Mqtt\ --configuration Release --framework net8.0-windows8.0 --runtime win-x64 --self-contained  --output c:\Win2MQTT
 ```
 
 Then create and start the service (you will need Administration privileges):
 
 ```powershell
-sc.exe create "Win2MQTT Service" binpath= "c:\Win2MQTT\Win2Mqtt.Service.exe"
+sc.exe create "Win2MQTT Service" binpath= "C:\Win2MQTT\Win2Mqtt.exe"
 sc.exe start "Win2MQTT Service"
 ```
 
 More information in [this article](https://learn.microsoft.com/en-us/dotnet/core/extensions/windows-service)
+
+### Linux
+
+Install as a **Linux Service**
+
+First, build a a self-containing exe:
+
+```powershell
+dotnet publish .\src\Win2Mqtt\ --configuration Release -f net8.0 --runtime linux-x64 --self-contained  --output ./publish/
+```
 
 ## Sensors
 
