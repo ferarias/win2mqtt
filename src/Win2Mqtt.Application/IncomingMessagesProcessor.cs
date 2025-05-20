@@ -14,7 +14,7 @@ namespace Win2Mqtt.Application
         ILogger<IncomingMessagesProcessor> logger) : IIncomingMessagesProcessor
     {
         private readonly Win2MqttOptions _options = options.Value;
-        private readonly IDictionary<string, IMqttActionHandler> _handlers = handlers.ToDictionary(h => h.GetType().Name.Replace("Handler", ""), h => h, StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, IMqttActionHandler> _handlers = handlers.ToDictionary(h => h.GetType().Name.Replace("Handler", ""), h => h, StringComparer.OrdinalIgnoreCase);
 
         public async Task ProcessMessageAsync(string subtopic, string message, CancellationToken cancellationToken = default)
         {
@@ -40,12 +40,6 @@ namespace Win2Mqtt.Application
                 }
 
 
-                //// Find in options the Listener that corresponds to this topic
-                //var (listener, options) = _options.Listeners.First(l => l.Value.Topic.Equals(subtopic));
-
-                //var processRunningTopic = $"{_options.MqttBaseTopic}/status/process/running/{message}";
-                //switch (listener)
-                //{
                 //    case "SendMessage":
                 //        var notifierParameters = JsonSerializer.Deserialize<NotificationMessage>(message);
                 //        if (notifierParameters != null)
@@ -53,13 +47,6 @@ namespace Win2Mqtt.Application
                 //            Notifier.Show(notifierParameters);
                 //        }
                 //        break;
-
-                //    case "Exec":
-                //        var execParameters = JsonSerializer.Deserialize<CommandParameters>(message);
-                //        if (execParameters != null)
-                //        {
-                //            Commands.RunCommand(execParameters);
-                //        }
 
                 //        break;
                 //    case "ProcessRunning":
@@ -70,11 +57,6 @@ namespace Win2Mqtt.Application
                 //        await connector.PublishAsync(processRunningTopic, sensorValueFormatter.Format(Processes.Close(message)), false, cancellationToken: cancellationToken);
                 //        break;
 
-                //    default:
-                //        _logger.LogError("An invalid topic or message received: `{topic}` `{message}`", subtopic, message);
-                //        break;
-
-                //}
             }
             catch (Exception ex)
             {
