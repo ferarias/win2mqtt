@@ -3,15 +3,21 @@
     <PropertyGroup>
         <TargetFrameworks>net8.0;net8.0-windows8.0</TargetFrameworks>
         <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
+        <PlatformTarget>AnyCPU</PlatformTarget>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <OutputType>exe</OutputType>
         <AssemblyName>win2mqtt</AssemblyName>
+        <Configurations>Debug;Release</Configurations>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(TargetFramework)'=='net8.0'">
+        <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)'=='net8.0-windows8.0'">
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-        <PublishSingleFile Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Release-Windows'">true</PublishSingleFile>
+        <PublishSingleFile Condition="'$(Configuration.StartsWith(`Release`))'">true</PublishSingleFile>
     </PropertyGroup>
 
     <ItemGroup>
@@ -25,8 +31,10 @@
         <PackageReference Include="Serilog.Sinks.Seq" Version="8.0.0" />
     </ItemGroup>
 
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-windows8.0' ">
+    <ItemGroup Condition="'$(TargetFramework)'=='net8.0-windows8.0'">
         <PackageReference Include="CliWrap" Version="3.8.2" />
+        <ProjectReference Include="..\Win2Mqtt.SystemSensors.Windows\Win2Mqtt.SystemSensors.Windows.csproj" />
+        <ProjectReference Include="..\Win2Mqtt.SystemActions.Windows\Win2Mqtt.SystemActions.Windows.csproj" />
     </ItemGroup>
     
     <ItemGroup>
@@ -34,9 +42,5 @@
         <ProjectReference Include="..\Win2Mqtt.SystemSensors\Win2Mqtt.SystemSensors.csproj" />
         <ProjectReference Include="..\Win2Mqtt.SystemActions\Win2Mqtt.SystemActions.csproj" />
     </ItemGroup>
-    
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-windows8.0' ">
-        <ProjectReference Include="..\Win2Mqtt.SystemSensors.Windows\Win2Mqtt.SystemSensors.Windows.csproj" />
-        <ProjectReference Include="..\Win2Mqtt.SystemActions.Windows\Win2Mqtt.SystemActions.Windows.csproj" />
-    </ItemGroup>
+
 </Project>
