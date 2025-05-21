@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
 
-namespace Win2Mqtt.SystemMetrics
+namespace Win2Mqtt.SystemSensors
 {
     public static class SensorMetadataFactory
     {

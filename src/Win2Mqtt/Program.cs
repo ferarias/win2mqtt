@@ -3,13 +3,13 @@ using Win2Mqtt.Application;
 using Win2Mqtt.Broker.MQTTNet;
 using Win2Mqtt.HomeAssistant;
 using Win2Mqtt.Options;
-using Win2Mqtt.SystemMetrics;
+using Win2Mqtt.SystemSensors;
 using Win2Mqtt.SystemActions;
 
 
 #if WINDOWS
 using Win2Mqtt;
-using Win2Mqtt.SystemMetrics.Windows;
+using Win2Mqtt.SystemSensors.Windows;
 using Win2Mqtt.SystemActions.Windows;
 #endif
 

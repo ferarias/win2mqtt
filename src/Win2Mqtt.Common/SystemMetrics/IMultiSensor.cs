@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Win2Mqtt.SystemMetrics
+namespace Win2Mqtt.SystemSensors
 {
     public interface IMultiSensor
     {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Win2Mqtt.SystemMetrics.Windows.MultiSensors.Drive;
+using Win2Mqtt.SystemSensors.Windows.MultiSensors.Drive;
 
-namespace Win2Mqtt.SystemMetrics.Windows.MultiSensors
+namespace Win2Mqtt.SystemSensors.Windows.MultiSensors
 {
     [MultiSensor("drives")]
     public class DriveMultiSensor() : MultiSensor

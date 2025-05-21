@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using System.Runtime.InteropServices;
 
-namespace Win2Mqtt.SystemMetrics.Windows.Sensors
+namespace Win2Mqtt.SystemSensors.Windows.Sensors
 {
     [Sensor("freememory", name: "Free Memory", unitOfMeasurement: "B", deviceClass: "memory", stateClass: "measurement")]
     public partial class FreeMemorySensor(ILogger<FreeMemorySensor> logger) : Sensor<double>

@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Win2Mqtt.SystemMetrics
+namespace Win2Mqtt.SystemSensors
 {
     public abstract class Sensor<T> : ISensor<T>
     {

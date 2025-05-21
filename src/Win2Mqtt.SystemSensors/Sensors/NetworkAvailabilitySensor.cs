@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Net.NetworkInformation;
 
-namespace Win2Mqtt.SystemMetrics.Sensors
+namespace Win2Mqtt.SystemSensors.Sensors
 {
     [Sensor(
     "networkavailability",

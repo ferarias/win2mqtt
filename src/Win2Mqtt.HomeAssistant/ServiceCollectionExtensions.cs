@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Win2Mqtt.SystemMetrics;
+using Win2Mqtt.SystemSensors;
 
 namespace Win2Mqtt.HomeAssistant
 {

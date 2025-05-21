@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using Win2Mqtt.Options;
 using Win2Mqtt.SystemActions;
-using Win2Mqtt.SystemMetrics;
+using Win2Mqtt.SystemSensors;
 
 namespace Win2Mqtt.Application
 {
