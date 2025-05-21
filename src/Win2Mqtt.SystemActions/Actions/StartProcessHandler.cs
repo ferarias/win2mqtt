@@ -39,3 +39,10 @@ namespace Win2Mqtt.SystemActions.Actions
         public string? MonitorId { get; set; }
     }
 }
+
+
+//{
+//    "CommandString": "notepad.exe",
+//    "WindowStyle": 0,
+//    "ExecParameters": "%WINDOWS%\\System32\drivers\etc\hosts"
+//}
