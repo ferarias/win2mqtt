@@ -4,12 +4,13 @@ using Win2Mqtt.Broker.MQTTNet;
 using Win2Mqtt.HomeAssistant;
 using Win2Mqtt.Options;
 using Win2Mqtt.SystemMetrics;
+using Win2Mqtt.SystemActions;
 
 
 #if WINDOWS
 using Win2Mqtt;
-using Win2Mqtt.SystemActions.Windows;
 using Win2Mqtt.SystemMetrics.Windows;
+using Win2Mqtt.SystemActions.Windows;
 #endif
 
 Log.Logger = new LoggerConfiguration()
@@ -43,11 +44,12 @@ try
         .AddWin2MqttApplication()
         .AddMqtt2NetBroker()
         .AddHomeAssistant()
+        .AddSystemActions()
         .AddSystemSensors();
 #if WINDOWS
     builder.Services
         .AddWindowsSpecificSensors()
-        .AddWindowsSystemActions()
+        .AddWindowsSpecificSystemActions()
         .AddWindowsService(options => options.ServiceName = $"{Constants.AppId} Service");
 #endif
 

@@ -34,6 +34,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Win2Mqtt.Application\Win2Mqtt.Application.csproj" />
         <ProjectReference Include="..\Win2Mqtt.SystemMetrics\Win2Mqtt.SystemMetrics.csproj" />
+        <ProjectReference Include="..\Win2Mqtt.SystemActions\Win2Mqtt.SystemActions.csproj" />
     </ItemGroup>
     
     <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-windows8.0' ">

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Win2Mqtt.SystemActions.Windows.Actions
+namespace Win2Mqtt.SystemActions.Actions
 {
     public class KillProcessHandler : IMqttActionHandler<bool>
     {
