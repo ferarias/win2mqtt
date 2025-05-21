@@ -1,20 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net8.0-windows8.0</TargetFrameworks>
+        <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <OutputType>exe</OutputType>
         <AssemblyName>win2mqtt</AssemblyName>
     </PropertyGroup>
 
-    <!-- Windows-specific tweaks -->
     <PropertyGroup Condition="'$(TargetFramework)'=='net8.0-windows8.0'">
-        <TargetFrameworks>net8.0;net8.0-windows8.0</TargetFrameworks>
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-        <PublishSingleFile Condition="'$(Configuration)'=='Release-Windows'">true</PublishSingleFile>
-        <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
-        <AssemblyName>Win2Mqtt</AssemblyName>
+        <PublishSingleFile Condition="'$(Configuration)'=='Release' Or '$(Configuration)'=='Release-Windows'">true</PublishSingleFile>
     </PropertyGroup>
 
     <ItemGroup>
