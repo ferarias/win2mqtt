@@ -5,9 +5,11 @@ namespace Win2Mqtt.SystemActions.Windows
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddWindowsSystemActions(this IServiceCollection services) =>
+        public static IServiceCollection AddWindowsSpecificSystemActions(this IServiceCollection services) =>
             services
-            .AddSingleton<HibernateHandler>()
-            .AddSingleton<IMqttActionHandler, HibernateHandler>();
+            .AddSingleton<IMqttActionHandler, HibernateHandler>()
+            .AddSingleton<IMqttActionHandler, RebootHandler>()
+            .AddSingleton<IMqttActionHandler, ShutdownHandler>()
+            .AddSingleton<IMqttActionHandler, SuspendHandler>();
     }
 }

@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Win2Mqtt.SystemActions.Windows
 {
-    public static partial class PowerManagement
+    public static partial class WindowsPowerManagement
     {
         [DllImport("Powrprof.dll", SetLastError = true, ExactSpelling = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
