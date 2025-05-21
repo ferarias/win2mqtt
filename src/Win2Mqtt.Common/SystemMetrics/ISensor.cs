@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Win2Mqtt.SystemMetrics
+namespace Win2Mqtt.SystemSensors
 {
     public interface ISensor { }
 

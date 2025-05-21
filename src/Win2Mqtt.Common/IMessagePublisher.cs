@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Win2Mqtt.SystemMetrics;
+using Win2Mqtt.SystemSensors;
 
 namespace Win2Mqtt
 {

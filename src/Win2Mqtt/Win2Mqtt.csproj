@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net8.0-windows8.0</TargetFrameworks>
+        <TargetFrameworks>net8.0</TargetFrameworks>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <OutputType>exe</OutputType>
@@ -10,8 +10,9 @@
 
     <!-- Windows-specific tweaks -->
     <PropertyGroup Condition="'$(TargetFramework)'=='net8.0-windows8.0'">
+        <TargetFrameworks>net8.0;net8.0-windows8.0</TargetFrameworks>
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-        <PublishSingleFile Condition="'$(Configuration)'=='Release'">true</PublishSingleFile>
+        <PublishSingleFile Condition="'$(Configuration)'=='Release-Windows'">true</PublishSingleFile>
         <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
         <AssemblyName>Win2Mqtt</AssemblyName>
     </PropertyGroup>
@@ -33,12 +34,12 @@
     
     <ItemGroup>
         <ProjectReference Include="..\Win2Mqtt.Application\Win2Mqtt.Application.csproj" />
-        <ProjectReference Include="..\Win2Mqtt.SystemMetrics\Win2Mqtt.SystemMetrics.csproj" />
+        <ProjectReference Include="..\Win2Mqtt.SystemSensors\Win2Mqtt.SystemSensors.csproj" />
         <ProjectReference Include="..\Win2Mqtt.SystemActions\Win2Mqtt.SystemActions.csproj" />
     </ItemGroup>
     
     <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-windows8.0' ">
-        <ProjectReference Include="..\Win2Mqtt.SystemMetrics.Windows\Win2Mqtt.SystemMetrics.Windows.csproj" />
+        <ProjectReference Include="..\Win2Mqtt.SystemSensors.Windows\Win2Mqtt.SystemSensors.Windows.csproj" />
         <ProjectReference Include="..\Win2Mqtt.SystemActions.Windows\Win2Mqtt.SystemActions.Windows.csproj" />
     </ItemGroup>
 </Project>

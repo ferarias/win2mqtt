@@ -1,10 +1,10 @@
 {
   "solution": {
-    "path": "Win2Mqtt.sln",
+    "path": "Win2MQTT.sln",
     "projects": [
-      "src/Win2Mqtt.App/Win2Mqtt.App.csproj",
-      "src/Win2Mqtt.SystemMetrics/Win2Mqtt.SystemMetrics.csproj",
-      "src/Win2Mqtt.SystemMetrics/Win2Mqtt.SystemActions.csproj",
+      "src/Win2Mqtt/Win2Mqtt.csproj",
+      "src/Win2Mqtt.SystemActions/Win2Mqtt.SystemActions.csproj",
+      "src/Win2Mqtt.SystemSensors/Win2Mqtt.SystemSensors.csproj",
       "src/Win2Mqtt.*/*.csproj"
     ]
   }

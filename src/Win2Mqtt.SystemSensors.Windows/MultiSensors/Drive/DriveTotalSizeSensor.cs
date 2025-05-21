@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Win2Mqtt.SystemMetrics.Windows.MultiSensors.Drive
+namespace Win2Mqtt.SystemSensors.Windows.MultiSensors.Drive
 {
     [ChildSensor("drive/{0}/sizetotal",
     namePattern: "Drive {0} Total Space",

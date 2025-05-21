@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Win2Mqtt.SystemMetrics
+namespace Win2Mqtt.SystemSensors
 {
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class SensorAttribute(

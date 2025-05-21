@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Win2Mqtt.Options;
-using Win2Mqtt.SystemMetrics;
+using Win2Mqtt.SystemSensors;
 
 namespace Win2Mqtt.HomeAssistant
 {
@@ -25,7 +25,7 @@ namespace Win2Mqtt.HomeAssistant
         private readonly object DeviceInfo = new
         {
             identifiers = new[] { options.Value.DeviceUniqueId },
-            name = $"Win2MQTT - {options.Value.DeviceUniqueId} metrics",
+            name = $"Win2MQTT - {options.Value.DeviceUniqueId} s",
             manufacturer = "Win2MQTT",
             model = "System Monitoring"
         };

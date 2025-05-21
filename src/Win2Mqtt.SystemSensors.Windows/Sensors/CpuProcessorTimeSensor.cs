@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
-namespace Win2Mqtt.SystemMetrics.Windows.Sensors
+namespace Win2Mqtt.SystemSensors.Windows.Sensors
 {
     [Sensor(
     "cpuprocessortime",
