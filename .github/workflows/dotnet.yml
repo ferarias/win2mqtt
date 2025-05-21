@@ -36,10 +36,10 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Restore dependencies
-        run: dotnet restore src/Win2Mqtt.App/Win2Mqtt.App.csproj
+        run: dotnet restore src/Win2Mqtt/Win2Mqtt.csproj
 
       - name: Publish
-        run: dotnet publish src/Win2Mqtt.App/Win2Mqtt.App.csproj -c Release -f ${{ matrix.framework }} -r ${{ matrix.rid }} --self-contained -o ${{ matrix.output }}
+        run: dotnet publish src/Win2Mqtt/Win2Mqtt.csproj --configuration Release --framework ${{ matrix.framework }} --runtime ${{ matrix.rid }} --self-contained --output ${{ matrix.output }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
