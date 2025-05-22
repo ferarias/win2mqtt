@@ -46,6 +46,64 @@ First, build a a self-containing exe:
 dotnet publish ./src/Win2Mqtt --configuration Release --framework net8.0 --runtime linux-x64 --self-contained  --output ./publish
 ```
 
+### Install as a Linux Service (systemd)
+
+To run Win2MQTT as a background service (daemon) on Linux, you can use systemd. Follow these steps:
+
+1. **Publish your application**
+
+   Build and publish the application for Linux:
+   
+   ```bash
+   dotnet publish ./src/Win2Mqtt --configuration Release --framework net8.0 --runtime linux-x64 --self-contained false --output /opt/win2mqtt
+   ```
+   
+   Adjust the output path as needed.
+
+2. **Create a systemd service file**
+
+   Create a file at `/etc/systemd/system/win2mqtt.service` with the following content (edit paths if necessary):
+   
+   ```ini
+   [Unit]
+   Description=Win2MQTT Service
+   After=network.target
+
+   [Service]
+   Type=simple
+   WorkingDirectory=/opt/win2mqtt
+   ExecStart=/usr/bin/dotnet /opt/win2mqtt/Win2Mqtt.dll
+   Restart=on-failure
+   User=win2mqtt
+   Environment=ASPNETCORE_ENVIRONMENT=Production
+
+   [Install]
+   WantedBy=multi-user.target
+   ```
+
+3. **Create the service user (optional but recommended)**
+
+   ```bash
+   sudo useradd --system --no-create-home --group win2mqtt
+   sudo chown -R win2mqtt:win2mqtt /opt/win2mqtt
+   ```
+
+4. **Reload systemd and enable the service**
+
+   ```bash
+   sudo systemctl daemon-reload
+   sudo systemctl enable win2mqtt
+   sudo systemctl start win2mqtt
+   ```
+
+5. **Check the service status**
+
+   ```bash
+   sudo systemctl status win2mqtt
+   ```
+
+Win2MQTT will now run as a background service and start automatically on boot.
+
 ## Sensors
 
 Sensors are published to Home Assistant, provided it has the MQTT integration enabled.
