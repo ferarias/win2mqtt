@@ -3,86 +3,86 @@ name: .NET CI/CD
 on:
   push:
     tags:
-      - 'v*'
+    - 'v*'
   pull_request:
     branches:
-      - main
+    - main
 
 jobs:
   build:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ ubuntu-latest, windows-latest ]
         include:
-          - os: ubuntu-latest
-            rid: linux-x64
-            framework: net8.0
-            configuration: Release
-            output: publish/linux
-          - os: windows-latest
-            rid: win-x64
-            framework: net8.0-windows8.0
-            configuration: Release-Windows
-            output: publish/windows
+        - os: ubuntu-latest
+          rid: linux-x64
+          framework: net8.0
+          configuration: Release
+          output: publish/linux
+        - os: windows-latest
+          rid: win-x64
+          framework: net8.0-windows8.0
+          configuration: Release-Windows
+          output: publish/windows
 
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
 
-      - name: Restore dependencies
-        run: dotnet restore src/Win2Mqtt/Win2Mqtt.csproj
+    - name: Restore dependencies
+      run: dotnet restore src/Win2Mqtt/Win2Mqtt.csproj
 
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
 
-      - name: Test
-        run: dotnet test --no-build --verbosity normal
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
 
-      - name: Publish (only on tag)
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: dotnet publish src/Win2Mqtt/Win2Mqtt.csproj --configuration ${{ matrix.configuration }} --framework ${{ matrix.framework }} --runtime ${{ matrix.rid }} --self-contained --output ${{ matrix.output }}
+    - name: Publish (only on tag)
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: dotnet publish src/Win2Mqtt/Win2Mqtt.csproj --configuration ${{ matrix.configuration }} --framework ${{ matrix.framework }} --runtime ${{ matrix.rid }} --self-contained --output ${{ matrix.output }}
 
-      - name: Compress artifacts (only on tag)
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: |
-          cd publish/${{ matrix.output }}
-          if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
-            tar -czf ../../win2mqtt-${{ matrix.os }}.tar.gz .
-          else
-            powershell -Command "Compress-Archive -Path * -DestinationPath ../../win2mqtt-${{ matrix.os }}.zip"
-          fi
+    - name: Compress artifacts (only on tag)
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        cd ${{ matrix.output }}
+        if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
+          tar -czf ../../win2mqtt-${{ matrix.os }}.tar.gz .
+        else
+          powershell -Command "Compress-Archive -Path * -DestinationPath ../../win2mqtt-${{ matrix.os }}.zip"
+        fi
 
-      - name: Upload compressed artifact (only on tag)
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: actions/upload-artifact@v4
-        with:
-          name: win2mqtt-${{ matrix.os }}.${{ matrix.os == 'ubuntu-latest' && 'tar.gz' || 'zip' }}
-          path: |
-            win2mqtt-${{ matrix.os }}.${{ matrix.os == 'ubuntu-latest' && 'tar.gz' || 'zip' }}
+    - name: Upload compressed artifact (only on tag)
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: actions/upload-artifact@v4
+      with:
+        name: win2mqtt-${{ matrix.os }}.${{ matrix.os == 'ubuntu-latest' && 'tar.gz' || 'zip' }}
+        path: |
+          win2mqtt-${{ matrix.os }}.${{ matrix.os == 'ubuntu-latest' && 'tar.gz' || 'zip' }}
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          path: ./artifacts
+    - uses: actions/download-artifact@v4
+      with:
+        path: ./artifacts
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
-          files: |
-            artifacts/win2mqtt-ubuntu-latest.tar.gz/win2mqtt-ubuntu-latest.tar.gz
-            artifacts/win2mqtt-windows-latest.zip/win2mqtt-windows-latest.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: Release ${{ github.ref_name }}
+        files: |
+          artifacts/win2mqtt-ubuntu-latest.tar.gz/win2mqtt-ubuntu-latest.tar.gz
+          artifacts/win2mqtt-windows-latest.zip/win2mqtt-windows-latest.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
