@@ -3,7 +3,8 @@ name: .NET CI/CD
 on:
   push:
     tags:
-    - 'v*'
+    - 'v*.*.*'
+    - 'v*.*.*-*'
   pull_request:
     branches:
     - master
