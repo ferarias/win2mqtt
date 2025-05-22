@@ -50,23 +50,24 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/v')
       run: dotnet publish src/Win2Mqtt/Win2Mqtt.csproj --configuration ${{ matrix.configuration }} --framework ${{ matrix.framework }} --runtime ${{ matrix.rid }} --self-contained --output ${{ matrix.output }}
 
-    - name: Compress artifacts (only on tag)
-      if: startsWith(github.ref, 'refs/tags/v')
+    - name: Compress artifacts on Linux
+      if: matrix.os == 'ubuntu-latest' && startsWith(github.ref, 'refs/tags/v')
       run: |
-        cd ${{ matrix.output }}
-        if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
-          tar -czf ../../win2mqtt-${{ matrix.os }}.tar.gz .
-        else
-          powershell -Command "Compress-Archive -Path * -DestinationPath ../../win2mqtt-${{ matrix.os }}.zip"
-        fi
+        cd publish/${{ matrix.os }}
+        tar -czf ../../win2mqtt-${{ matrix.os }}.tar.gz .
+
+    - name: Compress artifacts on Windows
+      if: matrix.os == 'windows-latest' && startsWith(github.ref, 'refs/tags/v')
+      run: |
+        cd publish\${{ matrix.os }}
+        Compress-Archive -Path * -DestinationPath ..\..\win2mqtt-${{ matrix.os }}.zip
 
     - name: Upload compressed artifact (only on tag)
       if: startsWith(github.ref, 'refs/tags/v')
       uses: actions/upload-artifact@v4
       with:
         name: win2mqtt-${{ matrix.os }}.${{ matrix.os == 'ubuntu-latest' && 'tar.gz' || 'zip' }}
-        path: |
-          win2mqtt-${{ matrix.os }}.${{ matrix.os == 'ubuntu-latest' && 'tar.gz' || 'zip' }}
+        path: win2mqtt-${{ matrix.os }}.${{ matrix.os == 'ubuntu-latest' && 'tar.gz' || 'zip' }}
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
