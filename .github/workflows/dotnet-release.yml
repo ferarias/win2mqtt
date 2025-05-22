@@ -53,13 +53,13 @@ jobs:
     - name: Compress artifacts on Linux
       if: matrix.os == 'ubuntu-latest' && startsWith(github.ref, 'refs/tags/v')
       run: |
-        cd publish/${{ matrix.os }}
+        cd ${{ matrix.output }}
         tar -czf ../../win2mqtt-${{ matrix.os }}.tar.gz .
 
     - name: Compress artifacts on Windows
       if: matrix.os == 'windows-latest' && startsWith(github.ref, 'refs/tags/v')
       run: |
-        cd publish\${{ matrix.os }}
+        cd ${{ matrix.output }}
         Compress-Archive -Path * -DestinationPath ..\..\win2mqtt-${{ matrix.os }}.zip
 
     - name: Upload compressed artifact (only on tag)
