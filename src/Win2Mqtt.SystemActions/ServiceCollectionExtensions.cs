@@ -8,6 +8,7 @@ namespace Win2Mqtt.SystemActions
             services.Scan(scan => scan
             .FromAssemblies([typeof(ServiceCollectionExtensions).Assembly])
             .AddClasses(classes => classes.AssignableTo<IMqttActionHandlerMarker>())
+			.AsSelf()
             .AsImplementedInterfaces()
             .WithSingletonLifetime());
     }

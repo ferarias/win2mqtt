@@ -1,10 +1,17 @@
 ﻿using System.Globalization;
+using System.Text.Json;
 using Win2Mqtt.SystemSensors;
 
 namespace Win2Mqtt.HomeAssistant
 {
     public class HomeAssistantSensorValueFormatter : ISensorValueFormatter
     {
+        private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.General)
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = false
+        };
+
         public string Format<T>(T? value)
         {
             if (value is null) return string.Empty;
@@ -16,25 +23,61 @@ namespace Win2Mqtt.HomeAssistant
                 DateTimeOffset dto => dto.ToUniversalTime().ToString("O"),
                 double d => d.ToString("0.##", CultureInfo.InvariantCulture),
                 float f => f.ToString("0.##", CultureInfo.InvariantCulture),
-                _ => value.ToString() ?? string.Empty
+                int i => i.ToString(CultureInfo.InvariantCulture),
+                long l => l.ToString(CultureInfo.InvariantCulture),
+                decimal dec => dec.ToString(CultureInfo.InvariantCulture),
+                IEnumerable<object> enumerable => JsonSerializer.Serialize(enumerable, JsonOptions),
+                _ => JsonSerializer.Serialize(value, JsonOptions)
             };
         }
 
         public T? Format<T>(string? value) where T : struct
         {
-            if(string.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
                 return default;
 
-            return typeof(T) switch
+            var targetType = typeof(T);
+
+            try
             {
-                Type t when t == typeof(bool) => (T)(object)(value == "1" || value.Equals("true", StringComparison.OrdinalIgnoreCase)),
-                Type t when t == typeof(DateTime) => (T)(object)DateTime.Parse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind),
-                Type t when t == typeof(DateTimeOffset) => (T)(object)DateTimeOffset.Parse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind),
-                Type t when t == typeof(double) => (T)(object)double.Parse(value, CultureInfo.InvariantCulture),
-                Type t when t == typeof(float) => (T)(object)float.Parse(value, CultureInfo.InvariantCulture),
-                Type t when t == typeof(int) => (T)(object)int.Parse(value, CultureInfo.InvariantCulture),
-                _ => (T)(object)value
-            };
+                if (targetType == typeof(bool))
+                    return (T)(object)(value == "1" || value.Equals("true", StringComparison.OrdinalIgnoreCase));
+                if (targetType == typeof(DateTime))
+                    return (T)(object)DateTime.Parse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+                if (targetType == typeof(DateTimeOffset))
+                    return (T)(object)DateTimeOffset.Parse(value, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+                if (targetType == typeof(double))
+                    return (T)(object)double.Parse(value, CultureInfo.InvariantCulture);
+                if (targetType == typeof(float))
+                    return (T)(object)float.Parse(value, CultureInfo.InvariantCulture);
+                if (targetType == typeof(int))
+                    return (T)(object)int.Parse(value, CultureInfo.InvariantCulture);
+                if (targetType == typeof(long))
+                    return (T)(object)long.Parse(value, CultureInfo.InvariantCulture);
+                if (targetType == typeof(decimal))
+                    return (T)(object)decimal.Parse(value, CultureInfo.InvariantCulture);
+
+                // Fall back to JSON deserialization
+                return JsonSerializer.Deserialize<T>(value, JsonOptions);
+            }
+            catch
+            {
+                return default;
+            }
+        }
+
+        public object? Deserialize(string? value, Type type)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return null;
+
+            try
+            {
+                return JsonSerializer.Deserialize(value, type, JsonOptions);
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 
