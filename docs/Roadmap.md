@@ -2,7 +2,6 @@
 
 * Control MQTT connection status.  
   Currently if it disconnects, it will not reconnect.
-* Implement pending listeners / actions
 * Implement more sensors
     * Charging
     * CPU load per processor
