@@ -23,11 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
-		docs\hass-example.yaml = docs\hass-example.yaml
-		docs\Listeners.md = docs\Listeners.md
-		README.md = README.md
-		docs\Roadmap.md = docs\Roadmap.md
-		docs\Sensors.md = docs\Sensors.md
+		.github\workflows\dotnet-release.yml = .github\workflows\dotnet-release.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
@@ -36,14 +32,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win2Mqtt.Application", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win2Mqtt.SystemSensors", "src\Win2Mqtt.SystemSensors\Win2Mqtt.SystemSensors.csproj", "{A7007CFA-92E6-47EE-92FD-F9EC32EC7596}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{E6E64D8F-1FD9-42B0-8CF9-31C39368EC0C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E6E64D8F-1FD9-42B0-8CF9-31C39368EC0C}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\dotnet-release.yml = .github\workflows\dotnet-release.yml
+		docs\hass-example.yaml = docs\hass-example.yaml
+		docs\Listeners.md = docs\Listeners.md
+		README.md = README.md
+		docs\Roadmap.md = docs\Roadmap.md
+		docs\Sensors.md = docs\Sensors.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{A01ABF5F-6536-4E0A-AF5F-2C4487CB6550}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win2Mqtt.SystemActions", "src\Win2Mqtt.SystemActions\Win2Mqtt.SystemActions.csproj", "{5DDC641D-949E-9BFA-6249-CAD26FCB5836}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "setup", "setup", "{57CB44E0-DA90-42EA-A38D-FB8FDEF9BCD6}"
+	ProjectSection(SolutionItems) = preProject
+		setup\Win2MqttInstaller.iss = setup\Win2MqttInstaller.iss
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
