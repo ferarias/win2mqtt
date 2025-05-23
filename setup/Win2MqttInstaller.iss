@@ -1,4 +1,6 @@
-#define MyAppVersion GetStringParam("MyAppVersion", "0.0.0")
+#ifndef MyAppVersion
+  #define MyAppVersion "0.0.0"
+#endif
 [Setup]
 AppName=Win2Mqtt
 AppVersion={#MyAppVersion}
