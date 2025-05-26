@@ -57,7 +57,7 @@ jobs:
         cp -r ${{ matrix.output }}/* dist/win2mqtt/
         cp ./setup/linux/install.sh dist/win2mqtt/
         cp ./setup/linux/win2mqtt.service dist/win2mqtt/
-        cp ./setup/linux/win2mqtt.appsettings.example dist/win2mqtt/
+        cp ./setup/linux/win2mqtt.appsettings.example.json dist/win2mqtt/
         cp ./setup/linux/README.md dist/win2mqtt/
 
     - name: Compress artifacts on Linux
