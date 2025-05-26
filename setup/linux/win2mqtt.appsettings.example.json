@@ -1,0 +1,11 @@
+{
+  "Win2MQTT": {
+    "Broker": {
+      "Server": "localhost",
+      "Port": 1883,
+      "Username": "win2mqtt",
+      "Password": "win2mqtt"
+    },
+    "DeviceIdentifier": "DESKTOP-GONT7DL"
+  }
+}
