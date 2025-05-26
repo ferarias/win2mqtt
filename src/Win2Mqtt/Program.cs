@@ -29,6 +29,10 @@ try
     Log.Information("Start application.");
 
     var builder = Host.CreateApplicationBuilder(args);
+#if !WINDOWS
+    builder.Configuration.AddJsonFile("/etc/win2mqtt/win2mqtt.appsettings.json", optional: true);
+#endif
+
     builder.Services
         .AddHostedService<Win2MqttBackgroundService>();
 

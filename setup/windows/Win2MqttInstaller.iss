@@ -6,14 +6,14 @@ AppName=Win2Mqtt
 AppVersion={#MyAppVersion}
 DefaultDirName={commonpf}\Win2Mqtt
 DefaultGroupName=Win2Mqtt
-OutputDir=..\publish\setup
+OutputDir=..\..\publish\setup
 OutputBaseFilename=Win2MqttSetup
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=admin
 
 [Files]
-Source: "..\publish\windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\publish\windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{group}\Win2Mqtt Service"; Filename: "{app}\Win2Mqtt.exe"; Parameters: "/install"; WorkingDir: "{app}"

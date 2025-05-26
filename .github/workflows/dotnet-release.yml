@@ -50,11 +50,18 @@ jobs:
       if: startsWith(github.ref, 'refs/tags/v')
       run: dotnet publish src/Win2Mqtt/Win2Mqtt.csproj --configuration ${{ matrix.configuration }} --framework ${{ matrix.framework }} --runtime ${{ matrix.rid }} --self-contained --output ${{ matrix.output }}
 
+    - name: Prepare Linux release folder
+      if: matrix.os == 'ubuntu-latest' && startsWith(github.ref, 'refs/tags/v')
+      run: |
+        cp ./setup/linux/install.sh ${{ matrix.output }}/
+        cp ./setup/linux/win2mqtt.service ${{ matrix.output }}/
+        cp ./setup/linux/win2mqtt.appsettings.json ${{ matrix.output }}/
+        cp ./README.md ${{ matrix.output }}/
+
     - name: Compress artifacts on Linux
       if: matrix.os == 'ubuntu-latest' && startsWith(github.ref, 'refs/tags/v')
       run: |
-        cd ${{ matrix.output }}
-        tar -czf ../../win2mqtt-${{ matrix.os }}.tar.gz .
+        tar -czf win2mqtt-${{ matrix.os }}.tar.gz -C ${{ matrix.output }} .
 
     - name: Compress artifacts on Windows
       if: matrix.os == 'windows-latest' && startsWith(github.ref, 'refs/tags/v')
@@ -71,7 +78,7 @@ jobs:
     - name: Build Setup Script
       if: matrix.os == 'windows-latest' && startsWith(github.ref, 'refs/tags/v')
       run: |
-        & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" setup\Win2MqttInstaller.iss /DMyAppVersion=${{ github.ref_name }}
+        & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" setup\windows\Win2MqttInstaller.iss /DMyAppVersion=${{ github.ref_name }}
 
     - name: Upload compressed artifact (only on tag)
       if: startsWith(github.ref, 'refs/tags/v')
