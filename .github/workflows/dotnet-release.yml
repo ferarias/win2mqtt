@@ -53,15 +53,17 @@ jobs:
     - name: Prepare Linux release folder
       if: matrix.os == 'ubuntu-latest' && startsWith(github.ref, 'refs/tags/v')
       run: |
-        cp ./setup/linux/install.sh ${{ matrix.output }}/
-        cp ./setup/linux/win2mqtt.service ${{ matrix.output }}/
-        cp ./setup/linux/win2mqtt.appsettings.json ${{ matrix.output }}/
-        cp ./README.md ${{ matrix.output }}/
+        mkdir -p release-linux
+        cp -r ${{ matrix.output }}/* release-linux/
+        cp ./setup/linux/install.sh release-linux/
+        cp ./setup/linux/win2mqtt.service release-linux/
+        cp ./setup/linux/win2mqtt.appsettings.json release-linux/
+        cp ./setup/linux/README.md release-linux/
 
     - name: Compress artifacts on Linux
       if: matrix.os == 'ubuntu-latest' && startsWith(github.ref, 'refs/tags/v')
       run: |
-        tar -czf win2mqtt-${{ matrix.os }}.tar.gz -C ${{ matrix.output }} .
+        tar -czf win2mqtt-${{ matrix.os }}.tar.gz -C release-linux .
 
     - name: Compress artifacts on Windows
       if: matrix.os == 'windows-latest' && startsWith(github.ref, 'refs/tags/v')
