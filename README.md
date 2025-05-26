@@ -46,19 +46,27 @@ First, build a a self-containing exe:
 dotnet publish ./src/Win2Mqtt --configuration Release --framework net8.0 --runtime linux-x64 --self-contained  --output ./publish
 ```
 
+Or directly, get the la version from the [releases](https://github.com/ferarias/win2mqtt/releases/) section
+
+```bash
+wget https://github.com/ferarias/win2mqtt/releases/download/v0.0.2-beta3/win2mqtt-ubuntu-latest.tar.gz
+```
+
+Then extract the files:
+
+```bash
+sudo mkdir -p /opt/win2mqtt
+sudo tar -xvzf win2mqtt-ubuntu-latest.tar.gz -C /opt/win2mqtt
+```
+
+Then create and start the service
+
+
 ### Install as a Linux Service (systemd)
 
 To run Win2MQTT as a background service (daemon) on Linux, you can use systemd. Follow these steps:
-
-1. **Publish your application**
-
-   Build and publish the application for Linux:
    
-   ```bash
-   dotnet publish ./src/Win2Mqtt --configuration Release --framework net8.0 --runtime linux-x64 --self-contained false --output /opt/win2mqtt
-   ```
-   
-   Adjust the output path as needed.
+Adjust the output path as needed.
 
 2. **Create a systemd service file**
 
@@ -72,7 +80,7 @@ To run Win2MQTT as a background service (daemon) on Linux, you can use systemd. 
    [Service]
    Type=simple
    WorkingDirectory=/opt/win2mqtt
-   ExecStart=/usr/bin/dotnet /opt/win2mqtt/Win2Mqtt.dll
+   ExecStart=/usr/bin/dotnet /opt/win2mqtt/win2mqtt.dll
    Restart=on-failure
    User=win2mqtt
    Environment=ASPNETCORE_ENVIRONMENT=Production

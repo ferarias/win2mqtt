@@ -1,0 +1,20 @@
+[Unit]
+Description=Win2MQTT Service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/win2mqtt
+ExecStart=/usr/bin/dotnet /opt/win2mqtt/win2mqtt.dll
+Restart=on-failure
+RestartSec=5
+User=win2mqtt
+Environment=ASPNETCORE_ENVIRONMENT=Production
+EnvironmentFile=/etc/win2mqtt/env
+
+# Redirect logs to journald
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
