@@ -1,5 +1,7 @@
 # Windows to MQTT
 
+![Win2MQTT Logo](win2mqtt.png)
+
 A Windows service that exposes system sensors to MQTT so that they can be consumed from IOT applications such as Home Assistant
 
 ## Roadmap

@@ -11,15 +11,19 @@ OutputBaseFilename=Win2MqttSetup
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=admin
+SetupIconFile=win2mqtt.ico
+
 
 [Files]
 Source: "..\..\publish\windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-
-[Icons]
-Name: "{group}\Win2Mqtt Service"; Filename: "{app}\Win2Mqtt.exe"; Parameters: "/install"; WorkingDir: "{app}"
+Source: "..\..\README.md"; DestDir: "{app}"; Flags: isreadme
+Source: ".\win2mqtt.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\win2mqtt.png"; DestDir: "{app}"; Flags: ignoreversion
 
 [Run]
-Filename: "{app}\Win2Mqtt.exe"; Parameters: "/install"; Description: "Install Win2Mqtt service"; Flags: runhidden
+Filename: "sc.exe"; Parameters: "create ""Win2MQTT Service"" binPath=""{app}\Win2Mqtt.exe"" start=auto"; Description: "Create Win2Mqtt service"; Flags: runhidden
+Filename: "sc.exe"; Parameters: "start ""Win2MQTT Service"""; Description: "Start Win2Mqtt service"; Flags: runhidden
 
 [UninstallRun]
-Filename: "{app}\Win2Mqtt.exe"; Parameters: "/uninstall"; RunOnceId: "Win2MqttUninstall"
+Filename: "sc.exe"; Parameters: "stop ""Win2MQTT Service"" "; RunOnceId: "Win2MqttStop"
+Filename: "sc.exe"; Parameters: "delete ""Win2MQTT Service"" "; RunOnceId: "Win2MqttUninstall"
