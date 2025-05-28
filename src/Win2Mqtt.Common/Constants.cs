@@ -6,5 +6,7 @@
         public const string ServiceName = "Win2MQTT Service";
 
         public const string Win2MqttTopic = "win2mqtt";
+
+        public static readonly string UserAppSettingsFile = $"{AppId.ToLowerInvariant()}.appsettings.json";
     }
 }
