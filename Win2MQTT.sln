@@ -46,8 +46,20 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win2Mqtt.SystemActions", "src\Win2Mqtt.SystemActions\Win2Mqtt.SystemActions.csproj", "{5DDC641D-949E-9BFA-6249-CAD26FCB5836}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "setup", "setup", "{57CB44E0-DA90-42EA-A38D-FB8FDEF9BCD6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "linux", "linux", "{BA9555BB-6BC7-490C-85FB-51E4C6D10737}"
 	ProjectSection(SolutionItems) = preProject
-		setup\Win2MqttInstaller.iss = setup\Win2MqttInstaller.iss
+		setup\linux\install.sh = setup\linux\install.sh
+		setup\linux\README.md = setup\linux\README.md
+		setup\linux\win2mqtt.appsettings.example.json = setup\linux\win2mqtt.appsettings.example.json
+		setup\linux\win2mqtt.service = setup\linux\win2mqtt.service
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "windows", "windows", "{5D29573B-EDF8-4E9D-B01C-875553888242}"
+	ProjectSection(SolutionItems) = preProject
+		setup\windows\win2mqtt.appsettings.example.json = setup\windows\win2mqtt.appsettings.example.json
+		setup\windows\win2mqtt.ico = setup\windows\win2mqtt.ico
+		setup\windows\Win2MqttInstaller.iss = setup\windows\Win2MqttInstaller.iss
 	EndProjectSection
 EndProject
 Global
@@ -185,6 +197,8 @@ Global
 		{A7007CFA-92E6-47EE-92FD-F9EC32EC7596} = {7FEF2422-E653-4420-87D9-B2525A50C502}
 		{A01ABF5F-6536-4E0A-AF5F-2C4487CB6550} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{5DDC641D-949E-9BFA-6249-CAD26FCB5836} = {A01ABF5F-6536-4E0A-AF5F-2C4487CB6550}
+		{BA9555BB-6BC7-490C-85FB-51E4C6D10737} = {57CB44E0-DA90-42EA-A38D-FB8FDEF9BCD6}
+		{5D29573B-EDF8-4E9D-B01C-875553888242} = {57CB44E0-DA90-42EA-A38D-FB8FDEF9BCD6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2634DCE7-2679-4467-8AC5-E8382EE43EC1}

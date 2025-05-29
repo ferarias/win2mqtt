@@ -1,6 +1,7 @@
 #ifndef MyAppVersion
   #define MyAppVersion "0.0.0"
 #endif
+
 [Setup]
 AppName=Win2Mqtt
 AppVersion={#MyAppVersion}
@@ -11,8 +12,12 @@ OutputBaseFilename=Win2MqttSetup
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=admin
-SetupIconFile=win2mqtt.ico
 
+SetupIconFile=win2mqtt.ico
+WizardImageFile=wizard.bmp
+
+[Dirs]
+Name: "{commonappdata}\Win2Mqtt"
 
 [Files]
 Source: "..\..\publish\windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -27,3 +32,83 @@ Filename: "sc.exe"; Parameters: "start ""Win2MQTT Service"""; Description: "Star
 [UninstallRun]
 Filename: "sc.exe"; Parameters: "stop ""Win2MQTT Service"" "; RunOnceId: "Win2MqttStop"
 Filename: "sc.exe"; Parameters: "delete ""Win2MQTT Service"" "; RunOnceId: "Win2MqttUninstall"
+
+[Code]
+var
+  Page1, Page2: TInputQueryWizardPage;
+  MQTTBroker: string;
+  MQTTPort: string;
+  MQTTUsername: string;
+  MQTTPassword: string;
+  DeviceId: string;
+
+procedure InitializeWizard;
+begin
+  Page1 := CreateInputQueryPage(wpWelcome,
+    'Win2Mqtt Configuration',
+    'Step 1 of 2: MQTT Connection',
+    'Enter the MQTT broker settings.');
+
+  Page1.Add('MQTT Broker hostname:', False);
+  Page1.Add('MQTT Broker port:', False);
+  Page1.Add('MQTT Username (optional):', False);
+  Page1.Add('MQTT Password (optional):', True);
+  
+  Page1.Values[0] := 'localhost';
+  Page1.Values[1] := '1883';
+  Page1.Values[2] := '';
+  Page1.Values[3] := '';
+  
+  Page2 := CreateInputQueryPage(Page1.ID,
+    'Win2Mqtt Configuration',
+    'Step 2 of 2: Device Info',
+    'Enter device identifier.');
+
+  Page2.Add('Device Identifier:', False);
+  
+  Page2.Values[0] := ExpandConstant('{computername}');
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+var
+  ConfigFile: string;
+  JSON: string;
+  NeedsAuth: Boolean;
+
+begin
+  if CurStep = ssPostInstall then
+  begin
+    MQTTBroker := Page1.Values[0];
+    MQTTPort := Page1.Values[1];
+    MQTTUsername := Page1.Values[2];
+    MQTTPassword := Page1.Values[3];
+    DeviceId := Page2.Values[0];
+    
+    ConfigFile := ExpandConstant('{commonappdata}\Win2Mqtt\win2mqtt.appsettings.json');
+    
+    NeedsAuth := (Trim(MQTTUsername) <> '') or (Trim(MQTTPassword) <> '');
+      
+    JSON :=
+      '{' + #13#10 +
+      '  "Win2MQTT": {' + #13#10 +
+      '    "Broker": {' + #13#10 +
+      '      "Server": "' + MQTTBroker + '",' + #13#10 +
+      '      "Port": ' + MQTTPort;
+
+    if NeedsAuth then
+    begin
+      JSON := JSON + ',' + #13#10 +
+        '      "Username": "' + MQTTUsername + '",' + #13#10 +
+        '      "Password": "' + MQTTPassword + '"';
+    end;
+
+    JSON := JSON + #13#10 +
+      '    },' + #13#10 +
+      '    "DeviceIdentifier": "' + DeviceId + '"' + #13#10 +
+      '  }' + #13#10 +
+      '}';
+
+    if not SaveStringToFile(ConfigFile, JSON, False) then
+      MsgBox('Failed to write config file to: ' + ConfigFile, mbError, MB_OK);
+  end;
+end;
