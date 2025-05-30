@@ -1,12 +1,12 @@
 {
     "Win2MQTT": {
         "Broker": {
-            "Server": "localhost",
-            "Port": 1883,
-            "Username": "win2mqtt",
-            "Password": "win2mqtt"
+            "Server": "{{MQTT_SERVER}}",
+            "Port": {{MQTT_PORT}},
+            "Username": "{{MQTT_USERNAME}}",
+            "Password": "{{MQTT_PASSWORD}}"
         },
-        "DeviceIdentifier": "my-linux-machine",
+        "DeviceIdentifier": "{{DEVICE_IDENTIFIER}}",
         "MqttTopicQoS": 1,
         "TimerInterval": 5,
         "Sensors": {
@@ -28,16 +28,16 @@
         },
         "MultiSensors": {
             "Drives": {
-                "enabled": true,
+                "enabled": false,
                 "Sensors": {
                     "DriveFreeSize": {
-                        "enabled": true
+                        "enabled": false
                     },
                     "DrivePercentFreeSize": {
-                        "enabled": true
+                        "enabled": false
                     },
                     "DriveTotalSize": {
-                        "enabled": true
+                        "enabled": false
                     }
                 }
             }
@@ -45,23 +45,23 @@
         "Listeners": {
             "Hibernate": {
                 "Topic": "hibernate",
-                "Enabled": true
+                "Enabled": false
             },
             "Reboot": {
                 "Topic": "reboot",
-                "Enabled": true
+                "Enabled": false
             },
             "Shutdown": {
                 "Topic": "shutdown",
-                "Enabled": true
+                "Enabled": false
             },
             "Suspend": {
                 "Topic": "suspend",
-                "Enabled": true
+                "Enabled": false
             },
             "SendNotification": {
                 "Topic": "sendnotification",
-                "Enabled": true
+                "Enabled": false
             },
             "StartProcess": {
                 "Topic": "startprocess",
@@ -69,7 +69,7 @@
             },
             "KillProcess": {
                 "Topic": "killprocess",
-                "Enabled": true
+                "Enabled": false
             },
             "GetProcesses": {
                 "Topic": "getprocesses",
