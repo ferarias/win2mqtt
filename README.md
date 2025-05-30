@@ -1,118 +1,51 @@
 # Windows to MQTT
 
-![Win2MQTT Logo](win2mqtt.png)
+<img src="./docs/icon.png" width="50%">
 
 A Windows service that exposes system sensors to MQTT so that they can be consumed from IOT applications such as Home Assistant
 
-## Roadmap
-
-See [Roadmap](./docs/Roadmap.md).
-
 ## Architecture
 
-[![Architecture](./docs/architecture-2022-12-13-0943.svg)](./docs/architecture-2022-12-13-0943.excalidraw)
+[![Architecture](./docs/architecture-simple.svg)](./docs/architecture.excalidraw)
 
-The application is a Windows Service that runs in the background, collects system information, and 
-publishes it to an MQTT broker. 
+The application is a Windows Service that runs in the background, collects system information, and publishes it to an MQTT broker. 
 
 It uses the MQTT protocol to communicate with the broker and publish sensor data.
 
 ## Installation
 
-### Microsoft Windows
+In both Linux and Windows there's an installer available. Keep these values at hand before installing
 
-Install as a **Windows Service**
+- **Hostname**, **port** and (optional) **credentials** for your MQTT broker.
+- A **device identifier**, usually your system/device/machine hostname.
 
-First, build a a self-containing exe:
+### Windows
 
-```powershell
-dotnet publish .\src\Win2Mqtt\ --configuration Release --framework net8.0-windows8.0 --runtime win-x64 --self-contained  --output c:\Win2MQTT
-```
-
-Then create and start the service (you will need Administration privileges):
-
-```powershell
-sc.exe create "Win2MQTT Service" binpath= "C:\Win2MQTT\Win2Mqtt.exe"
-sc.exe start "Win2MQTT Service"
-```
-
-More information in [this article](https://learn.microsoft.com/en-us/dotnet/core/extensions/windows-service)
+1. Get the latest Windows installer from the [releases](https://github.com/ferarias/win2mqtt/releases/) section: `Win2MqttSetup.exe`
+2. Double-click the installer and follow the instructions.
+3. That's all. Win2MQTT will be installed as a Windows Service.
+4. You can further customize settings in `%LOCALAPPDATA%\Win2Mqtt\win2mqtt.appsettings.json`
 
 ### Linux
 
-Install as a **Linux Service**
+1. Get the latest Linux version from the [releases](https://github.com/ferarias/win2mqtt/releases/) section.  
+`
+wget https://github.com/ferarias/win2mqtt/releases/download/v0.0.3-beta03/win2mqtt-ubuntu-latest.tar.gz`
 
-First, build a a self-containing exe:
+1. Extract the package:  
+`tar -xzfv win2mqtt-ubuntu-latest.tar.gz`
 
-```powershell
-dotnet publish ./src/Win2Mqtt --configuration Release --framework net8.0 --runtime linux-x64 --self-contained  --output ./publish
-```
+1. Run the installer and follow the instructions  
+`cd win2mqtt`  
+`chmod +x uninstall.sh`  
+`./install.sh`
 
-Or directly, get the la version from the [releases](https://github.com/ferarias/win2mqtt/releases/) section
+1. You can further customize settings in `/etc/mqtt/win2mqtt.appsettings.json`
 
-```bash
-wget https://github.com/ferarias/win2mqtt/releases/download/v0.0.2-beta3/win2mqtt-ubuntu-latest.tar.gz
-```
-
-Then extract the files:
-
-```bash
-sudo mkdir -p /opt/win2mqtt
-sudo tar -xvzf win2mqtt-ubuntu-latest.tar.gz -C /opt/win2mqtt
-```
-
-Then create and start the service
-
-
-### Install as a Linux Service (systemd)
-
-To run Win2MQTT as a background service (daemon) on Linux, you can use systemd. Follow these steps:
-   
-Adjust the output path as needed.
-
-2. **Create a systemd service file**
-
-   Create a file at `/etc/systemd/system/win2mqtt.service` with the following content (edit paths if necessary):
-   
-   ```ini
-   [Unit]
-   Description=Win2MQTT Service
-   After=network.target
-
-   [Service]
-   Type=simple
-   WorkingDirectory=/opt/win2mqtt
-   ExecStart=/usr/bin/dotnet /opt/win2mqtt/win2mqtt.dll
-   Restart=on-failure
-   User=win2mqtt
-   Environment=ASPNETCORE_ENVIRONMENT=Production
-
-   [Install]
-   WantedBy=multi-user.target
-   ```
-
-3. **Create the service user (optional but recommended)**
-
-   ```bash
-   sudo useradd --system --no-create-home --group win2mqtt
-   sudo chown -R win2mqtt:win2mqtt /opt/win2mqtt
-   ```
-
-4. **Reload systemd and enable the service**
-
-   ```bash
-   sudo systemctl daemon-reload
-   sudo systemctl enable win2mqtt
-   sudo systemctl start win2mqtt
-   ```
-
-5. **Check the service status**
-
-   ```bash
-   sudo systemctl status win2mqtt
-   ```
-
-Win2MQTT will now run as a background service and start automatically on boot.
+1. To uninstall:  
+`cd win2mqtt`  
+`chmod +x uninstall.sh`  
+`./uninstall.sh`
 
 ## Sensors
 
@@ -129,8 +62,11 @@ Win2MQTT subscribes to several topics and, when receiving messages, executes a c
 
 See [Listeners](./docs/Listeners.md) to see the list of available listeners and their topics.
 
-## Setup project
+## Roadmap
 
-(in progress)
+See [this document](./docs/Roadmap.md) to find out what I intend to do in the future.
 
-From https://learn.microsoft.com/en-us/dotnet/core/extensions/windows-service-with-installer?tabs=wix
+
+## Setup
+
+See [this document](./docs/setup.md) to understand how the installers work.

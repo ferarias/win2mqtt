@@ -2,31 +2,38 @@
 
 SERVICE_NAME=win2mqtt
 INSTALL_DIR=/opt/$SERVICE_NAME
-SERVICE_FILE=$SERVICE_NAME.service
-ENV_FILE=/etc/$SERVICE_NAME/env
+
 CONFIG_DIR=/etc/$SERVICE_NAME
+SERVICE_FILE=$SERVICE_NAME.service
+ENV_FILE=$CONFIG_DIR/env
+
 CONFIG_FILE=$CONFIG_DIR/win2mqtt.appsettings.json
+SAMPLE_CONFIG_FILE=win2mqtt.appsettings.example.json
+USER_NAME=$SERVICE_NAME
 
 set -e
 
 echo "Installing $SERVICE_NAME..."
 
-# Prompt user for MQTT configuration
+echo "Enter the MQTT broker settings."
+# Prompt for MQTT settings
 read -p "MQTT server [localhost]: " MQTT_SERVER
 MQTT_SERVER=${MQTT_SERVER:-localhost}
 
 read -p "MQTT port [1883]: " MQTT_PORT
 MQTT_PORT=${MQTT_PORT:-1883}
 
-read -p "MQTT username [empty]: " MQTT_USER
-MQTT_USER=${MQTT_USER}
+read -p "MQTT username [empty]: " MQTT_USERNAME
+MQTT_USERNAME=${MQTT_USERNAME}
 
-read -p "MQTT password [empty]: " MQTT_PASS
-MQTT_PASS=${MQTT_PASS}
+read -p "MQTT password [empty]: " MQTT_PASSWORD
+MQTT_PASSWORD=${MQTT_PASSWORD}
 
+echo "Enter the device identifier."
+# Prompt for device identifier
 DEFAULT_IDENTIFIER=$(hostname)
-read -p "Device Identifier [$DEFAULT_IDENTIFIER]: " DEVICE_ID
-DEVICE_ID=${DEVICE_ID:-$DEFAULT_IDENTIFIER}
+read -p "Device Identifier [$DEFAULT_IDENTIFIER]: " DEVICE_IDENTIFIER
+DEVICE_IDENTIFIER=${DEVICE_IDENTIFIER:-$DEFAULT_IDENTIFIER}
 
 # Create target install dir
 sudo mkdir -p $INSTALL_DIR
@@ -38,6 +45,9 @@ sudo cp $SERVICE_FILE /etc/systemd/system/$SERVICE_FILE
 # Create config dir
 sudo mkdir -p $CONFIG_DIR
 
+# Copy sample config file
+sudo cp $SAMPLE_CONFIG_FILE $CONFIG_DIR/$SAMPLE_CONFIG_FILE
+
 # Create win2mqtt.appsettings.json
 echo "Generating config at $CONFIG_FILE..."
 sudo tee $CONFIG_FILE > /dev/null <<EOF
@@ -46,10 +56,10 @@ sudo tee $CONFIG_FILE > /dev/null <<EOF
     "Broker": {
       "Server": "$MQTT_SERVER",
       "Port": $MQTT_PORT,
-      "Username": "$MQTT_USER",
-      "Password": "$MQTT_PASS"
+      "Username": "$MQTT_USERNAME",
+      "Password": "$MQTT_PASSWORD"
     },
-    "DeviceIdentifier": "$DEVICE_ID"
+    "DeviceIdentifier": "$DEVICE_IDENTIFIER"
   }
 }
 EOF
@@ -60,13 +70,13 @@ if [ ! -f $ENV_FILE ]; then
 fi
 
 # Create user if not exists
-if ! id $SERVICE_NAME &>/dev/null; then
-    sudo useradd --system --no-create-home --shell /usr/sbin/nologin $SERVICE_NAME
+if ! id $USER_NAME &>/dev/null; then
+    sudo useradd --system --no-create-home --shell /usr/sbin/nologin $USER_NAME
 fi
 
 # Set permissions
-sudo chown -R $SERVICE_NAME:$SERVICE_NAME $INSTALL_DIR
-sudo chown -R $SERVICE_NAME:$SERVICE_NAME $CONFIG_DIR
+sudo chown -R $USER_NAME:$USER_NAME $INSTALL_DIR
+sudo chown -R $USER_NAME:$USER_NAME $CONFIG_DIR
 
 # Reload and start service
 sudo systemctl daemon-reexec
@@ -75,4 +85,7 @@ sudo systemctl enable $SERVICE_NAME
 sudo systemctl restart $SERVICE_NAME
 
 echo "Service '$SERVICE_NAME' installed and started."
-echo "Logs: journalctl -u $SERVICE_NAME -f"
+echo "Configuration can be changed at $CONFIG_FILE..."
+echo "Sample configuration: '$SAMPLE_CONFIG_FILE'"
+echo "To view logs, use:"
+echo "journalctl -u $SERVICE_NAME -f"
