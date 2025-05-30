@@ -26,12 +26,11 @@ Source: "..\..\publish\windows\*"; DestDir: "{app}"; Flags: ignoreversion recurs
 Source: ".\README.md"; DestDir: "{app}"; Flags: isreadme
 Source: ".\win2mqtt.png"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\win2mqtt.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\win2mqtt.appsettings.example.json"; DestDir: "{commonappdata}\Win2Mqtt"; Flags: ignoreversion
+Source: ".\win2mqtt.appsettings.template.json"; DestDir: "{commonappdata}\Win2Mqtt"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\Win2MQTT Configuration file"; Filename: "{commonappdata}\Win2Mqtt\win2mqtt.appsettings.json"
 Name: "{group}\Win2MQTT Readme"; Filename: "{app}\README.md"
-Name: "{group}\Example Configuration File"; Filename: "notepad.exe"; Parameters: """{commonappdata}\Win2Mqtt\win2mqtt.appsettings.example.json"""
 
 [Run]
 Filename: "sc.exe"; Parameters: "create ""Win2MQTT Service"" binPath=""{app}\Win2Mqtt.exe"" start=auto"; Description: "Create Win2Mqtt service"; Flags: runhidden
@@ -44,11 +43,11 @@ Filename: "sc.exe"; Parameters: "delete ""Win2MQTT Service"" "; RunOnceId: "Win2
 [Code]
 var
   Page1, Page2: TInputQueryWizardPage;
-  MQTTServer: string;
-  MQTTPort: string;
-  MQTTUsername: string;
-  MQTTPassword: string;
-  DeviceIdentifier: string;
+  MQTTServer: AnsiString;
+  MQTTPort: AnsiString;
+  MQTTUsername: AnsiString;
+  MQTTPassword: AnsiString;
+  DeviceIdentifier: AnsiString;
 
 procedure InitializeWizard;
 begin
@@ -77,11 +76,13 @@ begin
   Page2.Values[0] := ExpandConstant('{computername}');
 end;
 
+
 procedure CurStepChanged(CurStep: TSetupStep);
 var
-  ConfigFile: string;
-  JSON: string;
+  TemplateFile, ConfigFile, FinalContent: String;
+  TemplateContent: AnsiString;
   NeedsAuth: Boolean;
+
 
 begin
   if CurStep = ssPostInstall then
@@ -92,31 +93,25 @@ begin
     MQTTPassword := Page1.Values[3];
     DeviceIdentifier := Page2.Values[0];
     
+    TemplateFile := ExpandConstant('{commonappdata}\Win2Mqtt\win2mqtt.appsettings.template.json');
     ConfigFile := ExpandConstant('{commonappdata}\Win2Mqtt\win2mqtt.appsettings.json');
-    
-    NeedsAuth := (Trim(MQTTUsername) <> '') or (Trim(MQTTPassword) <> '');
-      
-    JSON :=
-      '{' + #13#10 +
-      '  "Win2MQTT": {' + #13#10 +
-      '    "Broker": {' + #13#10 +
-      '      "Server": "' + MQTTServer + '",' + #13#10 +
-      '      "Port": ' + MQTTPort;
 
-    if NeedsAuth then
+    if LoadStringFromFile(TemplateFile, TemplateContent) then
     begin
-      JSON := JSON + ',' + #13#10 +
-        '      "Username": "' + MQTTUsername + '",' + #13#10 +
-        '      "Password": "' + MQTTPassword + '"';
-    end;
+      NeedsAuth := (Trim(MQTTUsername) <> '') or (Trim(MQTTPassword) <> '');
 
-    JSON := JSON + #13#10 +
-      '    },' + #13#10 +
-      '    "DeviceIdentifier": "' + DeviceIdentifier + '"' + #13#10 +
-      '  }' + #13#10 +
-      '}';
+      FinalContent := TemplateContent;
+      StringChangeEx(FinalContent, '{{MQTT_SERVER}}', MQTTServer, True);
+      StringChangeEx(FinalContent, '{{MQTT_PORT}}', MQTTPort, True);
+      StringChangeEx(FinalContent, '{{MQTT_USERNAME}}', MQTTUsername, True);
+      StringChangeEx(FinalContent, '{{MQTT_PASSWORD}}', MQTTPassword, True);
+      StringChangeEx(FinalContent, '{{DEVICE_IDENTIFIER}}', DeviceIdentifier, True);
 
-    if not SaveStringToFile(ConfigFile, JSON, False) then
-      MsgBox('Failed to write config file to: ' + ConfigFile, mbError, MB_OK);
+
+      if not SaveStringToFile(ConfigFile, FinalContent, False) then
+        MsgBox('Failed to write config file to: ' + ConfigFile, mbError, MB_OK);
+    end
+    else
+      MsgBox('Failed to read template config file from: ' + TemplateFile, mbError, MB_OK);
   end;
 end;

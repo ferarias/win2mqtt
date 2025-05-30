@@ -1,12 +1,12 @@
 {
     "Win2MQTT": {
         "Broker": {
-            "Server": "localhost",
-            "Port": 1883,
-            "Username": "win2mqtt",
-            "Password": "win2mqtt"
+            "Server": "{{MQTT_SERVER}}",
+            "Port": {{MQTT_PORT}},
+            "Username": "{{MQTT_USERNAME}}",
+            "Password": "{{MQTT_PASSWORD}}"
         },
-        "DeviceIdentifier": "my-linux-machine",
+        "DeviceIdentifier": "{{DEVICE_IDENTIFIER}}",
         "MqttTopicQoS": 1,
         "TimerInterval": 5,
         "Sensors": {
