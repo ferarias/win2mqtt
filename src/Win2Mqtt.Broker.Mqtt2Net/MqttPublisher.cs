@@ -25,7 +25,7 @@ namespace Win2Mqtt.Broker.MQTTNet
                 .Build();
 
                 await _client.PublishAsync(mqttMessage, cancellationToken);
-                _logger.LogDebug("Message published: {Topic} value {Message}", topic, message);
+                _logger.LogTrace("Message published: {Topic} value {Message}", topic, message);
             }
         }
     }
