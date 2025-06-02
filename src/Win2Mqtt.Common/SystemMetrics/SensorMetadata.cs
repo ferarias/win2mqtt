@@ -6,7 +6,14 @@ namespace Win2Mqtt.SystemSensors
     {
         // Required for internal use and HA discovery
         public string Key { get; init; } = default!;
+
         public string Name { get; init; } = default!;
+
+        public string? UniqueId { get; set; }
+
+        public string? StateTopic { get; set; }
+
+
         public Type ValueType { get; init; } = default!;
 
         // Optional but common fields
@@ -18,8 +25,6 @@ namespace Win2Mqtt.SystemSensors
         public bool IsBinary { get; init; }
 
 
-        public string? SensorUniqueId { get; set; }
-        public string? SensorStateTopic { get; set; }
 
     }
 }

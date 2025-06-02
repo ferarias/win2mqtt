@@ -29,7 +29,7 @@ try
     Log.Information("Start application.");
 
     var builder = Host.CreateApplicationBuilder(args);
-#if WINDOWS
+#if WINDOWS && !DEBUG
     var appDataConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), Constants.AppId, Constants.UserAppSettingsFile);
     builder.Configuration.AddJsonFile(appDataConfigPath, optional: true);
 #else

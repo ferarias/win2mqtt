@@ -2,12 +2,14 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Win2Mqtt.Options;
+using Win2Mqtt.SystemActions;
 using Win2Mqtt.SystemSensors;
 
 namespace Win2Mqtt.Application
 {
     public class Win2MqttBackgroundService(
         IMqttConnectionManager connectionManager,
+        IActionFactory actionFactory,
         ISensorFactory sensorFactory,
         IMessagePublisher publisher,
         IMqttSubscriber subscriber,
@@ -16,6 +18,7 @@ namespace Win2Mqtt.Application
     {
         private readonly static SemaphoreSlim _semaphore = new(1, 1);
         private readonly IEnumerable<ISensorWrapper> _activeSensors = sensorFactory.GetEnabledSensors();
+        private readonly IEnumerable<IMqttActionHandlerMarker> _activeActions = actionFactory.GetEnabledActions();
 
 
         public override async Task StartAsync(CancellationToken stoppingToken)
@@ -27,10 +30,15 @@ namespace Win2Mqtt.Application
             // Subscribe to incoming messages
             await subscriber.SubscribeAsync(stoppingToken);
 
-            // Publish Home Assistant discovery messages
+            // Publish Home Assistant sensor discovery messages
             foreach (var sensor in _activeSensors)
             {
                 await publisher.PublishSensorDiscoveryMessage(sensor.Metadata, stoppingToken);
+            }
+            // Publish Home Assistant switch discovery messages
+            foreach (var action in _activeActions)
+            {
+                await publisher.PublishSwitchDiscoveryMessage(action.Metadata, stoppingToken);
             }
 
             // Publish online status

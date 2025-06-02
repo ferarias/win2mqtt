@@ -16,11 +16,11 @@ namespace Win2Mqtt.Application
 
         public IEnumerable<ISensorWrapper> GetEnabledSensors()
         {
-            var wrappers = new List<ISensorWrapper>();
+            var sensors = new List<ISensorWrapper>();
 
             // Regular sensors
-            var sensors = serviceProvider.GetServices<ISensor>();
-            foreach (var sensor in sensors)
+            var singleSensors = serviceProvider.GetServices<ISensor>();
+            foreach (var sensor in singleSensors)
             {
                 var sensorType = sensor.GetType();
                 var iface = sensorType
@@ -33,9 +33,9 @@ namespace Win2Mqtt.Application
                     {
                         if (_options.Sensors[wrapper.Metadata.Key].Enabled)
                         {
-                            wrapper.Metadata.SensorUniqueId = $"{options.Value.DeviceUniqueId}_{SanitizeHelpers.Sanitize(wrapper.Metadata.Key)}";
-                            wrapper.Metadata.SensorStateTopic = $"{options.Value.MqttBaseTopic}/{wrapper.Metadata.SensorUniqueId}";
-                            wrappers.Add(wrapper);
+                            wrapper.Metadata.UniqueId = $"{options.Value.DeviceUniqueId}_{SanitizeHelpers.Sanitize(wrapper.Metadata.Key)}";
+                            wrapper.Metadata.StateTopic = $"{options.Value.MqttBaseTopic}/{wrapper.Metadata.UniqueId}";
+                            sensors.Add(wrapper);
                         }
                         else
                         {
@@ -70,9 +70,9 @@ namespace Win2Mqtt.Application
                                 }
                                 if (childSensorsOptions.TryGetValue(sensorName, out SensorOptions? value) && value.Enabled)
                                 {
-                                    wrapper.Metadata.SensorUniqueId = $"{options.Value.DeviceUniqueId}_{SanitizeHelpers.Sanitize(wrapper.Metadata.Key)}";
-                                    wrapper.Metadata.SensorStateTopic = $"{options.Value.MqttBaseTopic}/{wrapper.Metadata.SensorUniqueId}";
-                                    wrappers.Add(wrapper);
+                                    wrapper.Metadata.UniqueId = $"{options.Value.DeviceUniqueId}_{SanitizeHelpers.Sanitize(wrapper.Metadata.Key)}";
+                                    wrapper.Metadata.StateTopic = $"{options.Value.MqttBaseTopic}/{wrapper.Metadata.UniqueId}";
+                                    sensors.Add(wrapper);
                                 }
                                 else
                                 {
@@ -85,7 +85,7 @@ namespace Win2Mqtt.Application
                     }
                 }
             }
-            return wrappers;
+            return sensors;
 
         }
     }

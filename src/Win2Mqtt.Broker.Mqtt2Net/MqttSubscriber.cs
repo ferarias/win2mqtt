@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Options;
 using MQTTnet;
 using MQTTnet.Protocol;
-using Win2Mqtt.Common;
 using Win2Mqtt.Options;
 using Win2Mqtt.SystemActions;
 
@@ -11,6 +10,7 @@ namespace Win2Mqtt.Broker.MQTTNet
     public class MqttSubscriber(
         IMqttClient client,
         IOptions<Win2MqttOptions> options,
+        IActionFactory actionFactory,
         IIncomingMessagesProcessor incomingMessagesProcessor,
         ILogger<MqttSubscriber> logger) : IMqttSubscriber
     {
@@ -26,6 +26,7 @@ namespace Win2Mqtt.Broker.MQTTNet
                 {
                     if (_client?.IsConnected != true) return false;
 
+                    // Define what happens when a message is received
                     _client.ApplicationMessageReceivedAsync += async (e) =>
                     {
                         logger.LogDebug("New message received in `{Topic}`.", e.ApplicationMessage.Topic);
@@ -42,15 +43,11 @@ namespace Win2Mqtt.Broker.MQTTNet
                         }
                     };
 
-                    foreach (var listener in _options.Listeners)
+                    // Subscribe to the topics defined in options
+                    foreach (var action in actionFactory.GetEnabledActions())
                     {
-                        if (listener.Value.Enabled)
-                        {
-                            var sanitizedTopic = SanitizeHelpers.Sanitize(listener.Value.Topic);
-                            string topic = $"{options.Value.MqttBaseTopic}/{sanitizedTopic}";
-                            await _client.SubscribeAsync(topic, MqttQualityOfServiceLevel.ExactlyOnce, cancellationToken);
-                            logger.LogDebug("Subscribed to MQTT topic `{Topic}`.", topic);
-                        }
+                        await _client.SubscribeAsync(action.Metadata.CommandTopic, MqttQualityOfServiceLevel.ExactlyOnce, cancellationToken);
+                        logger.LogDebug("Subscribed to MQTT topic `{Topic}`.", action.Metadata.CommandTopic);
                     }
 
                     return true;
