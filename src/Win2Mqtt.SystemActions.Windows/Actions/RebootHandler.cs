@@ -1,10 +1,10 @@
 ﻿namespace Win2Mqtt.SystemActions.Windows.Actions
 {
-    public class RebootHandler : IMqttActionHandler
+    public class RebootHandler : MqttActionHandler
     {
         private static readonly int DefaultRebootDelay = 10;
 
-        public Task HandleAsync(string payload, CancellationToken cancellationToken)
+        public override Task HandleAsync(string payload, CancellationToken cancellationToken)
         {
             if (int.TryParse(payload, out int rebootDelay))
                 WindowsPowerManagement.Reboot(rebootDelay);

@@ -1,8 +1,8 @@
 ﻿namespace Win2Mqtt.SystemActions.Windows.Actions
 {
-    public class HibernateHandler : IMqttActionHandler
+    public class HibernateHandler : MqttActionHandler
     {
-        public Task HandleAsync(string payload, CancellationToken cancellationToken)
+        public override Task HandleAsync(string payload, CancellationToken cancellationToken)
         {
             WindowsPowerManagement.HibernateSystem();
             return Task.CompletedTask;

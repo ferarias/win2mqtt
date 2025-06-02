@@ -1,8 +1,8 @@
 ﻿namespace Win2Mqtt.SystemActions.Windows.Actions
 {
-    public class SuspendHandler : IMqttActionHandler
+    public class SuspendHandler : MqttActionHandler
     {
-        public Task HandleAsync(string payload, CancellationToken cancellationToken)
+        public override Task HandleAsync(string payload, CancellationToken cancellationToken)
         {
             WindowsPowerManagement.SuspendSystem();
             return Task.CompletedTask;

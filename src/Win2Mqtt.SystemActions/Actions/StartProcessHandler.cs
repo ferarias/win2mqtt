@@ -3,9 +3,9 @@ using System.Text.Json;
 
 namespace Win2Mqtt.SystemActions.Actions
 {
-    public class StartProcessHandler : IMqttActionHandler
+    public class StartProcessHandler : MqttActionHandler
     {
-        public Task HandleAsync(string payload, CancellationToken cancellationToken)
+        public override Task HandleAsync(string payload, CancellationToken cancellationToken)
         {
             var commandParameters = JsonSerializer.Deserialize<CommandParameters>(payload);
             if (commandParameters != null)
