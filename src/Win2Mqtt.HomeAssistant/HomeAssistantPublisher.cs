@@ -10,7 +10,7 @@ namespace Win2Mqtt.HomeAssistant
 {
     public class HomeAssistantPublisher(
         IMqttPublisher mqttPublisher,
-        ISensorValueFormatter sensorValueFormatter,
+        ISystemSensorValueFormatter sensorValueFormatter,
         IOptions<Win2MqttOptions> options,
         ILogger<HomeAssistantPublisher> logger)
         : IMessagePublisher
@@ -62,7 +62,7 @@ namespace Win2Mqtt.HomeAssistant
             }
         }
 
-        public async Task PublishSensorDiscoveryMessage(SensorMetadata metadata, CancellationToken cancellationToken = default)
+        public async Task PublishSensorDiscoveryMessage(SystemSensorMetadata metadata, CancellationToken cancellationToken = default)
         {
             if (metadata.StateTopic == null)
             {
@@ -114,7 +114,7 @@ namespace Win2Mqtt.HomeAssistant
 
         }
 
-        public async Task PublishSwitchDiscoveryMessage(SwitchMetadata metadata, CancellationToken cancellationToken = default)
+        public async Task PublishSwitchDiscoveryMessage(SystemActionMetadata metadata, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(metadata?.CommandTopic))
             {

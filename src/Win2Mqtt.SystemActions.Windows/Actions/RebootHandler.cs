@@ -1,6 +1,6 @@
 ﻿namespace Win2Mqtt.SystemActions.Windows.Actions
 {
-    public class RebootHandler : MqttActionHandler
+    public class RebootHandler : SystemAction
     {
         private static readonly int DefaultRebootDelay = 10;
 

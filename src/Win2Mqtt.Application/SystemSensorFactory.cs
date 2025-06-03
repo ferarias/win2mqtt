@@ -7,10 +7,10 @@ using Win2Mqtt.SystemSensors;
 
 namespace Win2Mqtt.Application
 {
-    public class SensorFactory(
+    public class SystemSensorFactory(
     IOptions<Win2MqttOptions> options,
     IServiceProvider serviceProvider,
-    ILogger<SensorFactory> logger) : ISensorFactory
+    ILogger<SystemSensorFactory> logger) : ISystemSensorFactory
     {
         private readonly Win2MqttOptions _options = options.Value;
 
@@ -19,13 +19,13 @@ namespace Win2Mqtt.Application
             var sensors = new List<ISensorWrapper>();
 
             // Regular sensors
-            var singleSensors = serviceProvider.GetServices<ISensor>();
+            var singleSensors = serviceProvider.GetServices<ISystemSensor>();
             foreach (var sensor in singleSensors)
             {
                 var sensorType = sensor.GetType();
                 var iface = sensorType
                     .GetInterfaces()
-                    .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISensor<>));
+                    .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISystemSensor<>));
                 if (iface != null)
                 {
                     var wrapperType = typeof(SensorWrapper<>).MakeGenericType(iface.GenericTypeArguments[0]);
@@ -46,7 +46,7 @@ namespace Win2Mqtt.Application
             }
 
             // Multi-sensors
-            var multiSensors = serviceProvider.GetServices<IMultiSensor>();
+            var multiSensors = serviceProvider.GetServices<ISystemMultiSensor>();
             foreach (var multi in multiSensors)
             {
                 if (_options.MultiSensors[multi.Key].Enabled)
@@ -56,7 +56,7 @@ namespace Win2Mqtt.Application
                     {
                         var iface = sensor.GetType()
                         .GetInterfaces()
-                        .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISensor<>));
+                        .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISystemSensor<>));
                         if (iface != null)
                         {
                             var wrapperType = typeof(SensorWrapper<>).MakeGenericType(iface.GenericTypeArguments[0]);

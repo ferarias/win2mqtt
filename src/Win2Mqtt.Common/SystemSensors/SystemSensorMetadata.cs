@@ -2,7 +2,7 @@
 
 namespace Win2Mqtt.SystemSensors
 {
-    public class SensorMetadata
+    public class SystemSensorMetadata
     {
         // Required for internal use and HA discovery
         public string Key { get; init; } = default!;

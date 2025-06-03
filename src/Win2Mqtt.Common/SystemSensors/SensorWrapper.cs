@@ -8,7 +8,7 @@ namespace Win2Mqtt.SystemSensors
     /// </summary>
     public interface ISensorWrapper
     {
-        SensorMetadata Metadata { get; }
+        SystemSensorMetadata Metadata { get; }
 
         Task<object?> CollectAsync();
     }
@@ -18,9 +18,9 @@ namespace Win2Mqtt.SystemSensors
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="sensor"></param>
-    public class SensorWrapper<T>(ISensor<T> sensor) : ISensorWrapper
+    public class SensorWrapper<T>(ISystemSensor<T> sensor) : ISensorWrapper
     {
-        public SensorMetadata Metadata => sensor.Metadata;
+        public SystemSensorMetadata Metadata => sensor.Metadata;
 
         public async Task<object?> CollectAsync()
         {

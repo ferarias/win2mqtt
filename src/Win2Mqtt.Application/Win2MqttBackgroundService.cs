@@ -9,8 +9,8 @@ namespace Win2Mqtt.Application
 {
     public class Win2MqttBackgroundService(
         IMqttConnectionManager connectionManager,
-        IActionFactory actionFactory,
-        ISensorFactory sensorFactory,
+        ISystemActionFactory actionFactory,
+        ISystemSensorFactory sensorFactory,
         IMessagePublisher publisher,
         IMqttSubscriber subscriber,
         IOptionsMonitor<Win2MqttOptions> options,
@@ -18,7 +18,7 @@ namespace Win2Mqtt.Application
     {
         private readonly static SemaphoreSlim _semaphore = new(1, 1);
         private readonly IEnumerable<ISensorWrapper> _activeSensors = sensorFactory.GetEnabledSensors();
-        private readonly IEnumerable<IMqttActionHandlerMarker> _activeActions = actionFactory.GetEnabledActions().Select(kv => kv.Value);
+        private readonly IEnumerable<ISystemActionWrapper> _activeActions = actionFactory.GetEnabledActions().Select(kv => kv.Value);
 
 
         public override async Task StartAsync(CancellationToken stoppingToken)

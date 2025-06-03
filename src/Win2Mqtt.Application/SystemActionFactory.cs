@@ -8,18 +8,18 @@ using Win2Mqtt.SystemActions;
 
 namespace Win2Mqtt.Application
 {
-    public class ActionFactory(
+    public class SystemActionFactory(
     IOptions<Win2MqttOptions> options,
     IServiceProvider serviceProvider,
-    ILogger<ActionFactory> logger) : IActionFactory
+    ILogger<SystemActionFactory> logger) : ISystemActionFactory
     {
         private readonly Win2MqttOptions _options = options.Value;
         private static readonly Dictionary<string, (Type HandlerType, PropertyInfo? ReturnProperty)> _handlers = [];
 
 
-        public IDictionary<string, IMqttActionHandlerMarker> GetEnabledActions()
+        public IDictionary<string, ISystemActionWrapper> GetEnabledActions()
         {
-            var actions = new Dictionary<string, IMqttActionHandlerMarker>(StringComparer.OrdinalIgnoreCase);
+            var actions = new Dictionary<string, ISystemActionWrapper>(StringComparer.OrdinalIgnoreCase);
             foreach (var (listenerName, listenerOptions) in _options.Listeners)
             {
                 if (listenerOptions.Enabled)
@@ -30,7 +30,7 @@ namespace Win2Mqtt.Application
                         logger.LogWarning("No handler registered for listener `{Listener}`", listenerName);
                         continue;
                     }
-                    if (serviceProvider.GetRequiredService(handlerType) is IMqttActionHandlerMarker handler)
+                    if (serviceProvider.GetRequiredService(handlerType) is ISystemActionWrapper handler)
                     {
                         // if topic is set in options, overwrite what's set in attribute
                         var topicName = string.IsNullOrWhiteSpace(listenerOptions.Topic) 
@@ -38,7 +38,7 @@ namespace Win2Mqtt.Application
                             : SanitizeHelpers.Sanitize(listenerOptions.Topic);
 
                         var uniqueId = $"{_options.DeviceUniqueId}_{SanitizeHelpers.Sanitize(listenerName)}";
-                        handler.Metadata = new SwitchMetadata
+                        handler.Metadata = new SystemActionMetadata
                         {
                             Key = listenerName,
                             Name = handlerType.Name.Replace("Handler", string.Empty),
@@ -59,14 +59,14 @@ namespace Win2Mqtt.Application
             var type = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(a => a.GetTypes())
                 .FirstOrDefault(t => t.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase)
-                                  && (typeof(IMqttActionHandler).IsAssignableFrom(t) || ImplementsIMqttActionHandlerGeneric(t)));
+                                  && (typeof(ISystemAction).IsAssignableFrom(t) || ImplementsIMqttActionHandlerGeneric(t)));
 
             return type ?? null;
         }
 
         private static bool ImplementsIMqttActionHandlerGeneric(Type type)
         {
-            return type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMqttActionHandler<>));
+            return type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISystemAction<>));
         }
 
     }

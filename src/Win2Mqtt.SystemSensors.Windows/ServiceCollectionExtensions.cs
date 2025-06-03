@@ -14,7 +14,7 @@ namespace Win2Mqtt.SystemSensors.Windows
         {
             services.Scan(scan => scan
             .FromAssemblies([typeof(ServiceCollectionExtensions).Assembly])
-            .AddClasses(c => c.WithAttribute<MultiSensorAttribute>().AssignableTo<IMultiSensor>())
+            .AddClasses(c => c.WithAttribute<MultiSensorAttribute>().AssignableTo<ISystemMultiSensor>())
             .AsImplementedInterfaces()
             .WithSingletonLifetime());
 
@@ -22,7 +22,7 @@ namespace Win2Mqtt.SystemSensors.Windows
             .FromAssemblies([typeof(ServiceCollectionExtensions).Assembly])
             .AddClasses(c => c.WithAttribute<SensorAttribute>())
             .UsingRegistrationStrategy(RegistrationStrategy.Append)
-            .As<ISensor>()
+            .As<ISystemSensor>()
             .WithSingletonLifetime());
 
             return services;

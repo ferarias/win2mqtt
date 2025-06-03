@@ -1,6 +1,6 @@
 ﻿namespace Win2Mqtt.SystemActions
 {
-    public class SwitchMetadata
+    public class SystemActionMetadata
     {
         public required string Key { get; set; }
 

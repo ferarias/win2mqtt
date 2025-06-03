@@ -10,11 +10,11 @@ namespace Win2Mqtt.Application
 {
     public class IncomingMessagesProcessor(
        IServiceProvider sp,
-       ISensorValueFormatter formatter,
+       ISystemSensorValueFormatter formatter,
        IMqttPublisher publisher,
-       IActionFactory actionFactory,
+       ISystemActionFactory actionFactory,
        IOptions<Win2MqttOptions> options,
-       ILogger<IncomingMessagesProcessor> logger) : IIncomingMessagesProcessor
+       ILogger<IncomingMessagesProcessor> logger) : ISystemActionsHandler
     {
         private readonly Win2MqttOptions _options = options.Value;
         private static readonly ConcurrentDictionary<Type, MethodInfo> _methodCache = new();
@@ -25,7 +25,7 @@ namespace Win2Mqtt.Application
             try
             {
                 var actions = actionFactory.GetEnabledActions();
-                if (!actions.TryGetValue(subtopic, out IMqttActionHandlerMarker? handler))
+                if (!actions.TryGetValue(subtopic, out ISystemActionWrapper? handler))
                 {
                     logger.LogWarning("No enabled listener for subtopic `{Subtopic}`", subtopic);
                     return;
@@ -33,8 +33,8 @@ namespace Win2Mqtt.Application
 
                 var handlerType = handler.GetType();
                 // Determine if it's IMqttActionHandler or IMqttActionHandler<T>
-                if (handlerType.GetInterfaces().FirstOrDefault(i => i == typeof(IMqttActionHandler)
-                    || (i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMqttActionHandler<>))) == null)
+                if (handlerType.GetInterfaces().FirstOrDefault(i => i == typeof(ISystemAction)
+                    || (i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISystemAction<>))) == null)
                 {
                     logger.LogWarning("Handler `{Handler}` does not implement a valid IMqttActionHandler interface", handlerType.Name);
                     return;

@@ -5,17 +5,17 @@ namespace Win2Mqtt.SystemSensors
 {
     public static class SensorMetadataFactory
     {
-        public static SensorMetadata? FromSensor(ISensor sensor)
+        public static SystemSensorMetadata? FromSensor(ISystemSensor sensor)
         {
             var type = sensor.GetType();
             var attr = type.GetCustomAttribute<SensorAttribute>();
             if (attr == null) return null;
 
             var valueType = type.GetInterfaces()
-                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISensor<>))
+                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISystemSensor<>))
                 ?.GenericTypeArguments[0] ?? typeof(object);
 
-            return new SensorMetadata
+            return new SystemSensorMetadata
             {
                 Key = attr.Key,
                 Name = attr.Name ?? attr.Key,
@@ -26,17 +26,17 @@ namespace Win2Mqtt.SystemSensors
                 IsBinary = attr.IsBinary
             };
         }
-        public static SensorMetadata? FromChildSensor(ISensor sensor, string id)
+        public static SystemSensorMetadata? FromChildSensor(ISystemSensor sensor, string id)
         {
             var type = sensor.GetType();
             var attr = type.GetCustomAttribute<ChildSensorAttribute>();
             if (attr == null) return null;
 
             var valueType = type.GetInterfaces()
-                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISensor<>))
+                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISystemSensor<>))
                 ?.GenericTypeArguments[0] ?? typeof(object);
 
-            return new SensorMetadata
+            return new SystemSensorMetadata
             {
                 Key = string.Format(attr.KeyPattern, id),
                 Name = attr.NamePattern == null ? string.Format(attr.KeyPattern, id) : string.Format(attr.NamePattern, id),
@@ -48,7 +48,7 @@ namespace Win2Mqtt.SystemSensors
             };
         }
 
-        public static string? GetKeyFromAttribute(IMultiSensor multiSensor)
+        public static string? GetKeyFromAttribute(ISystemMultiSensor multiSensor)
         {
             var type = multiSensor.GetType();
             var attr = type.GetCustomAttribute<MultiSensorAttribute>();

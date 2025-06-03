@@ -4,7 +4,7 @@ using Win2Mqtt.SystemSensors;
 
 namespace Win2Mqtt.HomeAssistant
 {
-    public class HomeAssistantSensorValueFormatter : ISensorValueFormatter
+    public class HomeAssistantSensorValueFormatter : ISystemSensorValueFormatter
     {
         private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.General)
         {

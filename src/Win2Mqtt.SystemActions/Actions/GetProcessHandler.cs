@@ -2,7 +2,7 @@
 
 namespace Win2Mqtt.SystemActions.Actions
 {
-    public class GetProcessHandler : MqttActionHandler<bool>
+    public class GetProcessHandler : SystemAction<bool>
     {
         public override Task<bool> HandleAsync(string payload, CancellationToken cancellationToken)
         {

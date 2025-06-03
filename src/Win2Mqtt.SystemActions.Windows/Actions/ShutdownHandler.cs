@@ -1,6 +1,6 @@
 ﻿namespace Win2Mqtt.SystemActions.Windows.Actions
 {
-    public class ShutdownHandler : MqttActionHandler
+    public class ShutdownHandler : SystemAction
     {
         private static readonly int DefaultShutdownDelay = 10;
 

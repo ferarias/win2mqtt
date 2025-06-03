@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Win2Mqtt.SystemActions.Actions
 {
-    public class StartProcessHandler : MqttActionHandler
+    public class StartProcessHandler : SystemAction
     {
         public override Task HandleAsync(string payload, CancellationToken cancellationToken)
         {

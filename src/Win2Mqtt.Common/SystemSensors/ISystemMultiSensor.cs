@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace Win2Mqtt.SystemSensors
 {
-    public interface IMultiSensor
+    public interface ISystemMultiSensor
     {
         public string Key { get; }
-        IEnumerable<ISensor> CreateSensors(IServiceProvider serviceProvider);
+        IEnumerable<ISystemSensor> CreateSensors(IServiceProvider serviceProvider);
     }
 
 }

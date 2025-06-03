@@ -10,8 +10,8 @@ namespace Win2Mqtt.Broker.MQTTNet
     public class MqttSubscriber(
         IMqttClient client,
         IOptions<Win2MqttOptions> options,
-        IActionFactory actionFactory,
-        IIncomingMessagesProcessor incomingMessagesProcessor,
+        ISystemActionFactory actionFactory,
+        ISystemActionsHandler incomingMessagesProcessor,
         ILogger<MqttSubscriber> logger) : IMqttSubscriber
     {
         private readonly IMqttClient _client = client;

@@ -7,7 +7,7 @@ namespace Win2Mqtt.SystemSensors.Windows.MultiSensors
     [MultiSensor("drives")]
     public class DriveMultiSensor() : MultiSensor
     {
-        public override IEnumerable<ISensor> CreateSensors(IServiceProvider serviceProvider)
+        public override IEnumerable<ISystemSensor> CreateSensors(IServiceProvider serviceProvider)
         {
             var drives = DriveInfo.GetDrives().Where(di => di.IsReady && di.DriveType != DriveType.Network);
             foreach (var item in drives)
