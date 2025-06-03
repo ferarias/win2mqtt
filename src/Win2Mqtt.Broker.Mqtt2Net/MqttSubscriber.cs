@@ -46,8 +46,9 @@ namespace Win2Mqtt.Broker.MQTTNet
                     // Subscribe to the topics defined in options
                     foreach (var action in actionFactory.GetEnabledActions())
                     {
-                        await _client.SubscribeAsync(action.Metadata.CommandTopic, MqttQualityOfServiceLevel.ExactlyOnce, cancellationToken);
-                        logger.LogDebug("Subscribed to MQTT topic `{Topic}`.", action.Metadata.CommandTopic);
+                        var actionMetadata = action.Value.Metadata;
+                        await _client.SubscribeAsync(actionMetadata.CommandTopic, MqttQualityOfServiceLevel.ExactlyOnce, cancellationToken);
+                        logger.LogDebug("Subscribed to MQTT topic `{Topic}`.", actionMetadata.CommandTopic);
                     }
 
                     return true;

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Win2Mqtt.Options;
@@ -13,6 +12,7 @@ namespace Win2Mqtt.Application
        IServiceProvider sp,
        ISensorValueFormatter formatter,
        IMqttPublisher publisher,
+       IActionFactory actionFactory,
        IOptions<Win2MqttOptions> options,
        ILogger<IncomingMessagesProcessor> logger) : IIncomingMessagesProcessor
     {
@@ -24,29 +24,17 @@ namespace Win2Mqtt.Application
         {
             try
             {
-                var match = _options
-                    .Listeners
-                    .FirstOrDefault(kv => kv.Value.Topic.Equals(subtopic, StringComparison.OrdinalIgnoreCase));
-
-                if (string.IsNullOrEmpty(match.Key) || !match.Value.Enabled)
+                var actions = actionFactory.GetEnabledActions();
+                if (!actions.TryGetValue(subtopic, out IMqttActionHandlerMarker? handler))
                 {
                     logger.LogWarning("No enabled listener for subtopic `{Subtopic}`", subtopic);
                     return;
                 }
 
-                var handlerType = GetHandlerTypeByKey(match.Key);
-                if (handlerType == null)
-                {
-                    logger.LogWarning("No handler registered for listener `{Listener}`", match.Key);
-                    return;
-                }
-                var handler = sp.GetRequiredService(handlerType);
+                var handlerType = handler.GetType();
                 // Determine if it's IMqttActionHandler or IMqttActionHandler<T>
-                var validInterface = handlerType
-                    .GetInterfaces()
-                    .FirstOrDefault(i => i == typeof(IMqttActionHandler) 
-                                || (i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMqttActionHandler<>)));
-                if (validInterface == null)
+                if (handlerType.GetInterfaces().FirstOrDefault(i => i == typeof(IMqttActionHandler)
+                    || (i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMqttActionHandler<>))) == null)
                 {
                     logger.LogWarning("Handler `{Handler}` does not implement a valid IMqttActionHandler interface", handlerType.Name);
                     return;
@@ -71,10 +59,15 @@ namespace Win2Mqtt.Application
                 if (result != null)
                 {
                     logger.LogTrace("Handler `{Handler}` returned: {Result}", handlerType.Name, result);
-                    string topic = handler.GetType().Name.Replace("Handler", "").ToLower();
-                    var resultTopic = $"{_options.MqttBaseTopic}/{topic}/result";
-                    var resultPayload = formatter.Format(result);
-                    await publisher.PublishAsync(resultTopic, resultPayload, false, cancellationToken);
+                    await publisher.PublishAsync(
+                        topic: $"{_options.MqttBaseTopic}/{handler.Metadata.CommandTopic}/result",
+                        message: formatter.Format(result), 
+                        retain: false, 
+                        cancellationToken: cancellationToken);
+                }
+                else
+                {
+                    logger.LogTrace("Handler `{Handler}` completed without a result", handlerType.Name);
                 }
 
 
@@ -84,23 +77,5 @@ namespace Win2Mqtt.Application
                 logger.LogError(ex, "Exception on processing message received");
             }
         }
-
-        private static Type GetHandlerTypeByKey(string key)
-        {
-            var typeName = key + "Handler";
-            var type = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .FirstOrDefault(t => t.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase)
-                                  && (typeof(IMqttActionHandler).IsAssignableFrom(t) || ImplementsIMqttActionHandlerGeneric(t)));
-
-            return type ?? throw new InvalidOperationException($"No handler found for {key}");
-        }
-
-        private static bool ImplementsIMqttActionHandlerGeneric(Type type)
-        {
-            return type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMqttActionHandler<>));
-        }
-
-
     }
 }

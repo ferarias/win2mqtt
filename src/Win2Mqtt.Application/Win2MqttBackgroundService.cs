@@ -18,7 +18,7 @@ namespace Win2Mqtt.Application
     {
         private readonly static SemaphoreSlim _semaphore = new(1, 1);
         private readonly IEnumerable<ISensorWrapper> _activeSensors = sensorFactory.GetEnabledSensors();
-        private readonly IEnumerable<IMqttActionHandlerMarker> _activeActions = actionFactory.GetEnabledActions();
+        private readonly IEnumerable<IMqttActionHandlerMarker> _activeActions = actionFactory.GetEnabledActions().Select(kv => kv.Value);
 
 
         public override async Task StartAsync(CancellationToken stoppingToken)

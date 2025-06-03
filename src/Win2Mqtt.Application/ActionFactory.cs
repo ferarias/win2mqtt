@@ -10,15 +10,16 @@ namespace Win2Mqtt.Application
 {
     public class ActionFactory(
     IOptions<Win2MqttOptions> options,
-    IServiceProvider sp,
-    ILogger<SensorFactory> logger) : IActionFactory
+    IServiceProvider serviceProvider,
+    ILogger<ActionFactory> logger) : IActionFactory
     {
         private readonly Win2MqttOptions _options = options.Value;
         private static readonly Dictionary<string, (Type HandlerType, PropertyInfo? ReturnProperty)> _handlers = [];
 
 
-        public IEnumerable<IMqttActionHandlerMarker> GetEnabledActions()
+        public IDictionary<string, IMqttActionHandlerMarker> GetEnabledActions()
         {
+            var actions = new Dictionary<string, IMqttActionHandlerMarker>(StringComparer.OrdinalIgnoreCase);
             foreach (var (listenerName, listenerOptions) in _options.Listeners)
             {
                 if (listenerOptions.Enabled)
@@ -29,7 +30,7 @@ namespace Win2Mqtt.Application
                         logger.LogWarning("No handler registered for listener `{Listener}`", listenerName);
                         continue;
                     }
-                    if (sp.GetRequiredService(handlerType) is IMqttActionHandlerMarker handler)
+                    if (serviceProvider.GetRequiredService(handlerType) is IMqttActionHandlerMarker handler)
                     {
                         // if topic is set in options, overwrite what's set in attribute
                         var topicName = string.IsNullOrWhiteSpace(listenerOptions.Topic) 
@@ -45,10 +46,11 @@ namespace Win2Mqtt.Application
                             StateTopic = $"{_options.MqttBaseTopic}/{topicName}",
                             CommandTopic = $"{_options.MqttBaseTopic}/{topicName}"
                         };
-                        yield return handler;
+                        actions.Add(listenerName, handler);
                     }
                 }
             }
+            return actions;
         }
 
         private static Type? GetHandlerTypeByKey(string key)
