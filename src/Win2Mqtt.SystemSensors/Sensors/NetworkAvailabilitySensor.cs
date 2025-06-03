@@ -3,12 +3,12 @@ using System.Net.NetworkInformation;
 
 namespace Win2Mqtt.SystemSensors.Sensors
 {
-    [Sensor(
+    [SystemSensor(
     "networkavailability",
     name: "Network Availability",
     deviceClass: "connectivity",
     isBinary: true)]
-    public class NetworkAvailabilitySensor(ILogger<NetworkAvailabilitySensor> logger) : Sensor<bool>
+    public class NetworkAvailabilitySensor(ILogger<NetworkAvailabilitySensor> logger) : SystemSensor<bool>
     {
         public override Task<bool> CollectAsync()
         {

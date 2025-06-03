@@ -6,7 +6,7 @@ namespace Win2Mqtt.SystemSensors
     /// Non-Generic Wrapper Interface
     /// A non-generic abstraction that allows calling CollectAsync() uniformly
     /// </summary>
-    public interface ISensorWrapper
+    public interface ISystemSensorWrapper
     {
         SystemSensorMetadata Metadata { get; }
 
@@ -18,7 +18,7 @@ namespace Win2Mqtt.SystemSensors
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="sensor"></param>
-    public class SensorWrapper<T>(ISystemSensor<T> sensor) : ISensorWrapper
+    public class SystemSensorWrapper<T>(ISystemSensor<T> sensor) : ISystemSensorWrapper
     {
         public SystemSensorMetadata Metadata => sensor.Metadata;
 

@@ -45,7 +45,7 @@ namespace Win2Mqtt.HomeAssistant
             logger.LogDebug("Published HA offline status for {Topic}", statusTopic);
         }
 
-        public async Task PublishSensorValue(ISensorWrapper sensor, object? value, CancellationToken cancellationToken = default)
+        public async Task PublishSensorValue(ISystemSensorWrapper sensor, object? value, CancellationToken cancellationToken = default)
         {
             if (sensor.Metadata.StateTopic == null)
             {

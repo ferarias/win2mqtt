@@ -9,7 +9,4 @@ namespace Win2Mqtt.SystemSensors
         SystemSensorMetadata Metadata { get; }
         Task<T> CollectAsync();
     }
-
-
-
 }

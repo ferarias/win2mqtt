@@ -15,7 +15,7 @@ namespace Win2Mqtt
 
         Task PublishSwitchDiscoveryMessage(SystemActionMetadata metadata, CancellationToken cancellationToken = default);
 
-        Task PublishSensorValue(ISensorWrapper sensor, object? value, CancellationToken cancellationToken = default);
+        Task PublishSensorValue(ISystemSensorWrapper sensor, object? value, CancellationToken cancellationToken = default);
 
     }
 }

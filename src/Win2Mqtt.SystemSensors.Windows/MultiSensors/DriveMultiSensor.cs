@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Win2Mqtt.SystemSensors.Multi;
 using Win2Mqtt.SystemSensors.Windows.MultiSensors.Drive;
 
 namespace Win2Mqtt.SystemSensors.Windows.MultiSensors
 {
-    [MultiSensor("drives")]
-    public class DriveMultiSensor() : MultiSensor
+    [SystemMultiSensor("drives")]
+    public class DriveMultiSensor() : SystemMultiSensor
     {
         public override IEnumerable<ISystemSensor> CreateSensors(IServiceProvider serviceProvider)
         {

@@ -1,13 +1,14 @@
 ﻿using Microsoft.Extensions.Logging;
+using Win2Mqtt.SystemSensors.Multi;
 
 namespace Win2Mqtt.SystemSensors.Windows.MultiSensors.Drive
 {
-    [ChildSensor("drive/{0}/percentfree",
+    [SystemChildSensor("drive/{0}/percentfree",
     namePattern: "Drive {0} Percent Free",
     unitOfMeasurement: "%",
     stateClass: "measurement")]
     public class DrivePercentFreeSizeSensor(DriveInfo driveInfo, ILogger<DrivePercentFreeSizeSensor> logger) 
-        : ChildSensor<double>(driveInfo.Name.Replace(":\\", ""))
+        : SystemChildSensor<double>(driveInfo.Name.Replace(":\\", ""))
     {
         public override Task<double> CollectAsync()
         {

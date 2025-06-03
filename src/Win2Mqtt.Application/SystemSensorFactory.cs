@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Win2Mqtt.Common;
 using Win2Mqtt.Options;
 using Win2Mqtt.SystemSensors;
+using Win2Mqtt.SystemSensors.Multi;
 
 namespace Win2Mqtt.Application
 {
@@ -14,9 +15,9 @@ namespace Win2Mqtt.Application
     {
         private readonly Win2MqttOptions _options = options.Value;
 
-        public IEnumerable<ISensorWrapper> GetEnabledSensors()
+        public IEnumerable<ISystemSensorWrapper> GetEnabledSensors()
         {
-            var sensors = new List<ISensorWrapper>();
+            var sensors = new List<ISystemSensorWrapper>();
 
             // Regular sensors
             var singleSensors = serviceProvider.GetServices<ISystemSensor>();
@@ -28,8 +29,8 @@ namespace Win2Mqtt.Application
                     .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISystemSensor<>));
                 if (iface != null)
                 {
-                    var wrapperType = typeof(SensorWrapper<>).MakeGenericType(iface.GenericTypeArguments[0]);
-                    if (Activator.CreateInstance(wrapperType, sensor) is ISensorWrapper wrapper)
+                    var wrapperType = typeof(SystemSensorWrapper<>).MakeGenericType(iface.GenericTypeArguments[0]);
+                    if (Activator.CreateInstance(wrapperType, sensor) is ISystemSensorWrapper wrapper)
                     {
                         if (_options.Sensors[wrapper.Metadata.Key].Enabled)
                         {
@@ -59,8 +60,8 @@ namespace Win2Mqtt.Application
                         .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISystemSensor<>));
                         if (iface != null)
                         {
-                            var wrapperType = typeof(SensorWrapper<>).MakeGenericType(iface.GenericTypeArguments[0]);
-                            if (Activator.CreateInstance(wrapperType, sensor) is ISensorWrapper wrapper)
+                            var wrapperType = typeof(SystemSensorWrapper<>).MakeGenericType(iface.GenericTypeArguments[0]);
+                            if (Activator.CreateInstance(wrapperType, sensor) is ISystemSensorWrapper wrapper)
                             {
                                 var childSensorsOptions = _options.MultiSensors[multi.Key].Sensors;
                                 var sensorName = sensor.GetType().Name;

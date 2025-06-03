@@ -4,6 +4,6 @@ namespace Win2Mqtt.SystemSensors
 {
     public interface ISystemSensorFactory
     {
-        IEnumerable<ISensorWrapper> GetEnabledSensors();
+        IEnumerable<ISystemSensorWrapper> GetEnabledSensors();
     }
 }

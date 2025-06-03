@@ -2,11 +2,11 @@
 
 namespace Win2Mqtt.SystemSensors.Sensors
 {
-    [Sensor(
+    [SystemSensor(
     "timestamp",
     name: "System Timestamp",
     deviceClass: "timestamp")]
-    public class TimestampSensor(ILogger<TimestampSensor> logger) : Sensor<DateTime>
+    public class TimestampSensor(ILogger<TimestampSensor> logger) : SystemSensor<DateTime>
     {
         public override Task<DateTime> CollectAsync()
         {

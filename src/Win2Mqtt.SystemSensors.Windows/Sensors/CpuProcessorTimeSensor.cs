@@ -3,13 +3,13 @@ using System.Diagnostics;
 
 namespace Win2Mqtt.SystemSensors.Windows.Sensors
 {
-    [Sensor(
+    [SystemSensor(
     "cpuprocessortime",
     name: "CPU Processor Time",
     unitOfMeasurement: "%",
     deviceClass: "",
     stateClass: "measurement")]
-    public class CpuProcessorTimeSensor(ILogger<CpuProcessorTimeSensor> logger) : Sensor<double>
+    public class CpuProcessorTimeSensor(ILogger<CpuProcessorTimeSensor> logger) : SystemSensor<double>
     {
         public override async Task<double> CollectAsync()
         {
