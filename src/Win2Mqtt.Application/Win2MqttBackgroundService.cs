@@ -17,7 +17,7 @@ namespace Win2Mqtt.Application
         ILogger<Win2MqttBackgroundService> logger) : BackgroundService
     {
         private readonly static SemaphoreSlim _semaphore = new(1, 1);
-        private readonly IEnumerable<ISystemSensorWrapper> _activeSensors = sensorFactory.GetEnabledSensors();
+        private readonly IEnumerable<ISystemSensor> _activeSensors = sensorFactory.GetEnabledSensors().Select(kv => kv.Value);
         private readonly IEnumerable<ISystemActionWrapper> _activeActions = actionFactory.GetEnabledActions().Select(kv => kv.Value);
 
 

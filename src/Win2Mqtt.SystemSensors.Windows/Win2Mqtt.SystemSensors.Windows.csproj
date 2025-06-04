@@ -9,6 +9,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="MultiSensors\**" />
+      <EmbeddedResource Remove="MultiSensors\**" />
+      <None Remove="MultiSensors\**" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.1" />
         <PackageReference Include="Scrutor" Version="6.0.1" />

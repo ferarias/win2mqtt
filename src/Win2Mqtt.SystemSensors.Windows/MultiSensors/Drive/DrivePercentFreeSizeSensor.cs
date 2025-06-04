@@ -3,10 +3,7 @@ using Win2Mqtt.SystemSensors.Multi;
 
 namespace Win2Mqtt.SystemSensors.Windows.MultiSensors.Drive
 {
-    [SystemChildSensor("drive/{0}/percentfree",
-    namePattern: "Drive {0} Percent Free",
-    unitOfMeasurement: "%",
-    stateClass: "measurement")]
+    [HomeAssistantSensor(unitOfMeasurement: "%", stateClass: "measurement")]
     public class DrivePercentFreeSizeSensor(DriveInfo driveInfo, ILogger<DrivePercentFreeSizeSensor> logger) 
         : SystemChildSensor<double>(driveInfo.Name.Replace(":\\", ""))
     {

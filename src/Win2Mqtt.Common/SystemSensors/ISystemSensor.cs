@@ -2,11 +2,20 @@
 
 namespace Win2Mqtt.SystemSensors
 {
-    public interface ISystemSensor { }
-
-    public interface ISystemSensor<T> : ISystemSensor
+    public interface ISystemSensor
     {
-        SystemSensorMetadata Metadata { get; }
-        Task<T> CollectAsync();
+        /// <summary>
+        /// Filled in by the factory before use:
+        ///   Key = "FreeMemory", 
+        ///   Name = "Free Memory", 
+        ///   UniqueId, StateTopic, IsBinary, etc.
+        /// </summary>
+        SystemSensorMetadata Metadata { get; set; }
+
+        /// <summary>
+        /// Return the current sensor value boxed as object.
+        /// </summary>
+        Task<object?> CollectAsync();
     }
+
 }

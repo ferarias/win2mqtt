@@ -2,17 +2,23 @@
 
 namespace Win2Mqtt.SystemSensors
 {
-    public abstract class SystemSensor<T> : ISystemSensor<T>
+    public abstract class SystemSensor<T> : ISystemSensor
     {
-        private readonly SystemSensorMetadata _metadata;
+        public required SystemSensorMetadata Metadata { get; set; }
 
-        protected SystemSensor()
+        /// <summary>
+        /// Subclasses override this to return a strongly-typed T.
+        /// </summary>
+        protected abstract Task<T> CollectInternalAsync();
+
+        /// <summary>
+        /// The factory and collector always see an object, so we box the T.
+        /// </summary>
+        public async Task<object?> CollectAsync()
         {
-            _metadata = SensorMetadataFactory.FromSensor(this)!;
+            var val = await CollectInternalAsync().ConfigureAwait(false);
+            return val!;
         }
-
-        public SystemSensorMetadata Metadata => _metadata;
-
-        public abstract Task<T> CollectAsync();
     }
+
 }

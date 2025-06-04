@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Scrutor;
-using Win2Mqtt.SystemSensors.Multi;
+using Win2Mqtt.SystemSensors.Sensors;
 
 namespace Win2Mqtt.SystemSensors
 {
@@ -13,19 +12,8 @@ namespace Win2Mqtt.SystemSensors
         /// <returns></returns>
         public static IServiceCollection AddSystemSensors(this IServiceCollection services)
         {
-            services.Scan(scan => scan
-            .FromAssemblies([typeof(ServiceCollectionExtensions).Assembly])
-            .AddClasses(c => c.WithAttribute<SystemMultiSensorAttribute>().AssignableTo<ISystemMultiSensor>())
-            .AsImplementedInterfaces()
-            .WithSingletonLifetime());
-
-            services.Scan(scan => scan
-            .FromAssemblies([typeof(ServiceCollectionExtensions).Assembly])
-            .AddClasses(c => c.WithAttribute<SystemSensorAttribute>())
-            .UsingRegistrationStrategy(RegistrationStrategy.Append)
-            .As<ISystemSensor>()
-            .WithSingletonLifetime());
-
+            services.AddSingleton<ISystemSensor, NetworkAvailabilitySensor>(); // if FreeMemorySensor implements ISystemSensorWrapper
+            services.AddSingleton<ISystemSensor, TimestampSensor>(); // if FreeMemorySensor implements ISystemSensorWrapper
             return services;
         }
     }

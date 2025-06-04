@@ -1,93 +1,90 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Win2Mqtt.Common;
 using Win2Mqtt.Options;
 using Win2Mqtt.SystemSensors;
-using Win2Mqtt.SystemSensors.Multi;
 
 namespace Win2Mqtt.Application
 {
     public class SystemSensorFactory(
-    IOptions<Win2MqttOptions> options,
-    IServiceProvider serviceProvider,
-    ILogger<SystemSensorFactory> logger) : ISystemSensorFactory
+        IOptions<Win2MqttOptions> options,
+        IServiceProvider serviceProvider,
+        ILogger<SystemSensorFactory> logger) : ISystemSensorFactory
     {
         private readonly Win2MqttOptions _options = options.Value;
 
-        public IEnumerable<ISystemSensorWrapper> GetEnabledSensors()
+        public IDictionary<string, ISystemSensor> GetEnabledSensors()
+
         {
-            var sensors = new List<ISystemSensorWrapper>();
+            var sensors = new Dictionary<string, ISystemSensor>(StringComparer.OrdinalIgnoreCase);
 
-            // Regular sensors
-            var singleSensors = serviceProvider.GetServices<ISystemSensor>();
-            foreach (var sensor in singleSensors)
+            var allSensors = serviceProvider.GetServices<ISystemSensor>();
+
+            foreach (var (sensorName, sensorOpts) in _options.Sensors)
             {
-                var sensorType = sensor.GetType();
-                var iface = sensorType
-                    .GetInterfaces()
-                    .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISystemSensor<>));
-                if (iface != null)
+                if (!sensorOpts.Enabled)
                 {
-                    var wrapperType = typeof(SystemSensorWrapper<>).MakeGenericType(iface.GenericTypeArguments[0]);
-                    if (Activator.CreateInstance(wrapperType, sensor) is ISystemSensorWrapper wrapper)
-                    {
-                        if (_options.Sensors[wrapper.Metadata.Key].Enabled)
-                        {
-                            wrapper.Metadata.UniqueId = $"{options.Value.DeviceUniqueId}_{SanitizeHelpers.Sanitize(wrapper.Metadata.Key)}";
-                            wrapper.Metadata.StateTopic = $"{options.Value.MqttBaseTopic}/{wrapper.Metadata.UniqueId}";
-                            sensors.Add(wrapper);
-                        }
-                        else
-                        {
-                            logger.LogInformation("Sensor {sensor} is disabled in the configuration.", wrapper.Metadata.Key);
-                        }
-                    }
+                    logger.LogInformation("Sensor {Sensor} is disabled in config.", sensorName);
+                    continue;
                 }
+                // We expect a concrete type named e.g. "FreeMemorySensor" etc.
+                var typeName = sensorName + "Sensor";
+                var t = AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(a => a.GetTypes())
+                    .FirstOrDefault(x =>
+                          x.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase)
+                       && typeof(ISystemSensor).IsAssignableFrom(x));
+
+                if (t is null)
+                {
+                    logger.LogWarning("No sensor type found for key `{Sensor}`", sensorName);
+                    continue;
+                }
+
+                // Resolve the single ISystemSensor instance (registered in DI)
+                var sensorInstance = allSensors.FirstOrDefault(s => t.IsInstanceOfType(s));
+                if (sensorInstance is null)
+                {
+                    logger.LogWarning("DI could not resolve sensor `{Sensor}` of type {Type}", sensorName, t.FullName);
+                    continue;
+                }
+
+                // Compute topic/uniqueId and IsBinary
+                var topicName = string.IsNullOrWhiteSpace(sensorOpts.Topic)
+                    ? SanitizeHelpers.Sanitize(sensorName)
+                    : SanitizeHelpers.Sanitize(sensorOpts.Topic);
+
+                var uniqueId = $"{_options.DeviceUniqueId}_{SanitizeHelpers.Sanitize(sensorName)}";
+
+                // Look up the generic argument (T) of SystemSensorBase<T> to see if it's bool
+                // or any other type, so we know IsBinary.
+                var baseIface = t.GetInterfaces()
+                    .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISystemSensor));
+                // Actually, since we removed the generic interface, just test if CollectAsync returns bool:
+                var isBinary = false;
+                var method = t.GetMethod("CollectInternalAsync", BindingFlags.NonPublic | BindingFlags.Instance);
+                if (method?.ReturnType.IsGenericType == true
+                    && method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>)
+                    && method.ReturnType.GetGenericArguments()[0] == typeof(bool))
+                {
+                    isBinary = true;
+                }
+
+                sensorInstance.Metadata = new SystemSensorMetadata
+                {
+                    Key = sensorName,
+                    Name = t.Name.Replace("Sensor", string.Empty),
+                    UniqueId = uniqueId,
+                    StateTopic = $"{_options.MqttBaseTopic}/{topicName}",
+                    IsBinary = isBinary
+                };
+
+                sensors.Add(sensorName, sensorInstance);
             }
 
-            // Multi-sensors
-            var multiSensors = serviceProvider.GetServices<ISystemMultiSensor>();
-            foreach (var multi in multiSensors)
-            {
-                if (_options.MultiSensors[multi.Key].Enabled)
-                {
-                    var sensorsFromMulti = multi.CreateSensors(serviceProvider);
-                    foreach (var sensor in sensorsFromMulti)
-                    {
-                        var iface = sensor.GetType()
-                        .GetInterfaces()
-                        .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISystemSensor<>));
-                        if (iface != null)
-                        {
-                            var wrapperType = typeof(SystemSensorWrapper<>).MakeGenericType(iface.GenericTypeArguments[0]);
-                            if (Activator.CreateInstance(wrapperType, sensor) is ISystemSensorWrapper wrapper)
-                            {
-                                var childSensorsOptions = _options.MultiSensors[multi.Key].Sensors;
-                                var sensorName = sensor.GetType().Name;
-                                if(sensorName.LastIndexOf("sensor", StringComparison.OrdinalIgnoreCase) != -1)
-                                {
-                                    sensorName = sensorName[..sensorName.LastIndexOf("sensor", StringComparison.OrdinalIgnoreCase)];
-                                }
-                                if (childSensorsOptions.TryGetValue(sensorName, out SensorOptions? value) && value.Enabled)
-                                {
-                                    wrapper.Metadata.UniqueId = $"{options.Value.DeviceUniqueId}_{SanitizeHelpers.Sanitize(wrapper.Metadata.Key)}";
-                                    wrapper.Metadata.StateTopic = $"{options.Value.MqttBaseTopic}/{wrapper.Metadata.UniqueId}";
-                                    sensors.Add(wrapper);
-                                }
-                                else
-                                {
-                                    logger.LogInformation("Sensor {sensor} is disabled in the configuration.", sensorName);
-                                }
-                            }
-                                
-                        }
-
-                    }
-                }
-            }
             return sensors;
-
         }
     }
 }

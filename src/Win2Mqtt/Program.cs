@@ -29,12 +29,14 @@ try
     Log.Information("Start application.");
 
     var builder = Host.CreateApplicationBuilder(args);
-#if WINDOWS && !DEBUG
+#if !DEBUG
+#if WINDOWS
     var appDataConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), Constants.AppId, Constants.UserAppSettingsFile);
     builder.Configuration.AddJsonFile(appDataConfigPath, optional: true);
 #else
     var appDataConfigPath = Path.Combine("/etc/", Constants.AppId.ToLowerInvariant(), Constants.UserAppSettingsFile);
     builder.Configuration.AddJsonFile(appDataConfigPath, optional: true);
+#endif
 #endif
 
     builder.Services

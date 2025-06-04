@@ -4,15 +4,14 @@ namespace Win2Mqtt.SystemSensors.Multi
 {
     public abstract class SystemChildSensor<T> : ISystemSensor<T>
     {
-        private readonly SystemSensorMetadata _metadata;
+        public required SystemSensorMetadata Metadata { get; set; }
+
+        public abstract Task<T> CollectAsync();
 
         protected SystemChildSensor(string id)
         {
-            _metadata = SensorMetadataFactory.FromChildSensor(this, id)!;
+            
+            Metadata = new SystemSensorMetadata { Key = id };
         }
-
-        public SystemSensorMetadata Metadata => _metadata;
-
-        public abstract Task<T> CollectAsync();
     }
 }

@@ -2,8 +2,7 @@
 {
     public class ListenerOptions
     {
-        public required string Topic { get; set; }
-
         public bool Enabled { get; set; } = true;
+        public string? Topic { get; set; }
     }
 }
