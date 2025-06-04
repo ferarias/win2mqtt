@@ -41,16 +41,10 @@ namespace Win2Mqtt.Application
                     continue;
                 }
 
-                var typeName = sensorName + "Sensor";
-                var t = AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(a => a.GetTypes())
-                    .FirstOrDefault(x =>
-                          x.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase)
-                       && typeof(ISystemSensor).IsAssignableFrom(x));
-
+                var t = ResolveSensorType<ISystemSensor>(sensorName, "Sensor");
                 if (t is null)
                 {
-                    logger.LogWarning("No sensor type named `{Type}` exists in AppDomain assemblies", typeName);
+                    logger.LogWarning("No sensor type named `{Type}` exists in AppDomain assemblies", sensorName + "Sensor");
                     continue;
                 }
 
@@ -61,21 +55,18 @@ namespace Win2Mqtt.Application
                     continue;
                 }
 
-                var topicName = string.IsNullOrWhiteSpace(sensorOpts.Topic)
-                    ? SanitizeHelpers.Sanitize(sensorName)
-                    : SanitizeHelpers.Sanitize(sensorOpts.Topic);
-
+                var topicName = SanitizeTopicOrDefault(sensorName, sensorOpts.Topic);
                 var uniqueId = $"{_options.DeviceUniqueId}_{SanitizeHelpers.Sanitize(sensorName)}";
                 var isBinary = ReturnsBinaryValue(t);
 
-                sensorInstance.Metadata = new SystemSensorMetadata
-                {
-                    Key = sensorName,
-                    Name = t.Name.Replace("Sensor", string.Empty),
-                    UniqueId = uniqueId,
-                    StateTopic = $"{_options.MqttBaseTopic}/{topicName}",
-                    IsBinary = isBinary
-                };
+                sensorInstance.Metadata = CreateMetadata(
+                    sensorName,
+                    t.Name.Replace("Sensor", string.Empty),
+                    topicName,
+                    uniqueId,
+                    isBinary
+                );
+
 
                 yield return new KeyValuePair<string, ISystemSensor>(sensorName, sensorInstance);
             }
@@ -93,17 +84,10 @@ namespace Win2Mqtt.Application
                     continue;
                 }
 
-                // We expect a concrete type named e.g. "DriveMultiSensor" etc.
-                var typeName = multisensorName + "MultiSensor";
-                var t = AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(a => a.GetTypes())
-                    .FirstOrDefault(x =>
-                          x.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase)
-                       && typeof(ISystemMultiSensor).IsAssignableFrom(x));
-
+                var t = ResolveSensorType<ISystemMultiSensor>(multisensorName, "MultiSensor");
                 if (t is null)
                 {
-                    logger.LogWarning("No multi-sensor type named `{Type}` exists in AppDomain assemblies", typeName);
+                    logger.LogWarning("No multi-sensor type named `{Type}` exists in AppDomain assemblies", multisensorName + "MultiSensor");
                     continue;
                 }
 
@@ -114,25 +98,26 @@ namespace Win2Mqtt.Application
                     continue;
                 }
 
-                var topicName = string.IsNullOrWhiteSpace(multisensorOpts.Topic)
-                    ? SanitizeHelpers.Sanitize(multisensorName)
-                    : SanitizeHelpers.Sanitize(multisensorOpts.Topic);
+                var topicName = SanitizeTopicOrDefault(multisensorName, multisensorOpts.Topic);
+                var uniqueId = $"{_options.DeviceUniqueId}_{SanitizeHelpers.Sanitize(multisensorName)}";
 
-                multisensorInstance.Metadata = new SystemSensorMetadata
-                {
-                    Key = multisensorName,
-                    Name = t.Name.Replace("MultiSensor", string.Empty),
-                    UniqueId = $"{_options.DeviceUniqueId}_{SanitizeHelpers.Sanitize(multisensorName)}",
-                    StateTopic = $"{_options.MqttBaseTopic}/{topicName}",
-                    IsBinary = false // Multi-sensors are not binary by default
-                };
+                multisensorInstance.Metadata = CreateMetadata(
+                    key: multisensorName,
+                    name: t.Name.Replace("MultiSensor", string.Empty),
+                    topic: topicName,
+                    uniqueId: uniqueId,
+                    isBinary: false
+                );
+
                 yield return new KeyValuePair<string, ISystemMultiSensor>(multisensorName, multisensorInstance);
             }
         }
 
         private IEnumerable<KeyValuePair<string, ISystemSensor>> GetMultiSensorChildren(string parentMultisensorName, ISystemMultiSensor parentMultiSensor)
         {
-            foreach (var (sensorName, sensorOpts) in _options.MultiSensors[parentMultisensorName].Sensors)
+            var multiOpts = _options.MultiSensors[parentMultisensorName];
+
+            foreach (var (sensorName, sensorOpts) in multiOpts.Sensors)
             {
                 if (!sensorOpts.Enabled)
                 {
@@ -140,69 +125,89 @@ namespace Win2Mqtt.Application
                     continue;
                 }
 
-                var typeName = sensorName + "Sensor";
-                var t = AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(a => a.GetTypes())
-                    .FirstOrDefault(x =>
-                          x.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase)
-                       && typeof(ISystemSensor).IsAssignableFrom(x));
-
+                var t = ResolveSensorType<ISystemSensor>(sensorName, "Sensor");
                 if (t is null)
                 {
-                    logger.LogWarning("No sensor type named `{Type}` exists in AppDomain assemblies (child sensor of {Sensor})", typeName, parentMultisensorName);
+                    logger.LogWarning(
+                        "No sensor type named `{Type}` exists in AppDomain assemblies (child sensor of {Parent})",
+                        sensorName + "Sensor",
+                        parentMultisensorName
+                    );
                     continue;
                 }
 
                 foreach (var id in parentMultiSensor.ChildIdentifiers)
                 {
-                    var instanceSensorName = $"{typeName}_{id}";
+                    var instanceSensorName = $"{sensorName}Sensor_{id}";
                     var childSensorInstance = serviceProvider.GetKeyedService<ISystemSensor>(instanceSensorName);
                     if (childSensorInstance is null)
                     {
-                        logger.LogWarning("DI could not resolve child sensor `{Sensor}` of type {Type} (child sensor of {Sensor})", sensorName, t.FullName, parentMultisensorName);
+                        logger.LogWarning(
+                            "DI could not resolve child sensor `{Sensor}` of type {Type} (child sensor of {Parent})",
+                            sensorName, t.FullName, parentMultisensorName
+                        );
                         continue;
                     }
 
-                    var childTopicName = string.IsNullOrWhiteSpace(sensorOpts.Topic)
-                    ? $"{parentMultiSensor.Metadata.StateTopic}_{SanitizeHelpers.Sanitize(instanceSensorName)}"
-                    : $"{parentMultiSensor.Metadata.StateTopic}_{SanitizeHelpers.Sanitize(sensorOpts.Topic)}";
+                    var baseTopic = parentMultiSensor.Metadata.StateTopic;
+                    var childTopicFragment = SanitizeTopicOrDefault(instanceSensorName, sensorOpts.Topic);
+                    var childTopicName = $"{baseTopic}_{childTopicFragment}";
                     var uniqueId = $"{_options.DeviceUniqueId}_{SanitizeHelpers.Sanitize(instanceSensorName)}";
                     var isBinary = ReturnsBinaryValue(t);
 
-                    childSensorInstance.Metadata = new SystemSensorMetadata
-                    {
-                        Key = instanceSensorName,
-                        InstanceId = id,
-                        Name = t.Name.Replace("Sensor", string.Empty),
-                        UniqueId = uniqueId,
-                        StateTopic = $"{_options.MqttBaseTopic}/{childTopicName}",
-                        IsBinary = isBinary
-                    };
+                    childSensorInstance.Metadata = CreateMetadata(
+                        key: instanceSensorName,
+                        name: t.Name.Replace("Sensor", string.Empty),
+                        topic: childTopicName,
+                        uniqueId: uniqueId,
+                        isBinary: isBinary,
+                        instanceId: id
+                    );
+
                     yield return new KeyValuePair<string, ISystemSensor>(instanceSensorName, childSensorInstance);
                 }
                
             }
         }
 
+        private static Type? ResolveSensorType<T>(string baseName, string suffix)
+        {
+            var typeName = baseName + suffix;
+            return AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes())
+                .FirstOrDefault(x =>
+                    x.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase)
+                    && typeof(T).IsAssignableFrom(x));
+        }
+
+        private SystemSensorMetadata CreateMetadata(string key, string name, string topic, string uniqueId, bool isBinary, string? instanceId = null)
+        {
+            return new SystemSensorMetadata
+            {
+                Key = key,
+                Name = name,
+                UniqueId = uniqueId,
+                StateTopic = $"{_options.MqttBaseTopic}/{topic}",
+                IsBinary = isBinary,
+                InstanceId = instanceId
+            };
+        }
+
+        private static string SanitizeTopicOrDefault(string fallback, string? topic) => 
+            SanitizeHelpers.Sanitize(string.IsNullOrWhiteSpace(topic) ? fallback : topic);
 
 
         private static bool ReturnsBinaryValue(Type t)
         {
-            // Look up the generic argument (T) of SystemSensorBase<T> to see if it's bool
-            // or any other type, so we know IsBinary.
-            var baseIface = t.GetInterfaces()
-                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISystemSensor));
-            // Actually, since we removed the generic interface, just test if CollectAsync returns bool:
-            var isBinary = false;
             var method = t.GetMethod("CollectInternalAsync", BindingFlags.NonPublic | BindingFlags.Instance);
             if (method?.ReturnType.IsGenericType == true
                 && method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>)
                 && method.ReturnType.GetGenericArguments()[0] == typeof(bool))
             {
-                isBinary = true;
+                return true;
             }
 
-            return isBinary;
+            return false;
         }
     }
 }
