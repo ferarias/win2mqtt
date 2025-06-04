@@ -9,7 +9,6 @@ using Win2Mqtt.SystemSensors;
 namespace Win2Mqtt.Application
 {
     public class IncomingMessagesProcessor(
-       IServiceProvider sp,
        ISystemSensorValueFormatter formatter,
        IMqttPublisher publisher,
        ISystemActionFactory actionFactory,

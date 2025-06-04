@@ -6,6 +6,8 @@ namespace Win2Mqtt.SystemSensors
     {
         public string Key { get; init; } = default!;
 
+        public string? InstanceId { get; init; }
+
         public string Name { get; set; } = default!;
 
         public string? UniqueId { get; set; }

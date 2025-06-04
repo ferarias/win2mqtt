@@ -16,7 +16,6 @@ namespace Win2Mqtt.Application
         private readonly Win2MqttOptions _options = options.Value;
         private static readonly Dictionary<string, (Type HandlerType, PropertyInfo? ReturnProperty)> _handlers = [];
 
-
         public IDictionary<string, ISystemActionWrapper> GetEnabledActions()
         {
             var actions = new Dictionary<string, ISystemActionWrapper>(StringComparer.OrdinalIgnoreCase);
