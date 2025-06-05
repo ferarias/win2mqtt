@@ -58,7 +58,7 @@ try
         .AddSystemSensors();
 #if WINDOWS
     builder.Services
-        .AddWindowsSpecificSensors()
+        .AddWindowsSpecificSystemSensors()
         .AddWindowsSpecificSystemActions()
         .AddWindowsService(options => options.ServiceName = $"{Constants.AppId} Service");
 #endif

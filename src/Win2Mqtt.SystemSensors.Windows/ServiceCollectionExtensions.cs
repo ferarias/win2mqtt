@@ -9,7 +9,7 @@ namespace Win2Mqtt.SystemSensors.Windows
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddWindowsSpecificSensors(this IServiceCollection services)
+        public static IServiceCollection AddWindowsSpecificSystemSensors(this IServiceCollection services)
         {
             services
                 .Scan(scan => scan
@@ -23,14 +23,37 @@ namespace Win2Mqtt.SystemSensors.Windows
                     .As<ISystemMultiSensor>()
                     .WithSingletonLifetime());
 
-            // We need a temporary service provider to resolve multi-sensors and register their child sensors.
+            // Temporarily build a provider to resolve all registered ISystemMultiSensor instances
             using var provider = services.BuildServiceProvider();
             var multiSensors = provider.GetServices<ISystemMultiSensor>();
+
             foreach (var sensor in multiSensors)
             {
-                sensor.RegisterChildSensors(services);
+                services.AddMultiSensorChildSensors(sensor);
             }
 
+            return services;
+        }
+
+        private static IServiceCollection AddMultiSensorChildSensors(this IServiceCollection services, ISystemMultiSensor sensor)
+        {
+            Type type = sensor.GetType();
+            var sensorBaseName = type.Name.Replace("MultiSensor", string.Empty);
+
+            foreach (var id in sensor.ChildIdentifiers)
+            {
+                var sensorTypes = type.Assembly
+                    .GetTypes()
+                    .Where(t => t.IsClass && !t.IsAbstract &&
+                        typeof(ISystemSensor).IsAssignableFrom(t) &&
+                        t.Name.StartsWith(sensorBaseName, StringComparison.OrdinalIgnoreCase));
+
+                foreach (var sensorType in sensorTypes)
+                {
+                    var key = $"{sensorType.Name}_{id}";
+                    services.AddKeyedSingleton(typeof(ISystemSensor), sensorType, key);
+                }
+            }
             return services;
         }
     }
