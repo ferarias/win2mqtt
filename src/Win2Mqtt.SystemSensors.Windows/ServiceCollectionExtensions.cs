@@ -1,7 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Win2Mqtt.SystemSensors.Windows.MultiSensors;
-using Win2Mqtt.SystemSensors.Windows.MultiSensors.Drive;
-using Win2Mqtt.SystemSensors.Windows.Sensors;
 
 namespace Win2Mqtt.SystemSensors.Windows
 {
@@ -14,17 +11,24 @@ namespace Win2Mqtt.SystemSensors.Windows
         /// <returns></returns>
         public static IServiceCollection AddWindowsSpecificSensors(this IServiceCollection services)
         {
-            services.AddSingleton<ISystemSensor, CpuProcessorTimeSensor>();
-            services.AddSingleton<ISystemSensor, FreeMemorySensor>();
+            services
+                .Scan(scan => scan
+                    .FromAssembliesOf([typeof(ServiceCollectionExtensions)])
+                    .AddClasses(c => c.AssignableTo<ISystemSensor>(), publicOnly: true)
+                    .As<ISystemSensor>()
+                    .WithSingletonLifetime())
+                .Scan(scan => scan
+                    .FromAssembliesOf([typeof(ServiceCollectionExtensions)])
+                    .AddClasses(c => c.AssignableTo<ISystemMultiSensor>(), publicOnly: true)
+                    .As<ISystemMultiSensor>()
+                    .WithSingletonLifetime());
 
-            services.AddSingleton<ISystemMultiSensor, DrivesMultiSensor>();
-
-            DrivesMultiSensor drivesMultiSensor = new() { Metadata = new SystemSensorMetadata() };
-            foreach (var id in drivesMultiSensor.ChildIdentifiers)
+            // We need a temporary service provider to resolve multi-sensors and register their child sensors.
+            using var provider = services.BuildServiceProvider();
+            var multiSensors = provider.GetServices<ISystemMultiSensor>();
+            foreach (var sensor in multiSensors)
             {
-                services.AddKeyedSingleton<ISystemSensor, DriveFreeSizeSensor>($"{nameof(DriveFreeSizeSensor)}_{id}");
-                services.AddKeyedSingleton<ISystemSensor, DrivePercentFreeSizeSensor>($"{nameof(DrivePercentFreeSizeSensor)}_{id}");
-                services.AddKeyedSingleton<ISystemSensor, DriveTotalSizeSensor>($"{nameof(DriveTotalSizeSensor)}_{id}");
+                sensor.RegisterChildSensors(services);
             }
 
             return services;
