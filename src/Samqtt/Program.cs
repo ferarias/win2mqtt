@@ -50,8 +50,8 @@ try
             .WriteTo.Console());
 
     builder.Services
-        .AddWin2MqttOptions()
-        .AddWin2MqttApplication()
+        .AddSamqttOptions()
+        .AddSamqttApplication()
         .AddMqtt2NetBroker()
         .AddHomeAssistant()
         .AddSystemActions()

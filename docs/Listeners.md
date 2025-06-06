@@ -4,11 +4,11 @@ THIS IS WORK-IN-PROGRESS. DO NOT BELIEVE WHAT YOU SEE HERE.
 
 ### Monitor
 
-Topic: `win2mqtt/{hostname}/monitor/set`
+Topic: `samqtt/{hostname}/monitor/set`
 Value: `0` or `1`
 
 Response:
-Published to `win2mqtt/{hostname}/monitor` after setting
+Published to `samqtt/{hostname}/monitor` after setting
 
 ### Power state operations
 
@@ -17,28 +17,28 @@ Tries to put system into different power states
 **Hibernate**
 Tries to put system into a hibernation power mode
 
-Topic: `win2mqtt/{hostname}/hibernate`
+Topic: `samqtt/{hostname}/hibernate`
 
 **Suspend**
 Tries to put system into a suspended power mode
 
-Topic: `win2mqtt/{hostname}/suspend `
+Topic: `samqtt/{hostname}/suspend `
 
 **Shutdown**
 Shutdown immediately the computer
 
-Topic: `win2mqtt/{hostname}/shutdown`
+Topic: `samqtt/{hostname}/shutdown`
 
 **Reboot**
 Reboot immediatly the computer
 
-Topic: `win2mqtt/{hostname}/reboot`
+Topic: `samqtt/{hostname}/reboot`
 
 ### Send Message
 
 Shows a popup notification message on the Windows computer.
 
-Topic: `win2mqtt/{hostname}/sendmessage`
+Topic: `samqtt/{hostname}/sendmessage`
 Value: the following JSON payload is expected:
 
 ```json
@@ -52,7 +52,7 @@ Value: the following JSON payload is expected:
 
 Examples: 
 
-Topic: `win2mqtt/{hostname}/sendmessage`
+Topic: `samqtt/{hostname}/sendmessage`
 Value:
 ```json
 { 
@@ -63,7 +63,7 @@ Value:
 
 If you want to add an image to the message, make sure the image file exists in the Windows filesystem.
 
-Topic: `win2mqtt/{hostname}/sendmessage`
+Topic: `samqtt/{hostname}/sendmessage`
 Value:
 ```json
 { 
@@ -74,28 +74,28 @@ Value:
 
 ### Running processes
 
-Topic: `win2mqtt/{hostname}/process/running`
+Topic: `samqtt/{hostname}/process/running`
 Message: `{appname}`
 
 `appname` is the name of the exe to check
 
 Return
 
-Topic: `win2mqtt/{hostname}/process/running/{appname}`
+Topic: `samqtt/{hostname}/process/running/{appname}`
 Value:
 * 0 = Not running
 * 1 = Found running
 
 Example:
 
-Topic: `win2mqtt/{hostname}/process/running`
+Topic: `samqtt/{hostname}/process/running`
 Message:
 ```
 pdf24.exe
 ```
 
 Returns:
-Topic: `win2mqtt/{hostname}/process/running/pdf24.exe`
+Topic: `samqtt/{hostname}/process/running/pdf24.exe`
 Message:
 ```
 1
@@ -105,7 +105,7 @@ Message:
 
 Executes the provided command in the system
 
-Topic: `win2mqtt/{hostname}/exec`
+Topic: `samqtt/{hostname}/exec`
 
 Value: the following payload is expected:
 

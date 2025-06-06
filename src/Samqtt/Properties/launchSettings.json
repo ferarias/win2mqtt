@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Win2Mqtt.Service": {
+    "SAMQTT": {
       "commandName": "Project",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"

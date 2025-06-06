@@ -2,8 +2,9 @@
 {
     public static class Constants
     {
-        public const string AppId = "Samqtt";
-        public const string ServiceName = "Samqtt Service";
+        public const string AppId = "SAMQTT";
+
+        public const string ServiceName = "SAMQTT Service";
 
         public const string SamqttTopic = "samqtt";
 

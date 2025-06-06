@@ -6,7 +6,7 @@ namespace Samqtt.Options
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddWin2MqttOptions(this IServiceCollection services)
+        public static IServiceCollection AddSamqttOptions(this IServiceCollection services)
         {
             services
             .AddOptionsWithValidateOnStart<SamqttOptions>()

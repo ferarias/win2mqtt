@@ -1,16 +1,16 @@
 [Unit]
-Description=Win2MQTT Service
+Description=SAMQTT Service
 After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/opt/win2mqtt
-ExecStart=/usr/bin/dotnet /opt/win2mqtt/win2mqtt.dll
+WorkingDirectory=/opt/samqtt
+ExecStart=/usr/bin/dotnet /opt/samqtt/samqtt.dll
 Restart=on-failure
 RestartSec=5
-User=win2mqtt
+User=samqtt
 Environment=ASPNETCORE_ENVIRONMENT=Production
-EnvironmentFile=/etc/win2mqtt/env
+EnvironmentFile=/etc/samqtt/env
 
 # Redirect logs to journald
 StandardOutput=journal

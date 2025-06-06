@@ -1,5 +1,5 @@
 {
-    "Win2MQTT": {
+    "SAMQTT": {
         "Broker": {
             "Server": "{{MQTT_SERVER}}",
             "Port": {{MQTT_PORT}},

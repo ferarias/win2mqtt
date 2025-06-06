@@ -1,6 +1,6 @@
 {
   "solution": {
-    "path": "Win2MQTT.sln",
+    "path": "SAMQTT.sln",
     "projects": [
       "src/Samqtt/Samqtt.csproj",
       "src/Samqtt.SystemActions/Samqtt.SystemActions.csproj",

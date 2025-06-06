@@ -15,8 +15,6 @@ namespace Samqtt.HomeAssistant
         ILogger<HomeAssistantPublisher> logger)
         : IMessagePublisher
     {
-        private static readonly string HABaseTopic = "homeassistant";
-
 
         private static readonly JsonSerializerOptions jsonSerializerOptions = new()
         {
@@ -26,9 +24,9 @@ namespace Samqtt.HomeAssistant
         private readonly object DeviceInfo = new
         {
             identifiers = new[] { options.Value.DeviceUniqueId },
-            name = $"Win2MQTT - {options.Value.DeviceUniqueId} s",
-            manufacturer = "Win2MQTT",
-            model = "System Monitoring"
+            name = $"SAMQTT - {options.Value.DeviceUniqueId}",
+            manufacturer = "FerArias",
+            model = "SAMQTT"
         };
 
         public async Task PublishOnlineStatus(CancellationToken cancellationToken = default)
@@ -95,11 +93,11 @@ namespace Samqtt.HomeAssistant
                 payloadDict["payload_on"] = "1";
                 payloadDict["payload_off"] = "0";
 
-                discoveryTopic = $"{HABaseTopic}/binary_sensor/{metadata.UniqueId}/config";
+                discoveryTopic = $"{HomeAssistantTopics.BaseTopic}/binary_sensor/{metadata.UniqueId}/config";
             }
             else
             {
-                discoveryTopic = $"{HABaseTopic}/sensor/{metadata?.UniqueId}/config";
+                discoveryTopic = $"{HomeAssistantTopics.BaseTopic}/sensor/{metadata?.UniqueId}/config";
             }
 
 
@@ -139,7 +137,7 @@ namespace Samqtt.HomeAssistant
                 ["device"] = DeviceInfo
             };
 
-            var discoveryTopic = $"{HABaseTopic}/switch/{metadata.UniqueId}/config";
+            var discoveryTopic = $"{HomeAssistantTopics.BaseTopic}/switch/{metadata.UniqueId}/config";
 
             await mqttPublisher.PublishAsync(
                 discoveryTopic,

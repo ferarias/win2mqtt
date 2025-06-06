@@ -3,42 +3,42 @@
 #endif
 
 [Setup]
-AppName=Win2Mqtt
+AppName=SAMQTT
 AppVersion={#MyAppVersion}
-DefaultDirName={commonpf}\Win2Mqtt
-DefaultGroupName=Win2Mqtt
+DefaultDirName={commonpf}\SAMQTT
+DefaultGroupName=SAMQTT
 OutputDir=..\..\publish\setup
-OutputBaseFilename=Win2MqttSetup
+OutputBaseFilename=SamqttSetup
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=admin
 
 WizardStyle=modern
-SetupIconFile=win2mqtt.ico
+SetupIconFile=samqtt.ico
 WizardImageFile=wizard.bmp
 WizardSmallImageFile=header.bmp
 
 [Dirs]
-Name: "{commonappdata}\Win2Mqtt"
+Name: "{commonappdata}\SAMQTT"
 
 [Files]
 Source: "..\..\publish\windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: ".\README.md"; DestDir: "{app}"; Flags: isreadme
-Source: ".\win2mqtt.png"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\win2mqtt.ico"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\win2mqtt.appsettings.template.json"; DestDir: "{commonappdata}\Win2Mqtt"; Flags: ignoreversion
+Source: ".\samqtt.png"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\samqtt.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\samqtt.appsettings.template.json"; DestDir: "{commonappdata}\SAMQTT"; Flags: ignoreversion
 
 [Icons]
-Name: "{group}\Win2MQTT Configuration file"; Filename: "{commonappdata}\Win2Mqtt\win2mqtt.appsettings.json"
-Name: "{group}\Win2MQTT Readme"; Filename: "{app}\README.md"
+Name: "{group}\SAMQTT Configuration file"; Filename: "{commonappdata}\SAMQTT\samqtt.appsettings.json"
+Name: "{group}\SAMQTT Readme"; Filename: "{app}\README.md"
 
 [Run]
-Filename: "sc.exe"; Parameters: "create ""Win2MQTT Service"" binPath=""{app}\Win2Mqtt.exe"" start=auto"; Description: "Create Win2Mqtt service"; Flags: runhidden
-Filename: "sc.exe"; Parameters: "start ""Win2MQTT Service"""; Description: "Start Win2Mqtt service"; Flags: runhidden
+Filename: "sc.exe"; Parameters: "create ""SAMQTT Service"" binPath=""{app}\Samqtt.exe"" start=auto"; Description: "Create Samqtt service"; Flags: runhidden
+Filename: "sc.exe"; Parameters: "start ""SAMQTT Service"""; Description: "Start Samqtt service"; Flags: runhidden
 
 [UninstallRun]
-Filename: "sc.exe"; Parameters: "stop ""Win2MQTT Service"" "; RunOnceId: "Win2MqttStop"
-Filename: "sc.exe"; Parameters: "delete ""Win2MQTT Service"" "; RunOnceId: "Win2MqttUninstall"
+Filename: "sc.exe"; Parameters: "stop ""SAMQTT Service"" "; RunOnceId: "SamqttStop"
+Filename: "sc.exe"; Parameters: "delete ""SAMQTT Service"" "; RunOnceId: "SamqttUninstall"
 
 [Code]
 var
@@ -52,7 +52,7 @@ var
 procedure InitializeWizard;
 begin
   Page1 := CreateInputQueryPage(wpWelcome,
-    'Win2Mqtt Configuration',
+    'Samqtt Configuration',
     'Step 1 of 2: MQTT Connection',
     'Enter the MQTT broker settings.');
 
@@ -67,7 +67,7 @@ begin
   Page1.Values[3] := '';
   
   Page2 := CreateInputQueryPage(Page1.ID,
-    'Win2Mqtt Configuration',
+    'Samqtt Configuration',
     'Step 2 of 2: Device Info',
     'Enter device identifier.');
 
@@ -93,8 +93,8 @@ begin
     MQTTPassword := Page1.Values[3];
     DeviceIdentifier := Page2.Values[0];
     
-    TemplateFile := ExpandConstant('{commonappdata}\Win2Mqtt\win2mqtt.appsettings.template.json');
-    ConfigFile := ExpandConstant('{commonappdata}\Win2Mqtt\win2mqtt.appsettings.json');
+    TemplateFile := ExpandConstant('{commonappdata}\SAMQTT\samqtt.appsettings.template.json');
+    ConfigFile := ExpandConstant('{commonappdata}\SAMQTT\samqtt.appsettings.json');
 
     if LoadStringFromFile(TemplateFile, TemplateContent) then
     begin
