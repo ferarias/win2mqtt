@@ -51,15 +51,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "linux", "linux", "{BA9555BB
 	ProjectSection(SolutionItems) = preProject
 		setup\linux\install.sh = setup\linux\install.sh
 		setup\linux\README.md = setup\linux\README.md
-		setup\linux\win2mqtt.appsettings.example.json = setup\linux\win2mqtt.appsettings.example.json
+		setup\linux\uninstall.sh = setup\linux\uninstall.sh
+		setup\linux\win2mqtt.appsettings.template.json = setup\linux\win2mqtt.appsettings.template.json
 		setup\linux\win2mqtt.service = setup\linux\win2mqtt.service
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "windows", "windows", "{5D29573B-EDF8-4E9D-B01C-875553888242}"
 	ProjectSection(SolutionItems) = preProject
-		setup\windows\win2mqtt.appsettings.example.json = setup\windows\win2mqtt.appsettings.example.json
+		setup\windows\header.bmp = setup\windows\header.bmp
+		setup\windows\README.md = setup\windows\README.md
+		setup\windows\win2mqtt.appsettings.template.json = setup\windows\win2mqtt.appsettings.template.json
 		setup\windows\win2mqtt.ico = setup\windows\win2mqtt.ico
+		setup\windows\win2mqtt.png = setup\windows\win2mqtt.png
 		setup\windows\Win2MqttInstaller.iss = setup\windows\Win2MqttInstaller.iss
+		setup\windows\wizard.bmp = setup\windows\wizard.bmp
 	EndProjectSection
 EndProject
 Global
