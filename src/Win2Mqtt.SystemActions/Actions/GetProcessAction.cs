@@ -2,17 +2,19 @@
 
 namespace Win2Mqtt.SystemActions.Actions
 {
-    public class GetProcessHandler : IMqttActionHandler<bool>
+    public class GetProcessAction : SystemAction<bool>
     {
-        public Task<bool> HandleAsync(string payload, CancellationToken cancellationToken)
+        public override Task<bool> HandleCoreAsync(string payload, CancellationToken cancellationToken)
         {
             try
             {
                 var isRunning = Process.GetProcessesByName(payload)?.Length != 0 == true;
                 return Task.FromResult(isRunning);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+
+                Console.WriteLine($"Error checking if process is running: {ex.Message}");
                 return Task.FromResult(false);
             }
         }

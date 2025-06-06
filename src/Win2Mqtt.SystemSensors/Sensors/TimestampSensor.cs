@@ -2,13 +2,11 @@
 
 namespace Win2Mqtt.SystemSensors.Sensors
 {
-    [Sensor(
-    "timestamp",
-    name: "System Timestamp",
-    deviceClass: "timestamp")]
-    public class TimestampSensor(ILogger<TimestampSensor> logger) : Sensor<DateTime>
+    [HomeAssistantSensor(deviceClass: "timestamp")]
+    public class TimestampSensor(ILogger<TimestampSensor> logger) : SystemSensor<DateTime>
     {
-        public override Task<DateTime> CollectAsync()
+        protected override Task<DateTime> CollectInternalAsync()
+
         {
             var value = DateTime.UtcNow;
             logger.LogDebug("Collect {Key}: {Value}", Metadata.Key, value);

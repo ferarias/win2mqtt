@@ -2,16 +2,19 @@
 
 namespace Win2Mqtt.SystemSensors.Windows.MultiSensors.Drive
 {
-    [ChildSensor("drive/{0}/sizetotal",
-    namePattern: "Drive {0} Total Space",
-    unitOfMeasurement: "B",
-    deviceClass: "data_size",
-    stateClass: "measurement")]
-    public class DriveTotalSizeSensor(DriveInfo driveInfo, ILogger<DriveTotalSizeSensor> logger) 
-        : ChildSensor<long>(driveInfo.Name.Replace(":\\", ""))
+    [HomeAssistantSensor(unitOfMeasurement: "B", deviceClass: "data_size", stateClass: "measurement")]
+    public class DriveTotalSizeSensor(ILogger<DriveTotalSizeSensor> logger) : SystemSensor<long>()
     {
-        public override Task<long> CollectAsync()
+        protected override Task<long> CollectInternalAsync()
         {
+            var driveName = Metadata.InstanceId + ":\\";
+            var driveInfo = DriveInfo.GetDrives().FirstOrDefault(di => di.Name.Equals(driveName, StringComparison.OrdinalIgnoreCase));
+
+            if (driveInfo == null)
+            {
+                logger.LogWarning("Drive {Key} not found.", driveName);
+                return Task.FromResult(0L); // Return 0 if the drive is not found
+            }
             var value = driveInfo.TotalSize;
             logger.LogDebug("Collect {Key}: {Value}", Metadata.Key, value);
             return Task.FromResult(value);

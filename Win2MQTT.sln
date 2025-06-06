@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infra", "Infra", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sensors", "Sensors", "{7FEF2422-E653-4420-87D9-B2525A50C502}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SystemSensors", "SystemSensors", "{7FEF2422-E653-4420-87D9-B2525A50C502}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Win2Mqtt.Common", "src\Win2Mqtt.Common\Win2Mqtt.Common.csproj", "{C7A61F18-4BC9-4F0D-91A0-6CD63BC5C64E}"
 EndProject
@@ -41,7 +41,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{E6E64D8F-1
 		docs\Sensors.md = docs\Sensors.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{A01ABF5F-6536-4E0A-AF5F-2C4487CB6550}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SystemActions", "SystemActions", "{A01ABF5F-6536-4E0A-AF5F-2C4487CB6550}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win2Mqtt.SystemActions", "src\Win2Mqtt.SystemActions\Win2Mqtt.SystemActions.csproj", "{5DDC641D-949E-9BFA-6249-CAD26FCB5836}"
 EndProject
@@ -51,15 +51,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "linux", "linux", "{BA9555BB
 	ProjectSection(SolutionItems) = preProject
 		setup\linux\install.sh = setup\linux\install.sh
 		setup\linux\README.md = setup\linux\README.md
-		setup\linux\win2mqtt.appsettings.example.json = setup\linux\win2mqtt.appsettings.example.json
+		setup\linux\uninstall.sh = setup\linux\uninstall.sh
+		setup\linux\win2mqtt.appsettings.template.json = setup\linux\win2mqtt.appsettings.template.json
 		setup\linux\win2mqtt.service = setup\linux\win2mqtt.service
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "windows", "windows", "{5D29573B-EDF8-4E9D-B01C-875553888242}"
 	ProjectSection(SolutionItems) = preProject
-		setup\windows\win2mqtt.appsettings.example.json = setup\windows\win2mqtt.appsettings.example.json
+		setup\windows\header.bmp = setup\windows\header.bmp
+		setup\windows\README.md = setup\windows\README.md
+		setup\windows\win2mqtt.appsettings.template.json = setup\windows\win2mqtt.appsettings.template.json
 		setup\windows\win2mqtt.ico = setup\windows\win2mqtt.ico
+		setup\windows\win2mqtt.png = setup\windows\win2mqtt.png
 		setup\windows\Win2MqttInstaller.iss = setup\windows\Win2MqttInstaller.iss
+		setup\windows\wizard.bmp = setup\windows\wizard.bmp
 	EndProjectSection
 EndProject
 Global

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Scrutor;
 
 namespace Win2Mqtt.SystemSensors.Windows
 {
@@ -10,22 +9,7 @@ namespace Win2Mqtt.SystemSensors.Windows
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddWindowsSpecificSensors(this IServiceCollection services)
-        {
-            services.Scan(scan => scan
-            .FromAssemblies([typeof(ServiceCollectionExtensions).Assembly])
-            .AddClasses(c => c.WithAttribute<MultiSensorAttribute>().AssignableTo<IMultiSensor>())
-            .AsImplementedInterfaces()
-            .WithSingletonLifetime());
-
-            services.Scan(scan => scan
-            .FromAssemblies([typeof(ServiceCollectionExtensions).Assembly])
-            .AddClasses(c => c.WithAttribute<SensorAttribute>())
-            .UsingRegistrationStrategy(RegistrationStrategy.Append)
-            .As<ISensor>()
-            .WithSingletonLifetime());
-
-            return services;
-        }
+        public static IServiceCollection AddWindowsSpecificSystemSensors(this IServiceCollection services) => 
+            services.AddSystemSensorsFromAssembly(typeof(ServiceCollectionExtensions).Assembly);
     }
 }

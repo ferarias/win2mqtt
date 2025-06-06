@@ -3,14 +3,10 @@ using System.Net.NetworkInformation;
 
 namespace Win2Mqtt.SystemSensors.Sensors
 {
-    [Sensor(
-    "networkavailability",
-    name: "Network Availability",
-    deviceClass: "connectivity",
-    isBinary: true)]
-    public class NetworkAvailabilitySensor(ILogger<NetworkAvailabilitySensor> logger) : Sensor<bool>
+    [HomeAssistantSensor(unitOfMeasurement: "availability", deviceClass: "connectivity")]
+    public class NetworkAvailabilitySensor(ILogger<NetworkAvailabilitySensor> logger) : SystemSensor<bool>
     {
-        public override Task<bool> CollectAsync()
+        protected override Task<bool> CollectInternalAsync()
         {
             var value = NetworkInterface.GetIsNetworkAvailable();
             logger.LogDebug("Collect {Key}: {Value}", Metadata.Key, value);

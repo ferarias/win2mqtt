@@ -2,20 +2,23 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Win2Mqtt.Options;
+using Win2Mqtt.SystemActions;
 using Win2Mqtt.SystemSensors;
 
 namespace Win2Mqtt.Application
 {
     public class Win2MqttBackgroundService(
         IMqttConnectionManager connectionManager,
-        ISensorFactory sensorFactory,
+        ISystemActionFactory actionFactory,
+        ISystemSensorFactory sensorFactory,
         IMessagePublisher publisher,
         IMqttSubscriber subscriber,
         IOptionsMonitor<Win2MqttOptions> options,
         ILogger<Win2MqttBackgroundService> logger) : BackgroundService
     {
         private readonly static SemaphoreSlim _semaphore = new(1, 1);
-        private readonly IEnumerable<ISensorWrapper> _activeSensors = sensorFactory.GetEnabledSensors();
+        private readonly IDictionary<string, ISystemSensor> _activeSensors = sensorFactory.GetEnabledSensors();
+        private readonly IDictionary<string, ISystemAction> _activeActions = actionFactory.GetEnabledActions();
 
 
         public override async Task StartAsync(CancellationToken stoppingToken)
@@ -24,13 +27,19 @@ namespace Win2Mqtt.Application
             // Connect to MQTT broker
             await connectionManager.ConnectAsync(stoppingToken);
 
-            // Subscribe to incoming messages
-            await subscriber.SubscribeAsync(stoppingToken);
 
-            // Publish Home Assistant discovery messages
+            // Publish Home Assistant sensor discovery messages
             foreach (var sensor in _activeSensors)
             {
-                await publisher.PublishSensorDiscoveryMessage(sensor.Metadata, stoppingToken);
+                await publisher.PublishSensorDiscoveryMessage(sensor.Value.Metadata, stoppingToken);
+            }
+
+            foreach (var action in _activeActions)
+            {
+                // Subscribe to incoming messages
+                await subscriber.SubscribeAsync(action.Value.Metadata.CommandTopic, action.Value.HandleAsync, stoppingToken);
+                // Publish Home Assistant switch discovery message
+                await publisher.PublishSwitchDiscoveryMessage(action.Value.Metadata, stoppingToken);
             }
 
             // Publish online status
@@ -54,8 +63,8 @@ namespace Win2Mqtt.Application
 
                         foreach (var sensor in _activeSensors)
                         {
-                            var sensorValue = await sensor.CollectAsync();
-                            await publisher.PublishSensorValue(sensor, sensorValue, stoppingToken);
+                            var collectedValue = await sensor.Value.CollectAsync();
+                            await publisher.PublishSensorValue(sensor.Value, collectedValue, stoppingToken);
                         }
                     }
                     finally

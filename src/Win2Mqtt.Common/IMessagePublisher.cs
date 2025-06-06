@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Win2Mqtt.SystemActions;
 using Win2Mqtt.SystemSensors;
 
 namespace Win2Mqtt
@@ -10,9 +11,11 @@ namespace Win2Mqtt
 
         Task PublishOfflineStatus(CancellationToken cancellationToken = default);
 
-        Task PublishSensorDiscoveryMessage(SensorMetadata sensor, CancellationToken cancellationToken = default);
+        Task PublishSensorDiscoveryMessage(SystemSensorMetadata sensor, CancellationToken cancellationToken = default);
 
-        Task PublishSensorValue(ISensorWrapper sensor, object? value, CancellationToken cancellationToken = default);
+        Task PublishSwitchDiscoveryMessage(SystemActionMetadata metadata, CancellationToken cancellationToken = default);
+
+        Task PublishSensorValue(ISystemSensor sensor, object? value, CancellationToken cancellationToken = default);
 
     }
 }

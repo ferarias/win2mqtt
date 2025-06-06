@@ -8,7 +8,7 @@ namespace Win2Mqtt.Application
     {
         public static IServiceCollection AddWin2MqttApplication(this IServiceCollection services) =>
             services
-            .AddSingleton<ISensorFactory, SensorFactory>()
-            .AddTransient<IIncomingMessagesProcessor, IncomingMessagesProcessor>();
+            .AddSingleton<ISystemSensorFactory, SystemSensorFactory>()
+            .AddSingleton<ISystemActionFactory, SystemActionFactory>();
     }
 }

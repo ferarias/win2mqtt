@@ -7,7 +7,7 @@ namespace Win2Mqtt.HomeAssistant
     {
         public static IServiceCollection AddHomeAssistant(this IServiceCollection services) =>
             services
-            .AddSingleton<ISensorValueFormatter, HomeAssistantSensorValueFormatter>()
+            .AddSingleton<ISystemSensorValueFormatter, HomeAssistantSensorValueFormatter>()
             .AddSingleton<IMessagePublisher, HomeAssistantPublisher>();
     }
 }

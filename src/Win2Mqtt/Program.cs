@@ -29,12 +29,14 @@ try
     Log.Information("Start application.");
 
     var builder = Host.CreateApplicationBuilder(args);
+#if !DEBUG
 #if WINDOWS
     var appDataConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), Constants.AppId, Constants.UserAppSettingsFile);
     builder.Configuration.AddJsonFile(appDataConfigPath, optional: true);
 #else
     var appDataConfigPath = Path.Combine("/etc/", Constants.AppId.ToLowerInvariant(), Constants.UserAppSettingsFile);
     builder.Configuration.AddJsonFile(appDataConfigPath, optional: true);
+#endif
 #endif
 
     builder.Services
@@ -56,7 +58,7 @@ try
         .AddSystemSensors();
 #if WINDOWS
     builder.Services
-        .AddWindowsSpecificSensors()
+        .AddWindowsSpecificSystemSensors()
         .AddWindowsSpecificSystemActions()
         .AddWindowsService(options => options.ServiceName = $"{Constants.AppId} Service");
 #endif

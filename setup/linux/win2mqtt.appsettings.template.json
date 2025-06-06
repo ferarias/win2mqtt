@@ -27,7 +27,7 @@
             }
         },
         "MultiSensors": {
-            "Drives": {
+            "Drive": {
                 "enabled": false,
                 "Sensors": {
                     "DriveFreeSize": {

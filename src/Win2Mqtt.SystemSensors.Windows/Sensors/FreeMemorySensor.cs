@@ -3,10 +3,11 @@ using System.Runtime.InteropServices;
 
 namespace Win2Mqtt.SystemSensors.Windows.Sensors
 {
-    [Sensor("freememory", name: "Free Memory", unitOfMeasurement: "B", deviceClass: "memory", stateClass: "measurement")]
-    public partial class FreeMemorySensor(ILogger<FreeMemorySensor> logger) : Sensor<double>
+    [HomeAssistantSensor(unitOfMeasurement: "B", deviceClass: "memory", stateClass: "measurement")]
+    public partial class FreeMemorySensor(ILogger<FreeMemorySensor> logger) : SystemSensor<double>
     {
-        public override async Task<double> CollectAsync()
+        protected override async Task<double> CollectInternalAsync()
+
         {
             var value = await GetFreeMemoryAsync();
             logger.LogDebug("Collect {Key}: {Value} B", Metadata.Key, value);

@@ -3,13 +3,14 @@ using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Win2Mqtt.Options;
+using Win2Mqtt.SystemActions;
 using Win2Mqtt.SystemSensors;
 
 namespace Win2Mqtt.HomeAssistant
 {
     public class HomeAssistantPublisher(
         IMqttPublisher mqttPublisher,
-        ISensorValueFormatter sensorValueFormatter,
+        ISystemSensorValueFormatter sensorValueFormatter,
         IOptions<Win2MqttOptions> options,
         ILogger<HomeAssistantPublisher> logger)
         : IMessagePublisher
@@ -44,16 +45,16 @@ namespace Win2Mqtt.HomeAssistant
             logger.LogDebug("Published HA offline status for {Topic}", statusTopic);
         }
 
-        public async Task PublishSensorValue(ISensorWrapper sensor, object? value, CancellationToken cancellationToken = default)
+        public async Task PublishSensorValue(ISystemSensor sensor, object? value, CancellationToken cancellationToken = default)
         {
-            if (sensor.Metadata.SensorStateTopic == null)
+            if (sensor.Metadata.StateTopic == null)
             {
                 logger.LogWarning("Sensor {Sensor} has no state topic", sensor.Metadata.Key);
                 return;
             }
             try
             {
-                await mqttPublisher.PublishAsync(sensor.Metadata.SensorStateTopic, sensorValueFormatter.Format(value), false, cancellationToken: cancellationToken);
+                await mqttPublisher.PublishAsync(sensor.Metadata.StateTopic, sensorValueFormatter.Format(value), false, cancellationToken: cancellationToken);
             }
             catch (Exception ex)
             {
@@ -61,14 +62,14 @@ namespace Win2Mqtt.HomeAssistant
             }
         }
 
-        public async Task PublishSensorDiscoveryMessage(SensorMetadata metadata, CancellationToken cancellationToken = default)
+        public async Task PublishSensorDiscoveryMessage(SystemSensorMetadata metadata, CancellationToken cancellationToken = default)
         {
-            if (metadata.SensorStateTopic == null)
+            if (metadata.StateTopic == null)
             {
                 logger.LogWarning("Sensor {Sensor} has no state topic", metadata.Key);
                 return;
             }
-            if (string.IsNullOrWhiteSpace(metadata.SensorUniqueId))
+            if (string.IsNullOrWhiteSpace(metadata.UniqueId))
             {
                 logger.LogWarning("Sensor {Sensor} has no unique ID", metadata.Key);
                 return;
@@ -77,8 +78,8 @@ namespace Win2Mqtt.HomeAssistant
             var payloadDict = new Dictionary<string, object>
             {
                 ["name"] = metadata.Name,
-                ["state_topic"] = metadata.SensorStateTopic,
-                ["unique_id"] = metadata.SensorUniqueId,
+                ["state_topic"] = metadata.StateTopic,
+                ["unique_id"] = metadata.UniqueId,
                 ["availability_topic"] = $"{options.Value.MqttBaseTopic}/status",
                 ["device"] = DeviceInfo
             };
@@ -94,23 +95,59 @@ namespace Win2Mqtt.HomeAssistant
                 payloadDict["payload_on"] = "1";
                 payloadDict["payload_off"] = "0";
 
-                discoveryTopic = $"{HABaseTopic}/binary_sensor/{metadata.SensorUniqueId}/config";
+                discoveryTopic = $"{HABaseTopic}/binary_sensor/{metadata.UniqueId}/config";
             }
             else
             {
-                discoveryTopic = $"{HABaseTopic}/sensor/{metadata?.SensorUniqueId}/config";
+                discoveryTopic = $"{HABaseTopic}/sensor/{metadata?.UniqueId}/config";
             }
 
 
 
             await mqttPublisher.PublishAsync(
-            discoveryTopic,
-                    JsonSerializer.Serialize(payloadDict, jsonSerializerOptions),
-                    retain: true,
-                    cancellationToken: cancellationToken);
+                discoveryTopic,
+                JsonSerializer.Serialize(payloadDict, jsonSerializerOptions),
+                retain: true,
+                cancellationToken: cancellationToken);
 
-            logger.LogInformation("Published HA binary_sensor config for {sensor}", metadata?.Key);
+            logger.LogInformation("Published HA sensor discovery message for {Sensor} in {Topic}", metadata?.Key, discoveryTopic);
 
+        }
+
+        public async Task PublishSwitchDiscoveryMessage(SystemActionMetadata metadata, CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(metadata?.CommandTopic))
+            {
+                logger.LogWarning("Switch {Switch} has no command topic", metadata?.Key);
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(metadata?.UniqueId))
+            {
+                logger.LogWarning("Switch {Switch} has no unique ID", metadata?.Key);
+                return;
+            }
+
+            var payloadDict = new Dictionary<string, object>
+            {
+                ["name"] = metadata.Name,
+                ["state_topic"] = metadata.StateTopic,
+                ["unique_id"] = metadata.UniqueId,
+                ["availability_topic"] = $"{options.Value.MqttBaseTopic}/status",
+                ["command_topic"] = metadata.CommandTopic,
+                ["payload_on"] = "ON",
+                ["payload_off"] = "OFF",
+                ["device"] = DeviceInfo
+            };
+
+            var discoveryTopic = $"{HABaseTopic}/switch/{metadata.UniqueId}/config";
+
+            await mqttPublisher.PublishAsync(
+                discoveryTopic,
+                JsonSerializer.Serialize(payloadDict, jsonSerializerOptions),
+                retain: true,
+                cancellationToken: cancellationToken);
+
+            logger.LogInformation("Published HA switch discovery message for {Switch} in {Topic}", metadata?.Key, discoveryTopic);
         }
     }
 }
