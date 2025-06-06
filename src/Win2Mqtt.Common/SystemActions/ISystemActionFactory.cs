@@ -4,6 +4,7 @@ namespace Win2Mqtt.SystemActions
 {
     public interface ISystemActionFactory
     {
-        public IDictionary<string, ISystemActionWrapper> GetEnabledActions();
+        IDictionary<string, ISystemAction> GetEnabledActions();
     }
+
 }

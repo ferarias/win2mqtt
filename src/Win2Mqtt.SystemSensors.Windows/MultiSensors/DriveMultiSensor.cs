@@ -1,6 +1,6 @@
 ﻿namespace Win2Mqtt.SystemSensors.Windows.MultiSensors
 {
-    public class DrivesMultiSensor() : SystemMultiSensorBase
+    public class DriveMultiSensor() : SystemMultiSensorBase
     {
         public override IEnumerable<string> ChildIdentifiers => GetDriveLetters();
 

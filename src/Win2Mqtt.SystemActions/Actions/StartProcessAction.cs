@@ -3,9 +3,9 @@ using System.Text.Json;
 
 namespace Win2Mqtt.SystemActions.Actions
 {
-    public class StartProcessHandler : SystemAction
+    public class StartProcessAction : SystemAction<Unit>
     {
-        public override Task HandleAsync(string payload, CancellationToken cancellationToken)
+        public override async Task<Unit> HandleCoreAsync(string payload, CancellationToken cancellationToken)
         {
             var commandParameters = JsonSerializer.Deserialize<CommandParameters>(payload);
             if (commandParameters != null)
@@ -24,10 +24,9 @@ namespace Win2Mqtt.SystemActions.Actions
 
                 };
                 var runningProcess = Process.Start(startInfo) ?? throw new InvalidOperationException($"Failed to start process: {commandParameters.CommandString}");
-                return runningProcess.WaitForExitAsync(cancellationToken);
-
+                await runningProcess.WaitForExitAsync(cancellationToken);
             }
-            return Task.CompletedTask;
+            return Unit.Default;
         }
     }
 

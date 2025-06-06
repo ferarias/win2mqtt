@@ -17,8 +17,8 @@ namespace Win2Mqtt.Application
         ILogger<Win2MqttBackgroundService> logger) : BackgroundService
     {
         private readonly static SemaphoreSlim _semaphore = new(1, 1);
-        private readonly IEnumerable<ISystemSensor> _activeSensors = sensorFactory.GetEnabledSensors().Select(kv => kv.Value);
-        private readonly IEnumerable<ISystemActionWrapper> _activeActions = actionFactory.GetEnabledActions().Select(kv => kv.Value);
+        private readonly IDictionary<string, ISystemSensor> _activeSensors = sensorFactory.GetEnabledSensors();
+        private readonly IDictionary<string, ISystemAction> _activeActions = actionFactory.GetEnabledActions();
 
 
         public override async Task StartAsync(CancellationToken stoppingToken)
@@ -27,18 +27,19 @@ namespace Win2Mqtt.Application
             // Connect to MQTT broker
             await connectionManager.ConnectAsync(stoppingToken);
 
-            // Subscribe to incoming messages
-            await subscriber.SubscribeAsync(stoppingToken);
 
             // Publish Home Assistant sensor discovery messages
             foreach (var sensor in _activeSensors)
             {
-                await publisher.PublishSensorDiscoveryMessage(sensor.Metadata, stoppingToken);
+                await publisher.PublishSensorDiscoveryMessage(sensor.Value.Metadata, stoppingToken);
             }
-            // Publish Home Assistant switch discovery messages
+
             foreach (var action in _activeActions)
             {
-                await publisher.PublishSwitchDiscoveryMessage(action.Metadata, stoppingToken);
+                // Subscribe to incoming messages
+                await subscriber.SubscribeAsync(action.Value.Metadata.CommandTopic, action.Value.HandleAsync, stoppingToken);
+                // Publish Home Assistant switch discovery message
+                await publisher.PublishSwitchDiscoveryMessage(action.Value.Metadata, stoppingToken);
             }
 
             // Publish online status
@@ -62,8 +63,8 @@ namespace Win2Mqtt.Application
 
                         foreach (var sensor in _activeSensors)
                         {
-                            var sensorValue = await sensor.CollectAsync();
-                            await publisher.PublishSensorValue(sensor, sensorValue, stoppingToken);
+                            var collectedValue = await sensor.Value.CollectAsync();
+                            await publisher.PublishSensorValue(sensor.Value, collectedValue, stoppingToken);
                         }
                     }
                     finally

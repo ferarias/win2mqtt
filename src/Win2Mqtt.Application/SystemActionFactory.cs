@@ -16,57 +16,46 @@ namespace Win2Mqtt.Application
         private readonly Win2MqttOptions _options = options.Value;
         private static readonly Dictionary<string, (Type HandlerType, PropertyInfo? ReturnProperty)> _handlers = [];
 
-        public IDictionary<string, ISystemActionWrapper> GetEnabledActions()
+        public IDictionary<string, ISystemAction> GetEnabledActions()
         {
-            var actions = new Dictionary<string, ISystemActionWrapper>(StringComparer.OrdinalIgnoreCase);
-            foreach (var (listenerName, listenerOptions) in _options.Listeners)
+            var allActions = serviceProvider.GetServices<ISystemAction>();
+            var result = new Dictionary<string, ISystemAction>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var (actionKey, actionOptions) in _options.Listeners)
             {
-                if (listenerOptions.Enabled)
+                if (!actionOptions.Enabled)
                 {
-                    var handlerType = GetHandlerTypeByKey(listenerName);
-                    if (handlerType == null)
-                    {
-                        logger.LogWarning("No handler registered for listener `{Listener}`", listenerName);
-                        continue;
-                    }
-                    if (serviceProvider.GetRequiredService(handlerType) is ISystemActionWrapper handler)
-                    {
-                        // if topic is set in options, overwrite what's set in attribute
-                        var topicName = string.IsNullOrWhiteSpace(listenerOptions.Topic) 
-                            ? SanitizeHelpers.Sanitize(listenerName) 
-                            : SanitizeHelpers.Sanitize(listenerOptions.Topic);
-
-                        var uniqueId = $"{_options.DeviceUniqueId}_{SanitizeHelpers.Sanitize(listenerName)}";
-                        handler.Metadata = new SystemActionMetadata
-                        {
-                            Key = listenerName,
-                            Name = handlerType.Name.Replace("Handler", string.Empty),
-                            UniqueId = uniqueId,
-                            StateTopic = $"{_options.MqttBaseTopic}/{topicName}",
-                            CommandTopic = $"{_options.MqttBaseTopic}/{topicName}"
-                        };
-                        actions.Add(listenerName, handler);
-                    }
+                    logger.LogInformation("Action {Action} is disabled in configuration", actionKey);
+                    continue;
                 }
+
+                var matching = allActions.FirstOrDefault(a => a.GetType().Name.Equals(actionKey + "Action", StringComparison.OrdinalIgnoreCase));
+
+                if (matching == null)
+                {
+                    logger.LogWarning("No matching ISystemAction implementation found for key: {Action}", actionKey);
+                    continue;
+                }
+
+                var topic = string.IsNullOrWhiteSpace(actionOptions.Topic)
+                    ? SanitizeHelpers.Sanitize(actionKey)
+                    : SanitizeHelpers.Sanitize(actionOptions.Topic);
+
+                var uniqueId = $"{_options.DeviceUniqueId}_{SanitizeHelpers.Sanitize(actionKey)}";
+
+                matching.Metadata = new SystemActionMetadata
+                {
+                    Key = actionKey,
+                    Name = matching.GetType().Name.Replace("Action", ""),
+                    UniqueId = uniqueId,
+                    StateTopic = $"{_options.MqttBaseTopic}/{topic}",
+                    CommandTopic = $"{_options.MqttBaseTopic}/{topic}"
+                };
+
+                result[actionKey] = matching;
             }
-            return actions;
+
+            return result;
         }
-
-        private static Type? GetHandlerTypeByKey(string key)
-        {
-            var typeName = key + "Handler";
-            var type = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .FirstOrDefault(t => t.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase)
-                                  && (typeof(ISystemAction).IsAssignableFrom(t) || ImplementsIMqttActionHandlerGeneric(t)));
-
-            return type ?? null;
-        }
-
-        private static bool ImplementsIMqttActionHandlerGeneric(Type type)
-        {
-            return type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISystemAction<>));
-        }
-
     }
 }

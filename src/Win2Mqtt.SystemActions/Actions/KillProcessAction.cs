@@ -2,9 +2,9 @@
 
 namespace Win2Mqtt.SystemActions.Actions
 {
-    public class KillProcessHandler : SystemAction<bool>
+    public class KillProcessAction : SystemAction<bool>
     {
-        public override Task<bool> HandleAsync(string payload, CancellationToken cancellationToken)
+        public override Task<bool> HandleCoreAsync(string payload, CancellationToken cancellationToken)
         {
             try
             {
@@ -14,8 +14,9 @@ namespace Win2Mqtt.SystemActions.Actions
                 }
                 return Task.FromResult(true);
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"Error killing process: {ex.Message}");
                 return Task.FromResult(false);
             }
         }

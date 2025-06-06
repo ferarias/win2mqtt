@@ -21,7 +21,7 @@ namespace Win2Mqtt.SystemSensors
                     .As<ISystemSensor>()
                     .WithSingletonLifetime())
                 .Scan(scan => scan
-                    .FromAssembliesOf([typeof(ServiceCollectionExtensions)])
+                    .FromAssemblyDependencies(assembly)
                     .AddClasses(c => c.AssignableTo<ISystemMultiSensor>(), publicOnly: true)
                     .As<ISystemMultiSensor>()
                     .WithSingletonLifetime());
@@ -54,7 +54,7 @@ namespace Win2Mqtt.SystemSensors
                 foreach (var sensorType in sensorTypes)
                 {
                     var key = $"{sensorType.Name}_{id}";
-                    services.AddKeyedSingleton(typeof(ISystemSensor), sensorType, key);
+                    services.AddKeyedSingleton(typeof(ISystemSensor), key, sensorType);
                 }
             }
             return services;

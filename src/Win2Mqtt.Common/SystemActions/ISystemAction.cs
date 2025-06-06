@@ -3,14 +3,11 @@ using System.Threading.Tasks;
 
 namespace Win2Mqtt.SystemActions
 {
-    public interface ISystemAction : ISystemActionWrapper
+    public interface ISystemAction
     {
-        Task HandleAsync(string payload, CancellationToken cancellationToken);
-    }
+        SystemActionMetadata Metadata { get; set; }
 
-    public interface ISystemAction<T> : ISystemActionWrapper
-    {
-        Task<T> HandleAsync(string payload, CancellationToken cancellationToken);
+        Task<object?> HandleAsync(string payload, CancellationToken cancellationToken);
     }
 
 }

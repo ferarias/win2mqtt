@@ -8,7 +8,7 @@ namespace Win2Mqtt.SystemActions
         public static IServiceCollection AddSystemActionsFromAssembly(this IServiceCollection services, Assembly assembly) =>
             services.Scan(scan => scan
             .FromAssemblyDependencies(assembly)
-            .AddClasses(classes => classes.AssignableTo<ISystemActionWrapper>())
+            .AddClasses(classes => classes.AssignableTo<ISystemAction>())
             .AsSelf()
             .AsImplementedInterfaces()
             .WithSingletonLifetime());
