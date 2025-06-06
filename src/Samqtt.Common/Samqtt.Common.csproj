@@ -3,7 +3,7 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<OutputType>Library</OutputType>
 		<LanguageVersion>latest</LanguageVersion>
-		<RootNamespace>Win2Mqtt</RootNamespace>
+		<RootNamespace>Samqtt</RootNamespace>
 		<Nullable>enable</Nullable>
 		<Configurations>Debug;Release</Configurations>
 	</PropertyGroup>

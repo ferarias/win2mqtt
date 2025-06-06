@@ -7,7 +7,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <OutputType>exe</OutputType>
-        <AssemblyName>win2mqtt</AssemblyName>
+        <AssemblyName>Samqtt</AssemblyName>
         <Configurations>Debug;Release</Configurations>
     </PropertyGroup>
 
@@ -33,14 +33,14 @@
 
     <ItemGroup Condition="'$(TargetFramework)'=='net8.0-windows8.0'">
         <PackageReference Include="CliWrap" Version="3.8.2" />
-        <ProjectReference Include="..\Win2Mqtt.SystemSensors.Windows\Win2Mqtt.SystemSensors.Windows.csproj" />
-        <ProjectReference Include="..\Win2Mqtt.SystemActions.Windows\Win2Mqtt.SystemActions.Windows.csproj" />
+        <ProjectReference Include="..\Samqtt.SystemSensors.Windows\Samqtt.SystemSensors.Windows.csproj" />
+        <ProjectReference Include="..\Samqtt.SystemActions.Windows\Samqtt.SystemActions.Windows.csproj" />
     </ItemGroup>
     
     <ItemGroup>
-        <ProjectReference Include="..\Win2Mqtt.Application\Win2Mqtt.Application.csproj" />
-        <ProjectReference Include="..\Win2Mqtt.SystemSensors\Win2Mqtt.SystemSensors.csproj" />
-        <ProjectReference Include="..\Win2Mqtt.SystemActions\Win2Mqtt.SystemActions.csproj" />
+        <ProjectReference Include="..\Samqtt.Application\Samqtt.Application.csproj" />
+        <ProjectReference Include="..\Samqtt.SystemSensors\Samqtt.SystemSensors.csproj" />
+        <ProjectReference Include="..\Samqtt.SystemActions\Samqtt.SystemActions.csproj" />
     </ItemGroup>
 
 </Project>
