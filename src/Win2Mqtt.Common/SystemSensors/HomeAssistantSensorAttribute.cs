@@ -2,7 +2,7 @@
 
 namespace Win2Mqtt.SystemSensors
 {
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public sealed class HomeAssistantSensorAttribute(string? unitOfMeasurement = null, string? deviceClass = null, string? stateClass = null) : Attribute
     {
         public string? UnitOfMeasurement { get; } = unitOfMeasurement;

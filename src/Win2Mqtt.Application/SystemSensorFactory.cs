@@ -59,6 +59,7 @@ namespace Win2Mqtt.Application
                 var uniqueId = $"{_options.DeviceUniqueId}_{SanitizeHelpers.Sanitize(sensorName)}";
                 var isBinary = ReturnsBinaryValue(t);
 
+                
                 sensorInstance.Metadata = CreateMetadata(
                     sensorName,
                     t.Name.Replace("Sensor", string.Empty),
@@ -97,17 +98,6 @@ namespace Win2Mqtt.Application
                     logger.LogWarning("DI could not resolve multi-sensor `{Sensor}` of type {Type}", multisensorName, t.FullName);
                     continue;
                 }
-
-                var topicName = SanitizeTopicOrDefault(multisensorName, multisensorOpts.Topic);
-                var uniqueId = $"{_options.DeviceUniqueId}_{SanitizeHelpers.Sanitize(multisensorName)}";
-
-                multisensorInstance.Metadata = CreateMetadata(
-                    key: multisensorName,
-                    name: t.Name.Replace("MultiSensor", string.Empty),
-                    topic: topicName,
-                    uniqueId: uniqueId,
-                    isBinary: false
-                );
 
                 yield return new KeyValuePair<string, ISystemMultiSensor>(multisensorName, multisensorInstance);
             }
@@ -149,7 +139,7 @@ namespace Win2Mqtt.Application
                         continue;
                     }
 
-                    var baseTopic = parentMultiSensor.Metadata.StateTopic;
+                    var baseTopic = SanitizeTopicOrDefault(parentMultisensorName, multiOpts.Topic);
                     var childTopicFragment = SanitizeTopicOrDefault(instanceSensorName, sensorOpts.Topic);
                     var childTopicName = $"{baseTopic}_{childTopicFragment}";
                     var uniqueId = $"{_options.DeviceUniqueId}_{SanitizeHelpers.Sanitize(instanceSensorName)}";
@@ -170,14 +160,27 @@ namespace Win2Mqtt.Application
             }
         }
 
-        private static Type? ResolveSensorType<T>(string baseName, string suffix)
+        private SystemSensorMetadata CreateMetadata<T>(string sensorName, string defaultSensorTopicName, string? instanceId = null) where T : ISystemSensor
         {
-            var typeName = baseName + suffix;
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .FirstOrDefault(x =>
-                    x.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase)
-                    && typeof(T).IsAssignableFrom(x));
+            Type sensorType = typeof(T);
+            var isBinary = ReturnsBinaryValue(sensorType);
+
+            var sm = new SystemSensorMetadata
+            {
+                Key = sensorName,
+                Name = sensorType.Name.Replace("Sensor", string.Empty),
+                UniqueId = $"{_options.DeviceUniqueId}_{SanitizeHelpers.Sanitize(sensorName)}",
+                StateTopic = $"{_options.MqttBaseTopic}/{SanitizeTopicOrDefault(sensorName, defaultSensorTopicName)}",
+                IsBinary = isBinary,
+                InstanceId = instanceId
+            };
+            if (Attribute.GetCustomAttribute(sensorType, typeof(HomeAssistantSensorAttribute)) is HomeAssistantSensorAttribute haAttr)
+            {
+                sm.UnitOfMeasurement = haAttr.UnitOfMeasurement;
+                sm.DeviceClass = haAttr.DeviceClass;
+                sm.StateClass = haAttr.StateClass;
+            }
+            return sm;
         }
 
         private SystemSensorMetadata CreateMetadata(string key, string name, string topic, string uniqueId, bool isBinary, string? instanceId = null)
@@ -191,6 +194,16 @@ namespace Win2Mqtt.Application
                 IsBinary = isBinary,
                 InstanceId = instanceId
             };
+        }
+
+        private static Type? ResolveSensorType<T>(string baseName, string suffix)
+        {
+            var typeName = baseName + suffix;
+            return AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes())
+                .FirstOrDefault(x =>
+                    x.Name.Equals(typeName, StringComparison.OrdinalIgnoreCase)
+                    && typeof(T).IsAssignableFrom(x));
         }
 
         private static string SanitizeTopicOrDefault(string fallback, string? topic) => 
