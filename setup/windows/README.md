@@ -1,9 +1,9 @@
-# Win2MQTT - README
+# SAMQTT - README
 
-App is installed in `%ProgramFiles%\Win2Mqtt` or `%ProgramFiles(x86)%\Win2Mqtt`
+App is installed in `%ProgramFiles%\SAMQTT` or `%ProgramFiles(x86)%\SAMQTT`
 
-Settings are stored in `%PROGRAMDATA%\Win2Mqtt\win2mqtt.appsettings.json`
+Settings are stored in `%PROGRAMDATA%\SAMQTT\samqtt.appsettings.json`
 
-You can see an example configuration here: `%PROGRAMDATA%\Win2Mqtt\win2mqtt.appsettings.example.json`
+You can see an example configuration here: `%PROGRAMDATA%\SAMQTT\samqtt.appsettings.example.json`
 
-More info in the repo: https://github.com/ferarias/win2mqtt
+More info in the repo: https://github.com/ferarias/samqtt

@@ -38,7 +38,7 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Restore dependencies
-      run: dotnet restore src/Win2Mqtt/Win2Mqtt.csproj
+      run: dotnet restore src/Samqtt/Samqtt.csproj
 
     - name: Build
       run: dotnet build --configuration Release --no-restore
@@ -48,25 +48,25 @@ jobs:
 
     - name: Publish (only on tag)
       if: startsWith(github.ref, 'refs/tags/v')
-      run: dotnet publish src/Win2Mqtt/Win2Mqtt.csproj --configuration ${{ matrix.configuration }} --framework ${{ matrix.framework }} --runtime ${{ matrix.rid }} --self-contained --output ${{ matrix.output }}
+      run: dotnet publish src/Samqtt/Samqtt.csproj --configuration ${{ matrix.configuration }} --framework ${{ matrix.framework }} --runtime ${{ matrix.rid }} --self-contained --output ${{ matrix.output }}
 
     - name: Prepare Linux release folder
       if: matrix.os == 'ubuntu-latest' && startsWith(github.ref, 'refs/tags/v')
       run: |
-        mkdir -p dist/win2mqtt
-        cp -r ${{ matrix.output }}/* dist/win2mqtt/
-        cp -r ./setup/linux/* dist/win2mqtt/
+        mkdir -p dist/samqtt
+        cp -r ${{ matrix.output }}/* dist/samqtt/
+        cp -r ./setup/linux/* dist/samqtt/
 
     - name: Compress artifacts on Linux
       if: matrix.os == 'ubuntu-latest' && startsWith(github.ref, 'refs/tags/v')
       run: |
-        tar -czf win2mqtt-${{ matrix.os }}.tar.gz -C dist win2mqtt
+        tar -czf samqtt-${{ matrix.os }}.tar.gz -C dist samqtt
 
     - name: Compress artifacts on Windows
       if: matrix.os == 'windows-latest' && startsWith(github.ref, 'refs/tags/v')
       run: |
         cd ${{ matrix.output }}
-        Compress-Archive -Path * -DestinationPath ..\..\win2mqtt-${{ matrix.os }}.zip
+        Compress-Archive -Path * -DestinationPath ..\..\samqtt-${{ matrix.os }}.zip
 
     - name: Install Inno Setup on Windows
       if: matrix.os == 'windows-latest' && startsWith(github.ref, 'refs/tags/v')
@@ -77,21 +77,21 @@ jobs:
     - name: Build Setup Script
       if: matrix.os == 'windows-latest' && startsWith(github.ref, 'refs/tags/v')
       run: |
-        & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" setup\windows\Win2MqttInstaller.iss /DMyAppVersion=${{ github.ref_name }}
+        & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" setup\windows\SamqttInstaller.iss /DMyAppVersion=${{ github.ref_name }}
 
     - name: Upload compressed artifact (only on tag)
       if: startsWith(github.ref, 'refs/tags/v')
       uses: actions/upload-artifact@v4
       with:
-        name: win2mqtt-${{ matrix.os }}.${{ matrix.os == 'ubuntu-latest' && 'tar.gz' || 'zip' }}
-        path: win2mqtt-${{ matrix.os }}.${{ matrix.os == 'ubuntu-latest' && 'tar.gz' || 'zip' }}
+        name: samqtt-${{ matrix.os }}.${{ matrix.os == 'ubuntu-latest' && 'tar.gz' || 'zip' }}
+        path: samqtt-${{ matrix.os }}.${{ matrix.os == 'ubuntu-latest' && 'tar.gz' || 'zip' }}
 
     - name: Upload installer exe (only on tag)
       if: matrix.os == 'windows-latest' && startsWith(github.ref, 'refs/tags/v')
       uses: actions/upload-artifact@v4
       with:
-        name: Win2MqttSetup.exe
-        path: publish/setup/Win2MqttSetup.exe
+        name: SamqttSetup.exe
+        path: publish/setup/SamqttSetup.exe
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
@@ -108,8 +108,8 @@ jobs:
         tag_name: ${{ github.ref_name }}
         name: Release ${{ github.ref_name }}
         files: |
-          artifacts/win2mqtt-ubuntu-latest.tar.gz/win2mqtt-ubuntu-latest.tar.gz
-          artifacts/win2mqtt-windows-latest.zip/win2mqtt-windows-latest.zip
-          artifacts/Win2MqttSetup.exe/Win2MqttSetup.exe
+          artifacts/samqtt-ubuntu-latest.tar.gz/samqtt-ubuntu-latest.tar.gz
+          artifacts/samqtt-windows-latest.zip/samqtt-windows-latest.zip
+          artifacts/SamqttSetup.exe/SamqttSetup.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,14 +1,14 @@
 #!/bin/bash
 
-SERVICE_NAME=win2mqtt
+SERVICE_NAME=samqtt
 INSTALL_DIR=/opt/$SERVICE_NAME
 
 CONFIG_DIR=/etc/$SERVICE_NAME
 SERVICE_FILE=$SERVICE_NAME.service
 ENV_FILE=$CONFIG_DIR/env
 
-CONFIG_FILE=$CONFIG_DIR/win2mqtt.appsettings.json
-TEMPLATE_FILE=win2mqtt.appsettings.template.json
+CONFIG_FILE=$CONFIG_DIR/samqtt.appsettings.json
+TEMPLATE_FILE=samqtt.appsettings.template.json
 USER_NAME=$SERVICE_NAME
 
 set -e
