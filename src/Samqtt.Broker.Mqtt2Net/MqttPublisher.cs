@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using MQTTnet;
 using MQTTnet.Protocol;
 
-namespace Win2Mqtt.Broker.MQTTNet
+namespace Samqtt.Broker.MQTTNet
 {
     public class MqttPublisher(IMqttClient client, ILogger<MqttPublisher> logger) : IMqttPublisher
     {

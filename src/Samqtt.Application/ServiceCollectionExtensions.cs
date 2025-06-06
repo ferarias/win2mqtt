@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Win2Mqtt.SystemActions;
-using Win2Mqtt.SystemSensors;
+using Samqtt.SystemActions;
+using Samqtt.SystemSensors;
 
-namespace Win2Mqtt.Application
+namespace Samqtt.Application
 {
     public static class ServiceCollectionExtensions
     {

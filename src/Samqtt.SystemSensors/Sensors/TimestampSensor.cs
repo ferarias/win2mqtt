@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Win2Mqtt.SystemSensors.Sensors
+namespace Samqtt.SystemSensors.Sensors
 {
     [HomeAssistantSensor(deviceClass: "timestamp")]
     public class TimestampSensor(ILogger<TimestampSensor> logger) : SystemSensor<DateTime>

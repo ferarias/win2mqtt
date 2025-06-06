@@ -1,4 +1,4 @@
-﻿namespace Win2Mqtt
+﻿namespace Samqtt
 {
     public static class MessageExtensions
     {

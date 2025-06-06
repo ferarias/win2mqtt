@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Win2Mqtt.SystemSensors
+namespace Samqtt.SystemSensors
 {
     public static class ServiceCollectionExtensions
     {

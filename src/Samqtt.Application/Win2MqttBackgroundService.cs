@@ -1,20 +1,20 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Win2Mqtt.Options;
-using Win2Mqtt.SystemActions;
-using Win2Mqtt.SystemSensors;
+using Samqtt.Options;
+using Samqtt.SystemActions;
+using Samqtt.SystemSensors;
 
-namespace Win2Mqtt.Application
+namespace Samqtt.Application
 {
-    public class Win2MqttBackgroundService(
+    public class SamqttBackgroundService(
         IMqttConnectionManager connectionManager,
         ISystemActionFactory actionFactory,
         ISystemSensorFactory sensorFactory,
         IMessagePublisher publisher,
         IMqttSubscriber subscriber,
-        IOptionsMonitor<Win2MqttOptions> options,
-        ILogger<Win2MqttBackgroundService> logger) : BackgroundService
+        IOptionsMonitor<SamqttOptions> options,
+        ILogger<SamqttBackgroundService> logger) : BackgroundService
     {
         private readonly static SemaphoreSlim _semaphore = new(1, 1);
         private readonly IDictionary<string, ISystemSensor> _activeSensors = sensorFactory.GetEnabledSensors();

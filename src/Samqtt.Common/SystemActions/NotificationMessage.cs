@@ -1,4 +1,4 @@
-﻿namespace Win2Mqtt.SystemActions
+﻿namespace Samqtt.SystemActions
 {
     public class NotificationMessage
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Win2Mqtt.SystemSensors;
+using Samqtt.SystemSensors;
 
-namespace Win2Mqtt.HomeAssistant
+namespace Samqtt.HomeAssistant
 {
     public static class ServiceCollectionExtensions
     {

@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
 
-namespace Win2Mqtt.SystemActions.Actions
+namespace Samqtt.SystemActions.Actions
 {
     public class StartProcessAction : SystemAction<Unit>
     {

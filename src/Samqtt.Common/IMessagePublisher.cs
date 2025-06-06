@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Win2Mqtt.SystemActions;
-using Win2Mqtt.SystemSensors;
+using Samqtt.SystemActions;
+using Samqtt.SystemSensors;
 
-namespace Win2Mqtt
+namespace Samqtt
 {
     public interface IMessagePublisher
     {

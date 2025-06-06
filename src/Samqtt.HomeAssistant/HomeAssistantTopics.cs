@@ -1,4 +1,4 @@
-﻿namespace Win2Mqtt.HomeAssistant
+﻿namespace Samqtt.HomeAssistant
 {
     public static class HomeAssistantTopics
     {

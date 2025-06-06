@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
-namespace Win2Mqtt.SystemSensors.Windows.Sensors
+namespace Samqtt.SystemSensors.Windows.Sensors
 {
     [HomeAssistantSensor(unitOfMeasurement: "%", stateClass: "measurement")]
     public class CpuProcessorTimeSensor(ILogger<CpuProcessorTimeSensor> logger) : SystemSensor<double>

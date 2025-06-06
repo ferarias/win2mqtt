@@ -1,4 +1,4 @@
-﻿namespace Win2Mqtt.SystemActions.Windows.Actions
+﻿namespace Samqtt.SystemActions.Windows.Actions
 {
     public class SuspendAction : SystemAction<Unit>
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Win2Mqtt.Options
+namespace Samqtt.Options
 {
     public class MqttBrokerOptions
     {

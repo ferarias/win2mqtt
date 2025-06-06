@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Win2Mqtt.Options
+namespace Samqtt.Options
 {
     public class MultiSensorOptions
     {

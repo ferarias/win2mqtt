@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Win2Mqtt.SystemActions.Windows
+namespace Samqtt.SystemActions.Windows
 {
     public static class ServiceCollectionExtensions
     {

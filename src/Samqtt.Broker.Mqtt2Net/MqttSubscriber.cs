@@ -2,24 +2,23 @@
 using Microsoft.Extensions.Options;
 using MQTTnet;
 using MQTTnet.Protocol;
-using Win2Mqtt.Options;
-using Win2Mqtt.SystemActions;
+using Samqtt.Options;
+using Samqtt.SystemActions;
 
-namespace Win2Mqtt.Broker.MQTTNet
+namespace Samqtt.Broker.MQTTNet
 {
     public class MqttSubscriber : IMqttSubscriber
     {
         private Dictionary<string, Func<string, CancellationToken, Task<object?>>> _actions = [];
 
-
         private readonly IMqttClient _client;
-        private readonly Win2MqttOptions _options;
+        private readonly SamqttOptions _options;
         private readonly ISystemActionFactory actionFactory;
         private readonly ILogger<MqttSubscriber> logger;
 
         public MqttSubscriber(
             IMqttClient client,
-            IOptions<Win2MqttOptions> options,
+            IOptions<SamqttOptions> options,
             ISystemActionFactory actionFactory,
             ILogger<MqttSubscriber> logger)
         {

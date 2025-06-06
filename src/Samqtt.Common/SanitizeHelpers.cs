@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Win2Mqtt.Common
+namespace Samqtt.Common
 {
     public static partial class SanitizeHelpers
     {

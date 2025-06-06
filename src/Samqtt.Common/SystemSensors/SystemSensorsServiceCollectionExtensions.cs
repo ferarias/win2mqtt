@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Win2Mqtt.SystemSensors
+namespace Samqtt.SystemSensors
 {
     public static class SystemSensorsServiceCollectionExtensions
     {

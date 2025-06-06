@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Win2Mqtt.SystemActions
+namespace Samqtt.SystemActions
 {
     public interface ISystemActionFactory
     {

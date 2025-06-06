@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Win2Mqtt.SystemSensors
+namespace Samqtt.SystemSensors
 {
     public class SystemSensorMetadata
     {

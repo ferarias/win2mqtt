@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace Win2Mqtt.SystemActions
+namespace Samqtt.SystemActions
 {
     public abstract class SystemAction<T> : ISystemAction
     {

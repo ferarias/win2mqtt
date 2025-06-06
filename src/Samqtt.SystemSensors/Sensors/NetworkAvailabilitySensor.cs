@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Net.NetworkInformation;
 
-namespace Win2Mqtt.SystemSensors.Sensors
+namespace Samqtt.SystemSensors.Sensors
 {
     [HomeAssistantSensor(unitOfMeasurement: "availability", deviceClass: "connectivity")]
     public class NetworkAvailabilitySensor(ILogger<NetworkAvailabilitySensor> logger) : SystemSensor<bool>

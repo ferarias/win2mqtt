@@ -2,18 +2,18 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Win2Mqtt.Common;
-using Win2Mqtt.Options;
-using Win2Mqtt.SystemSensors;
+using Samqtt.Common;
+using Samqtt.Options;
+using Samqtt.SystemSensors;
 
-namespace Win2Mqtt.Application
+namespace Samqtt.Application
 {
     public class SystemSensorFactory(
-        IOptions<Win2MqttOptions> options,
+        IOptions<SamqttOptions> options,
         IServiceProvider serviceProvider,
         ILogger<SystemSensorFactory> logger) : ISystemSensorFactory
     {
-        private readonly Win2MqttOptions _options = options.Value;
+        private readonly SamqttOptions _options = options.Value;
 
         public IDictionary<string, ISystemSensor> GetEnabledSensors()
         {

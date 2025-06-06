@@ -1,16 +1,16 @@
 using Serilog;
-using Win2Mqtt.Application;
-using Win2Mqtt.Broker.MQTTNet;
-using Win2Mqtt.HomeAssistant;
-using Win2Mqtt.Options;
-using Win2Mqtt.SystemSensors;
-using Win2Mqtt.SystemActions;
-using Win2Mqtt;
+using Samqtt.Application;
+using Samqtt.Broker.MQTTNet;
+using Samqtt.HomeAssistant;
+using Samqtt.Options;
+using Samqtt.SystemSensors;
+using Samqtt.SystemActions;
+using Samqtt;
 
 
 #if WINDOWS
-using Win2Mqtt.SystemSensors.Windows;
-using Win2Mqtt.SystemActions.Windows;
+using Samqtt.SystemSensors.Windows;
+using Samqtt.SystemActions.Windows;
 #endif
 
 Log.Logger = new LoggerConfiguration()
@@ -40,7 +40,7 @@ try
 #endif
 
     builder.Services
-        .AddHostedService<Win2MqttBackgroundService>();
+        .AddHostedService<SamqttBackgroundService>();
 
     builder.Services
         .AddSerilog((services, loggerConfiguration) => loggerConfiguration

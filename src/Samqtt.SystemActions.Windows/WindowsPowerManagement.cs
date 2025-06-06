@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Win2Mqtt.SystemActions.Windows
+namespace Samqtt.SystemActions.Windows
 {
     public static partial class WindowsPowerManagement
     {

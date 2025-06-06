@@ -2,16 +2,16 @@
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Win2Mqtt.Options;
-using Win2Mqtt.SystemActions;
-using Win2Mqtt.SystemSensors;
+using Samqtt.Options;
+using Samqtt.SystemActions;
+using Samqtt.SystemSensors;
 
-namespace Win2Mqtt.HomeAssistant
+namespace Samqtt.HomeAssistant
 {
     public class HomeAssistantPublisher(
         IMqttPublisher mqttPublisher,
         ISystemSensorValueFormatter sensorValueFormatter,
-        IOptions<Win2MqttOptions> options,
+        IOptions<SamqttOptions> options,
         ILogger<HomeAssistantPublisher> logger)
         : IMessagePublisher
     {

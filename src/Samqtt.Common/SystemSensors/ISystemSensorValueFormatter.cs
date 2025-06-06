@@ -1,4 +1,4 @@
-﻿namespace Win2Mqtt.SystemSensors
+﻿namespace Samqtt.SystemSensors
 {
     public interface ISystemSensorValueFormatter
     {

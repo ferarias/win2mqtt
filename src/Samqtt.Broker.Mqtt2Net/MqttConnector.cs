@@ -1,20 +1,20 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MQTTnet;
-using Win2Mqtt.Options;
+using Samqtt.Options;
 
-namespace Win2Mqtt.Broker.MQTTNet
+namespace Samqtt.Broker.MQTTNet
 {
     public class MqttConnector(
         IMqttClient client,
         IMqttPublisher publisher,
-        IOptions<Win2MqttOptions> options,
+        IOptions<SamqttOptions> options,
         ILogger<MqttConnector> logger) : IMqttConnectionManager, IAsyncDisposable
     {
         private readonly IMqttClient _client = client;
         private readonly IMqttPublisher publisher = publisher;
 
-        private readonly Win2MqttOptions _options = options.Value;
+        private readonly SamqttOptions _options = options.Value;
         private readonly ILogger _logger = logger;
 
         public bool IsConnected => _client.IsConnected;

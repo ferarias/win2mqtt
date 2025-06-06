@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Win2Mqtt.SystemSensors
+namespace Samqtt.SystemSensors
 {
     public abstract class SystemSensor<T> : ISystemSensor
     {

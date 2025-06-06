@@ -1,4 +1,4 @@
-﻿namespace Win2Mqtt.SystemSensors.Windows.MultiSensors
+﻿namespace Samqtt.SystemSensors.Windows.MultiSensors
 {
     public class DriveMultiSensor() : SystemMultiSensorBase
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Win2Mqtt.SystemSensors
+namespace Samqtt.SystemSensors
 {
     public abstract class SystemMultiSensorBase : ISystemMultiSensor
     {

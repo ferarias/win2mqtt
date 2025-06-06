@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using System.Runtime.InteropServices;
 
-namespace Win2Mqtt.SystemSensors.Windows.Sensors
+namespace Samqtt.SystemSensors.Windows.Sensors
 {
     [HomeAssistantSensor(unitOfMeasurement: "B", deviceClass: "memory", stateClass: "measurement")]
     public partial class FreeMemorySensor(ILogger<FreeMemorySensor> logger) : SystemSensor<double>

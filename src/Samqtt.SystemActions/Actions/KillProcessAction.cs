@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Win2Mqtt.SystemActions.Actions
+namespace Samqtt.SystemActions.Actions
 {
     public class KillProcessAction : SystemAction<bool>
     {

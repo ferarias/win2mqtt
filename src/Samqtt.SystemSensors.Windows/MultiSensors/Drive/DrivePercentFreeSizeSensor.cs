@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Win2Mqtt.SystemSensors.Windows.MultiSensors.Drive
+namespace Samqtt.SystemSensors.Windows.MultiSensors.Drive
 {
     [HomeAssistantSensor(unitOfMeasurement: "%", stateClass: "measurement")]
     public class DrivePercentFreeSizeSensor(ILogger<DrivePercentFreeSizeSensor> logger) : SystemSensor<double>()

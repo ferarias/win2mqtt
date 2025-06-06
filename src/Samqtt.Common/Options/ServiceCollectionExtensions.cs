@@ -2,19 +2,19 @@
 using System;
 using System.Collections.Generic;
 
-namespace Win2Mqtt.Options
+namespace Samqtt.Options
 {
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddWin2MqttOptions(this IServiceCollection services)
         {
             services
-            .AddOptionsWithValidateOnStart<Win2MqttOptions>()
-                .BindConfiguration(Win2MqttOptions.SectionName)
+            .AddOptionsWithValidateOnStart<SamqttOptions>()
+                .BindConfiguration(SamqttOptions.SectionName)
                 .ValidateDataAnnotations();
 
             services
-                .PostConfigure<Win2MqttOptions>(o =>
+                .PostConfigure<SamqttOptions>(o =>
                 {
                     o.Sensors = new Dictionary<string, SensorOptions>(o.Sensors, StringComparer.OrdinalIgnoreCase);
                     o.MultiSensors = new Dictionary<string, MultiSensorOptions>(o.MultiSensors, StringComparer.OrdinalIgnoreCase);

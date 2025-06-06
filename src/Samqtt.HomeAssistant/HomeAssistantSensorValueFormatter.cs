@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
 using System.Text.Json;
-using Win2Mqtt.SystemSensors;
+using Samqtt.SystemSensors;
 
-namespace Win2Mqtt.HomeAssistant
+namespace Samqtt.HomeAssistant
 {
     public class HomeAssistantSensorValueFormatter : ISystemSensorValueFormatter
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MQTTnet;
 
-namespace Win2Mqtt.Broker.MQTTNet
+namespace Samqtt.Broker.MQTTNet
 {
     public static class ServiceCollectionExtensions
     {

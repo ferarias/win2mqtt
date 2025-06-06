@@ -1,11 +1,11 @@
-﻿namespace Win2Mqtt
+﻿namespace Samqtt
 {
     public static class Constants
     {
-        public const string AppId = "Win2MQTT";
-        public const string ServiceName = "Win2MQTT Service";
+        public const string AppId = "Samqtt";
+        public const string ServiceName = "Samqtt Service";
 
-        public const string Win2MqttTopic = "win2mqtt";
+        public const string SamqttTopic = "samqtt";
 
         public static readonly string UserAppSettingsFile = $"{AppId.ToLowerInvariant()}.appsettings.json";
     }

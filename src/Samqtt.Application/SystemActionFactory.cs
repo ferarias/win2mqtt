@@ -2,18 +2,18 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Win2Mqtt.Common;
-using Win2Mqtt.Options;
-using Win2Mqtt.SystemActions;
+using Samqtt.Common;
+using Samqtt.Options;
+using Samqtt.SystemActions;
 
-namespace Win2Mqtt.Application
+namespace Samqtt.Application
 {
     public class SystemActionFactory(
-    IOptions<Win2MqttOptions> options,
+    IOptions<SamqttOptions> options,
     IServiceProvider serviceProvider,
     ILogger<SystemActionFactory> logger) : ISystemActionFactory
     {
-        private readonly Win2MqttOptions _options = options.Value;
+        private readonly SamqttOptions _options = options.Value;
         private static readonly Dictionary<string, (Type HandlerType, PropertyInfo? ReturnProperty)> _handlers = [];
 
         public IDictionary<string, ISystemAction> GetEnabledActions()

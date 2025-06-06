@@ -2,7 +2,7 @@
 using CliWrap;
 
 using Serilog;
-using Win2Mqtt;
+using Samqtt;
 
 internal class WindowsServiceInstaller
 {
