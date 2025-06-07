@@ -34,7 +34,6 @@ Name: "{group}\SAMQTT Readme"; Filename: "{app}\README.md"
 
 [Run]
 Filename: "sc.exe"; Parameters: "create ""SAMQTT Service"" binPath=""{app}\Samqtt.exe"" start=auto"; Description: "Create Samqtt service"; Flags: runhidden
-Filename: "sc.exe"; Parameters: "start ""SAMQTT Service"""; Description: "Start Samqtt service"; Flags: runhidden
 
 [UninstallRun]
 Filename: "sc.exe"; Parameters: "stop ""SAMQTT Service"" "; RunOnceId: "SamqttStop"
@@ -48,6 +47,7 @@ var
   MQTTUsername: AnsiString;
   MQTTPassword: AnsiString;
   DeviceIdentifier: AnsiString;
+  StartServiceCheckbox: TCheckBox;
 
 procedure InitializeWizard;
 begin
@@ -74,6 +74,13 @@ begin
   Page2.Add('Device Identifier:', False);
   
   Page2.Values[0] := ExpandConstant('{computername}');
+
+  StartServiceCheckbox := TCheckBox.Create(WizardForm);
+  StartServiceCheckbox.Parent := WizardForm.FinishedPage;
+  StartServiceCheckbox.Caption := 'Start SAMQTT service after installation';
+  StartServiceCheckbox.Checked := True;
+  StartServiceCheckbox.Left := ScaleX(ScaleX(0) + 16);
+  StartServiceCheckbox.Top := WizardForm.FinishedLabel.Top + WizardForm.FinishedLabel.Height + ScaleY(16);
 end;
 
 
@@ -82,7 +89,7 @@ var
   TemplateFile, ConfigFile, FinalContent: String;
   TemplateContent: AnsiString;
   NeedsAuth: Boolean;
-
+  ResultCode: Integer;
 
 begin
   if CurStep = ssPostInstall then
@@ -113,5 +120,13 @@ begin
     end
     else
       MsgBox('Failed to read template config file from: ' + TemplateFile, mbError, MB_OK);
+
+    if StartServiceCheckbox.Checked then
+    begin
+      if Exec('sc.exe', 'start "SAMQTT Service"', '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+        MsgBox('The SAMQTT service has been started successfully.', mbInformation, MB_OK)
+      else
+        MsgBox('Failed to start SAMQTT service. Please start it manually.', mbError, MB_OK);
+    end;
   end;
 end;
