@@ -32,9 +32,11 @@ try
 #if !DEBUG
 #if WINDOWS
     var appDataConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), Constants.AppId, Constants.UserAppSettingsFile);
+    Log.Information("Applying custom settings from {ConfigPath}", appDataConfigPath);
     builder.Configuration.AddJsonFile(appDataConfigPath, optional: true);
 #else
     var appDataConfigPath = Path.Combine("/etc/", Constants.AppId.ToLowerInvariant(), Constants.UserAppSettingsFile);
+    Log.Information("Applying custom settings from {ConfigPath}", appDataConfigPath);
     builder.Configuration.AddJsonFile(appDataConfigPath, optional: true);
 #endif
 #endif
@@ -57,6 +59,7 @@ try
         .AddSystemActions()
         .AddSystemSensors();
 #if WINDOWS
+    Log.Information("Adding Windows-specific sensors and actions");
     builder.Services
         .AddWindowsSpecificSystemSensors()
         .AddWindowsSpecificSystemActions()
